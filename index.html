@@ -136,6 +136,7 @@
 
 <main>
 
+  <!-- ===================== FORM ===================== -->
   <section id="formSection">
 
     <div class="card">
@@ -175,6 +176,7 @@
     </div>
   </section>
 
+  <!-- ===================== DASHBOARD ===================== -->
   <section id="dashboardSection" style="display:none;">
 
     <div class="card">
@@ -243,7 +245,7 @@
 <div id="toast" class="toast" style="display:none;"></div>
 
 <script>
-// ===================== FIREBASE REAL CONFIG INTEGRATION =====================
+// ===================== FIREBASE =====================
 const firebaseConfig = {
   apiKey: "AIzaSyCDv88ZkUdd8spsekIDtU-iMbAufqWKyzA",
   authDomain: "auditoria-alb.firebaseapp.com",
@@ -290,19 +292,17 @@ const PESO_TOTAL = CHECKLIST.reduce((s,i)=>s+i.peso,0);
 
 // ===================== RENDER CHECKLIST FORM =====================
 const checklistWrap = document.getElementById("checklistWrap");
-const itemState = {};
+const itemState = {}; // id -> {status, obs, evidenciaFile, evidenciaURL}
 
 CHECKLIST.forEach(item=>{
   itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null};
   const card = document.createElement("div");
   card.className = "item-card";
 
-  const statusButtons = item.tipo === "tres"
-    ? `<button type="button" class="status-btn ok" data-val="abastecido">Abastecido</button>
-       <button type="button" class="status-btn mid" data-val="parcial">Parcialmente abastecido</button>
-       <button type="button" class="status-btn bad" data-val="nao_abastecido">Não abastecido</button>`
-    : `<button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
-       <button type="button" class="status-btn bad" data-val="nao_conforme">Não conforme</button>`;
+  const statusButtons =
+    `<button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
+     <button type="button" class="status-btn mid" data-val="parcial">Parcialmente atendido</button>
+     <button type="button" class="status-btn bad" data-val="nao_conforme">Não conforme</button>`;
 
   card.innerHTML = `
     <div class="item-head">
@@ -359,9 +359,10 @@ checklistWrap.addEventListener("change", (e)=>{
   }
 });
 
+// default date = today
 document.getElementById("fData").valueAsDate = new Date();
 
-// ===================== SUBMIT & TOAST =====================
+// ===================== SUBMIT =====================
 function showToast(msg){
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -392,9 +393,10 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
 
   document.getElementById("btnSubmit").disabled = true;
   msgEl.style.color = "var(--muted)";
-  msgEl.textContent = "Salvando no Firebase...";
+  msgEl.textContent = "Salvando...";
 
   try{
+    // upload evidências
     const itemsPayload = [];
     for(const item of CHECKLIST){
       const st = itemState[item.id];
@@ -405,15 +407,18 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
         await ref.put(st.evidenciaFile);
         url = await ref.getDownloadURL();
       }
-      const conforme = (st.status === "conforme" || st.status === "abastecido" || st.status === "parcial");
+      const conforme = (st.status === "conforme");
+      const scoreObtido = st.status === "conforme" ? item.peso
+                         : st.status === "parcial" ? item.peso / 2
+                         : 0;
       itemsPayload.push({
         id:item.id, titulo:item.titulo, peso:item.peso, status:st.status,
-        conforme, obs:st.obs || "", evidenciaURL:url
+        conforme, scoreObtido, obs:st.obs || "", evidenciaURL:url
       });
     }
 
-    const pesoConforme = itemsPayload.filter(i=>i.conforme).reduce((s,i)=>s+i.peso,0);
-    const percConformidade = Math.round((pesoConforme / PESO_TOTAL) * 100);
+    const pesoObtido = itemsPayload.reduce((s,i)=>s+i.scoreObtido,0);
+    const percConformidade = Math.round((pesoObtido / PESO_TOTAL) * 100);
     const naoConformidades = itemsPayload.filter(i=>!i.conforme).length;
 
     await db.collection(COLLECTION).add({
@@ -456,7 +461,7 @@ function resetForm(){
   checklistWrap.querySelectorAll('input[type="file"]').forEach(f=>f.value="");
 }
 
-// ===================== TABS SWITCHERS =====================
+// ===================== TABS =====================
 const tabFormBtn = document.getElementById("tabFormBtn");
 const tabDashBtn = document.getElementById("tabDashBtn");
 const formSection = document.getElementById("formSection");
@@ -472,7 +477,7 @@ tabDashBtn.addEventListener("click", ()=>{
   loadDashboard();
 });
 
-// ===================== DASHBOARD MATH & CHARTS =====================
+// ===================== DASHBOARD =====================
 let allAudits = [];
 let filteredAudits = [];
 let chartEvolucao, chartTurno, chartItens;
@@ -520,6 +525,7 @@ function renderKpis(){
 }
 
 function renderCharts(){
+  // Evolução diária de conformidade
   const byDate = {};
   filteredAudits.forEach(a=>{
     if(!byDate[a.data]) byDate[a.data] = [];
@@ -535,6 +541,7 @@ function renderCharts(){
     options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} } }, plugins:{legend:{labels:{color:"#e7ecf7"}}} }
   });
 
+  // Não conformidades por turno
   const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
   const naoConfPorTurno = turnos.map(t=>
     filteredAudits.filter(a=>a.turno===t).reduce((s,a)=>s+a.naoConformidades,0)
@@ -546,6 +553,7 @@ function renderCharts(){
     options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} } }, plugins:{legend:{display:false}} }
   });
 
+  // Ranking de itens com mais desvios
   const desviosPorItem = {};
   CHECKLIST.forEach(i=>desviosPorItem[i.id]=0);
   filteredAudits.forEach(a=>{
@@ -596,7 +604,7 @@ document.getElementById("auditTableBody").addEventListener("click", async (e)=>{
   await loadDashboard();
 });
 
-// ===================== EXPORTS DADOS =====================
+// ===================== EXPORTS =====================
 document.getElementById("btnExportExcel").addEventListener("click", ()=>{
   const rows = filteredAudits.map(a=>({
     Data:a.data, Turno:a.turno, Auditor:a.auditor, Área:a.area,
