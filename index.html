@@ -1,330 +1,628 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="AUDITORIA ALB">
-    <meta name="theme-color" content="#020202">
-    <link rel="manifest" href="data:application/manifest+json,{%22name%22:%22AUDITORIA%20ALB%22,%22short_name%22:%22Auditoria%22,%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22%23020202%22,%22theme_color%22:%22%23ff3e3e%22,%22orientation%22:%22portrait-primary%22,%22scope%22:%22/%22}">
-    <meta name="description" content="AUDITORIA ALB - Sistema Focado em Auditoria de Estoque">
-    
-    <title>AUDITORIA ALB - Painel de Inspeção</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-    <style>
-        :root { 
-            --bg: #020202;
-            --glass: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.06);
-            --primary: #ff3e3e; 
-            --primary-glow: rgba(255, 62, 62, 0.2);
-            --accent: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.3);
-            --verde: #10b981; 
-            --text: #f8fafc; 
-            --text-secondary: #64748b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auditoria de Estoque - ALB</title>
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
- 
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg); 
-            color: var(--text); 
-            padding-bottom: env(safe-area-inset-bottom, 40px); 
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(255, 62, 62, 0.05) 0%, transparent 30%),
-                radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.05) 0%, transparent 30%);
-        }
- 
-        .glass-card { 
-            background: var(--glass);
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px); 
-            border: 1px solid var(--glass-border); 
-            border-radius: 24px; 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
- 
-        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100dvh; background: rgba(5, 5, 5, 0.98); backdrop-filter: blur(20px); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1500; padding-top: calc(60px + env(safe-area-inset-top)); border-right: 1px solid var(--glass-border); }
-        .sidebar.active { left: 0; }
-        .sidebar button { width: 85%; padding: 16px 20px; background: transparent; border: none; color: var(--text-secondary); text-align: left; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 12px; margin: 8px auto; border-radius: 14px; transition: 0.3s; }
-        .sidebar button:hover { background: var(--glass); color: var(--text); transform: translateX(8px); }
- 
-        .header { padding: calc(20px + env(safe-area-inset-top)) 24px 20px 24px; display: flex; align-items: center; gap: 15px; position: sticky; top: 0; z-index: 900; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); }
-        .menu-btn { background: var(--glass); border: 1px solid var(--glass-border); padding: 10px; border-radius: 14px; color: white; font-size: 20px; display: flex; width: 46px; height: 46px; align-items: center; justify-content: center; cursor: pointer; }
-        
-        .container { width: 100%; max-width: 1200px; margin: auto; padding: 0 20px; }
- 
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 24px; margin-top: 20px; }
-        .stat-card { padding: 24px; position: relative; overflow: hidden; }
-        .stat-card h5 { font-size: 9px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 800; }
-        .stat-card p { font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -1px; }
- 
-        .btn-action { background: var(--primary); color: #fff; border: none; padding: 16px 28px; border-radius: 16px; font-weight: 900; cursor: pointer; font-size: 13px; box-shadow: 0 10px 20px var(--primary-glow); transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .btn-action:active { transform: scale(0.96); }
- 
-        .form-box { padding: 35px; margin-bottom: 30px; margin-top: 20px; }
-        .form-group label { display: block; font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 10px; font-weight: 800; letter-spacing: 1.5px; }
-        .form-group input { width: 100%; padding: 18px; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: #fff; outline: none; font-size: 15px; transition: 0.3s; }
-        .form-group input:focus { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
-        .auditoria-table-container { width: 100%; overflow-x: auto; margin-top: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid var(--glass-border); }
-        .auditoria-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
-        .auditoria-table th { background: rgba(255,255,255,0.05); padding: 14px 16px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; font-size: 10px; letter-spacing: 1px; }
-        .auditoria-table td { padding: 14px 16px; border-bottom: 1px solid var(--glass-border); color: var(--text); }
-        
-        .login-box { width: 100%; max-width: 380px; padding: 50px; text-align: center; }
-    </style>
+<style>
+  :root{
+    --bg: #0f172a;
+    --panel: #111c34;
+    --panel-2: #16223f;
+    --line: #24314f;
+    --text: #e7ecf7;
+    --muted: #93a0bd;
+    --accent: #3aa1ff;
+    --accent-2: #23c48f;
+    --danger: #ff5a67;
+    --warn: #ffb648;
+    --radius: 12px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Segoe UI', Roboto, Arial, sans-serif;
+    background: radial-gradient(1200px 600px at 10% -10%, #16264a 0%, var(--bg) 55%);
+    color:var(--text); min-height:100vh;
+  }
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px; border-bottom:1px solid var(--line);
+    background:rgba(17,28,52,0.7); backdrop-filter: blur(6px);
+    position:sticky; top:0; z-index:20;
+  }
+  header h1{font-size:18px; margin:0; letter-spacing:.3px;}
+  header .sub{color:var(--muted); font-size:12px; margin-top:2px;}
+  nav.tabs{display:flex; gap:6px;}
+  nav.tabs button{
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    padding:9px 16px; border-radius:999px; cursor:pointer; font-size:13px; transition:.15s;
+  }
+  nav.tabs button.active{background:var(--accent); color:#04121f; border-color:var(--accent); font-weight:600;}
+  main{max-width:1180px; margin:0 auto; padding:24px 20px 80px;}
+  .card{
+    background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-bottom:16px;
+  }
+  .grid{display:grid; gap:14px;}
+  .grid.cols-4{grid-template-columns:repeat(4,1fr);}
+  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  .grid.cols-2{grid-template-columns:repeat(2,1fr);}
+  @media (max-width:900px){ .grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr 1fr;} }
+  @media (max-width:600px){ .grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr;} }
+  label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px;}
+  input[type=text], input[type=date], input[type=number], select, textarea{
+    width:100%; background:#0c1730; border:1px solid var(--line); color:var(--text);
+    padding:10px 12px; border-radius:8px; font-size:14px; outline:none;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--accent);}
+  textarea{resize:vertical; min-height:64px; font-family:inherit;}
+  .field{margin-bottom:4px;}
+  h2.section-title{font-size:15px; margin:0 0 14px; color:var(--text); display:flex; align-items:center; gap:8px;}
+  h2.section-title .badge{background:var(--accent); color:#04121f; font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;}
+
+  .item-card{border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px; background:#0d1830;}
+  .item-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .item-title{font-size:14px; font-weight:600;}
+  .item-desc{font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.45;}
+  .peso-chip{flex-shrink:0; font-size:11px; font-weight:700; background:#1c2b4f; color:var(--accent); border:1px solid var(--line); padding:3px 9px; border-radius:999px; white-space:nowrap;}
+  .status-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
+  .status-btn{
+    flex:1; min-width:110px; padding:9px 10px; border-radius:8px; border:1px solid var(--line);
+    background:#0c1730; color:var(--muted); cursor:pointer; font-size:13px; font-weight:600; transition:.15s;
+  }
+  .status-btn.ok.selected{background:var(--accent-2); color:#04231a; border-color:var(--accent-2);}
+  .status-btn.bad.selected{background:var(--danger); color:#2a0509; border-color:var(--danger);}
+  .status-btn.mid.selected{background:var(--warn); color:#2a1a02; border-color:var(--warn);}
+  .item-extra{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;}
+  @media (max-width:700px){ .item-extra{grid-template-columns:1fr;} }
+  .file-drop{font-size:12px;}
+  .thumb{height:56px; border-radius:6px; margin-top:6px;}
+
+  button.primary{
+    background:var(--accent); color:#04121f; border:none; padding:12px 22px; border-radius:9px;
+    font-weight:700; font-size:14px; cursor:pointer;
+  }
+  button.secondary{
+    background:transparent; color:var(--text); border:1px solid var(--line); padding:11px 18px; border-radius:9px;
+    font-size:13px; cursor:pointer;
+  }
+  button.small{padding:6px 12px; font-size:12px; border-radius:7px;}
+  .kpi{padding:16px 18px;}
+  .kpi .val{font-size:26px; font-weight:800;}
+  .kpi .lbl{font-size:12px; color:var(--muted); margin-top:4px;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th,td{padding:9px 10px; border-bottom:1px solid var(--line); text-align:left;}
+  th{color:var(--muted); font-weight:600; font-size:12px;}
+  tr:hover td{background:#0e1a34;}
+  .tag{font-size:11px; padding:3px 9px; border-radius:999px; font-weight:700;}
+  .tag.ok{background:#0f3327; color:var(--accent-2);}
+  .tag.bad{background:#3a1218; color:var(--danger);}
+  .tag.pend{background:#3a2a08; color:var(--warn);}
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--accent-2); color:#04231a; padding:12px 22px; border-radius:9px;
+    font-weight:600; font-size:14px; z-index:100; box-shadow:0 10px 30px rgba(0,0,0,.4);
+  }
+  .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+  .filters .field{flex:1; min-width:140px;}
+  .empty{color:var(--muted); text-align:center; padding:30px 0; font-size:13px;}
+  .row-actions{display:flex; gap:6px;}
+  ::-webkit-scrollbar{height:8px; width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
+  .chart-wrap{position:relative; height:260px;}
+</style>
 </head>
 <body>
- 
-<div id="sidebar" class="sidebar">
-    <div style="padding: 30px; font-weight: 900; color: #fff; font-size: 22px; letter-spacing: -1.5px; display: flex; align-items: center; gap: 10px;">
-        <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary);"></div>
-        AUDITORIA ALB
-    </div>
-    <button onclick="navegar('dashboard')">📊 DASHBOARD ANALYTICS</button>
-    <button onclick="navegar('executar')">📋 EXECUTAR AUDITORIA</button>
-    <button onclick="navegar('historico')">🔍 HISTÓRICO DE LOGS</button>
-    <button onclick="logout()" style="color: #f87171; margin-top: 40px; border-top: 1px solid var(--glass-border); border-radius: 0; width: 100%; opacity: 0.7;">🚪 ENCERRAR SESSÃO</button>
-</div>
- 
-<div id="login-screen">
-    <div style="height: 100dvh; display: flex; justify-content: center; align-items: center; padding: 20px;">
-        <div class="login-box glass-card">
-            <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 20px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; box-shadow: 0 15px 30px var(--primary-glow);">A</div>
-            <h2 style="color: #fff; margin-bottom: 10px; font-weight: 900; font-size: 26px; letter-spacing: -1px;">AUDITORIA ALB</h2>
-            <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1px;">Módulo de Inventário</p>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <input type="text" id="login-usuario" placeholder="Usuário / Matrícula" style="text-align: center; margin-bottom: 15px;">
-                <input type="password" id="login-senha" placeholder="Senha" style="text-align: center;">
-            </div>
-            <button onclick="efetuarLogin()" class="btn-action" style="width: 100%; padding: 20px; font-size: 15px; margin-top: 10px;">INICIAR CONTROLE</button>
-        </div>
-    </div>
-</div>
- 
-<div id="app-screen" style="display: none;">
-    <div class="header">
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <div style="flex-grow: 1;">
-            <div id="user-name" style="font-weight: 900; font-size: 18px; letter-spacing: -0.5px; color: #fff;">Auditor ALB</div>
-            <div id="role-label" style="font-size: 9px; color: var(--primary); font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">Módulo de Auditoria</div>
-        </div>
-        <div style="text-align: right;">
-            <div id="current-time" style="font-size: 12px; font-weight: 800;">00:00</div>
-            <div style="font-size: 9px; color: var(--verde); text-transform: uppercase; font-weight: 800;">Online</div>
-        </div>
-    </div>
- 
-    <div class="container">
-        <div id="view-dashboard" class="form-box glass-card">
-            <div class="stats-grid">
-                <div class="stat-card glass-card"><h5>TOTAL AUDITADO</h5><p id="st-total">0</p></div>
-                <div class="stat-card glass-card"><h5>PRODUTIVIDADE</h5><p id="st-prod" style="color: var(--verde);">100%</p></div>
-            </div>
-            <h3 style="font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">Gráfico de Inspeções</h3>
-            <div style="max-height: 250px; position: relative;">
-                <canvas id="chart-auditoria"></canvas>
-            </div>
-        </div>
 
-        <div id="view-executar" class="form-box glass-card" style="display: none;">
-            <h3 style="font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; color: #fff;">Nova Inspeção Física</h3>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label>Posição / Endereço do Estoque</label>
-                <input type="text" id="aud-posicao" placeholder="Ex: RUA-01-A">
-            </div>
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label>Código SKU / Código do Material</label>
-                <input type="text" id="aud-material" placeholder="Ex: 10004562">
-            </div>
-            <div class="form-group" style="margin-bottom: 20px;">
-                <label>Quantidade Contada</label>
-                <input type="number" id="aud-qtd" placeholder="0">
-            </div>
-            <button class="btn-action" style="width: 100%;" onclick="salvarAuditoria()">REGISTRAR AUDITORIA</button>
-        </div>
+<header>
+  <div>
+    <h1>Auditoria de Estoque · ALB</h1>
+    <div class="sub">Registro por turno e painel de acompanhamento</div>
+  </div>
+  <nav class="tabs">
+    <button id="tabFormBtn" class="active">Nova auditoria</button>
+    <button id="tabDashBtn">Painel</button>
+  </nav>
+</header>
 
-        <div id="view-historico" class="form-box glass-card" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">Logs Realizados</h3>
-                <button class="btn-action" onclick="exportarTabelaExcel()" style="padding: 10px 15px; font-size: 10px; background: #107c41; box-shadow: none;">Exportar Excel</button>
-            </div>
-            <div class="auditoria-table-container">
-                <table class="auditoria-table" id="tabela-auditorias-print">
-                    <thead>
-                        <tr>
-                            <th>Posição</th>
-                            <th>Material</th>
-                            <th>Qtd Física</th>
-                            <th>Data / Horário</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-logs-body">
-                        </tbody>
-                </table>
-            </div>
+<main>
+
+  <section id="formSection">
+
+    <div class="card">
+      <h2 class="section-title"><span class="badge">1</span> Identificação</h2>
+      <div class="grid cols-4">
+        <div class="field"><label>Data da auditoria</label><input type="date" id="fData"></div>
+        <div class="field"><label>Turno</label>
+          <select id="fTurno">
+            <option value="">Selecione</option>
+            <option>Turno A</option>
+            <option>Turno B</option>
+            <option>Turno Intermediário</option>
+            <option>Turno C</option>
+          </select>
         </div>
+        <div class="field"><label>Nome do auditor</label><input type="text" id="fAuditor" placeholder="Nome completo"></div>
+        <div class="field"><label>Área auditada</label><input type="text" id="fArea" value="Estoque ALB"></div>
+      </div>
     </div>
-</div>
+
+    <div class="card">
+      <h2 class="section-title"><span class="badge">2</span> Checklist (12 itens)</h2>
+      <div id="checklistWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title"><span class="badge">3</span> Observações gerais e plano de ação</h2>
+      <div class="grid cols-2">
+        <div class="field"><label>Observações gerais</label><textarea id="fObsGerais" placeholder="Observações adicionais sobre a auditoria"></textarea></div>
+        <div class="field"><label>Plano de ação para as não conformidades</label><textarea id="fPlanoAcao" placeholder="O que será feito, quem é o responsável e o prazo"></textarea></div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button class="primary" id="btnSubmit">Salvar auditoria</button>
+      <span id="formMsg" style="font-size:13px; color:var(--muted);"></span>
+    </div>
+  </section>
+
+  <section id="dashboardSection" style="display:none;">
+
+    <div class="card">
+      <h2 class="section-title">Filtros</h2>
+      <div class="filters">
+        <div class="field"><label>De</label><input type="date" id="fltDe"></div>
+        <div class="field"><label>Até</label><input type="date" id="fltAte"></div>
+        <div class="field"><label>Turno</label>
+          <select id="fltTurno"><option value="">Todos</option><option>Turno A</option><option>Turno B</option><option>Turno Intermediário</option><option>Turno C</option></select>
+        </div>
+        <div class="field"><label>Área</label><input type="text" id="fltArea" placeholder="Todas"></div>
+        <div class="field"><label>Auditor</label><input type="text" id="fltAuditor" placeholder="Todos"></div>
+        <div class="field"><label>Status</label>
+          <select id="fltStatus"><option value="">Todos</option><option value="ok">Conforme (≥80%)</option><option value="bad">Não conforme (&lt;80%)</option></select>
+        </div>
+        <div class="field" style="max-width:140px;"><button class="secondary" id="btnFilter">Aplicar</button></div>
+      </div>
+    </div>
+
+    <div class="grid cols-4">
+      <div class="card kpi"><div class="val" id="kpiTotal">0</div><div class="lbl">Auditorias realizadas</div></div>
+      <div class="card kpi"><div class="val" id="kpiConform">0%</div><div class="lbl">Percentual de conformidade médio</div></div>
+      <div class="card kpi"><div class="val" id="kpiNaoConform">0</div><div class="lbl">Não conformidades (total de itens)</div></div>
+      <div class="card kpi"><div class="val" id="kpiPendentes">0</div><div class="lbl">Ações pendentes</div></div>
+    </div>
+
+    <div class="grid cols-2">
+      <div class="card">
+        <h2 class="section-title">Evolução da conformidade</h2>
+        <div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Não conformidades por turno</h2>
+        <div class="chart-wrap"><canvas id="chartTurno"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Ranking de itens com mais desvios</h2>
+      <div class="chart-wrap"><canvas id="chartItens"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h2 class="section-title" style="margin:0;">Auditorias</h2>
+        <div style="display:flex; gap:8px;">
+          <button class="secondary small" id="btnExportExcel">Exportar Excel</button>
+          <button class="secondary small" id="btnExportPdf">Exportar PDF</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table>
+          <thead><tr>
+            <th>Data</th><th>Turno</th><th>Auditor</th><th>Área</th><th>Conformidade</th><th>Não conf.</th><th>Ação</th><th></th>
+          </tr></thead>
+          <tbody id="auditTableBody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty" style="display:none;">Nenhuma auditoria encontrada para os filtros aplicados.</div>
+    </div>
+
+  </section>
+
+</main>
+
+<div id="toast" class="toast" style="display:none;"></div>
 
 <script>
-    // Configurações Reais extraídas do seu Firebase Web App
-    const firebaseConfig = {
-        apiKey: "AIzaSyCDv88ZkUdd8spsekIDtU-iMbAufqWKyzA",
-        authDomain: "auditoria-alb.firebaseapp.com",
-        databaseURL: "https://auditoria-alb-default-rtdb.firebaseio.com",
-        projectId: "auditoria-alb",
-        storageBucket: "auditoria-alb.firebasestorage.app",
-        messagingSenderId: "782871877045",
-        appId: "1:782871877045:web:5b1610725ab6adc832f5fc",
-        measurementId: "G-J932NK3MQ4"
-    };
+// ===================== FIREBASE REAL CONFIG INTEGRATION =====================
+const firebaseConfig = {
+  apiKey: "AIzaSyCDv88ZkUdd8spsekIDtU-iMbAufqWKyzA",
+  authDomain: "auditoria-alb.firebaseapp.com",
+  databaseURL: "https://auditoria-alb-default-rtdb.firebaseio.com",
+  projectId: "auditoria-alb",
+  storageBucket: "auditoria-alb.firebasestorage.app",
+  messagingSenderId: "782871877045",
+  appId: "1:782871877045:web:5b1610725ab6adc832f5fc",
+  measurementId: "G-J932NK3MQ4"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
+const COLLECTION = "auditorias_estoque_alb";
 
-    // Inicialização do Firebase Firestore
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+// ===================== CHECKLIST CONFIG =====================
+const CHECKLIST = [
+  {id:1, titulo:"Paletes fora de posição do blocado ou mal posicionado", peso:5,
+   desc:"O que avaliar: se o blocado está alinhado corretamente dentro das demarcações de faixa. Paletes tortos, desalinhados, fora de posição ou avançando nos corredores devem ser apontados.", tipo:"binario"},
+  {id:2, titulo:"Organização 5S", peso:10,
+   desc:"O que avaliar: a limpeza e organização geral da área (ausência de lixo, poeira acumulada, fitas ou plásticos esticados no chão). Avalia se há senso de utilização e se tudo está limpo e em seu devido lugar.", tipo:"binario"},
+  {id:3, titulo:"Paletes avariados", peso:10,
+   desc:"O que avaliar: as condições físicas das estruturas de madeira ou plástico dos paletes. Devem ser reportados paletes com ripas quebradas, pregos expostos, rachaduras graves ou qualquer sinal que comprometa a segurança do material.", tipo:"binario"},
+  {id:4, titulo:"Bloqueio de equipamentos de emergência", peso:10,
+   desc:"O que avaliar: se o acesso a extintores de incêndio, hidrantes, macas, saídas de emergência e painéis elétricos está 100% livre. Nenhum objeto ou mercadoria pode estar obstruindo esses locais, mesmo que \"por instantes\".", tipo:"binario"},
+  {id:5, titulo:"Blocado misturado", peso:10,
+   desc:"O que avaliar: se existem produtos de SKUs (códigos/lotes) diferentes misturados no mesmo blocado ou empilhamento, o que pode gerar erros graves na hora da separação ou carregamento.", tipo:"binario"},
+  {id:6, titulo:"Blocado retirado pela lateral", peso:5,
+   desc:"O que avaliar: se a retirada incorreta de paletes deixando o blocado instável ou vulnerável a quedas e avarias.", tipo:"binario"},
+  {id:7, titulo:"Produtos sem identificação (sem etiqueta/etiqueta rasgada)", peso:5,
+   desc:"O que avaliar: a presença e a legibilidade das etiquetas de identificação do palete/produto. Itens sem etiqueta ou com códigos de barras rasgados/borrados que impeçam a leitura do operador.", tipo:"binario"},
+  {id:8, titulo:"Organização da apanha", peso:10,
+   desc:"O que avaliar: a situação da área de picking (separação). Avaliar se os produtos nas posições de apanha estão organizados, fáceis de separar e desobstruídos. Verificar paletes de retorno/reembalo posicionados de forma inadequada ou desnecessários impactando a separação.", tipo:"binario"},
+  {id:9, titulo:"Furo de FEFO", peso:10,
+   desc:"O que avaliar: se a regra de validade está sendo respeitada (First Expired, First Out). Ocorre \"furo\" se um produto com validade mais próxima do vencimento foi deixado para trás enquanto uma data nova foi retirada antes.", tipo:"binario"},
+  {id:10, titulo:"Organização das gaiolas", peso:5,
+   desc:"O que avaliar: se as gaiolas estão abastecidas de acordo com as etiquetas de identificação e se há materiais misturados nelas.", tipo:"binario"},
+  {id:11, titulo:"Espaçamento 50cm", peso:10,
+   desc:"O que avaliar: se o espaçamento obrigatório de 50 cm entre os blocados está sendo respeitado.", tipo:"binario"},
+  {id:12, titulo:"Setor da apanha abastecida", peso:10,
+   desc:"Avaliar se o setor de apanha está abastecido, parcialmente abastecido ou não abastecido.", tipo:"tres"}
+];
+const PESO_TOTAL = CHECKLIST.reduce((s,i)=>s+i.peso,0);
+
+// ===================== RENDER CHECKLIST FORM =====================
+const checklistWrap = document.getElementById("checklistWrap");
+const itemState = {};
+
+CHECKLIST.forEach(item=>{
+  itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null};
+  const card = document.createElement("div");
+  card.className = "item-card";
+
+  const statusButtons = item.tipo === "tres"
+    ? `<button type="button" class="status-btn ok" data-val="abastecido">Abastecido</button>
+       <button type="button" class="status-btn mid" data-val="parcial">Parcialmente abastecido</button>
+       <button type="button" class="status-btn bad" data-val="nao_abastecido">Não abastecido</button>`
+    : `<button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
+       <button type="button" class="status-btn bad" data-val="nao_conforme">Não conforme</button>`;
+
+  card.innerHTML = `
+    <div class="item-head">
+      <div>
+        <div class="item-title">${item.id}. ${item.titulo}</div>
+        <div class="item-desc">${item.desc}</div>
+      </div>
+      <div class="peso-chip">Peso ${item.peso}</div>
+    </div>
+    <div class="status-row" data-item="${item.id}">${statusButtons}</div>
+    <div class="item-extra">
+      <div class="field">
+        <label>Observação (opcional)</label>
+        <textarea data-obs="${item.id}" placeholder="Detalhes sobre o item"></textarea>
+      </div>
+      <div class="field">
+        <label>Evidência (foto)</label>
+        <input type="file" accept="image/*" data-evidencia="${item.id}" class="file-drop">
+        <img class="thumb" id="thumb-${item.id}" style="display:none;">
+      </div>
+    </div>
+  `;
+  checklistWrap.appendChild(card);
+});
+
+checklistWrap.addEventListener("click", (e)=>{
+  const btn = e.target.closest(".status-btn");
+  if(!btn) return;
+  const row = btn.closest(".status-row");
+  const itemId = row.dataset.item;
+  row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  itemState[itemId].status = btn.dataset.val;
+});
+
+checklistWrap.addEventListener("input", (e)=>{
+  if(e.target.dataset.obs){
+    itemState[e.target.dataset.obs].obs = e.target.value;
+  }
+});
+
+checklistWrap.addEventListener("change", (e)=>{
+  if(e.target.dataset.evidencia){
+    const id = e.target.dataset.evidencia;
+    const file = e.target.files[0];
+    itemState[id].evidenciaFile = file || null;
+    const thumb = document.getElementById("thumb-"+id);
+    if(file){
+      thumb.src = URL.createObjectURL(file);
+      thumb.style.display = "block";
+    } else {
+      thumb.style.display = "none";
     }
-    const db = firebase.firestore();
+  }
+});
 
-    // Funções de Interface e Navegação
-    function navegar(tela) {
-        document.getElementById('view-dashboard').style.display = 'none';
-        document.getElementById('view-executar').style.display = 'none';
-        document.getElementById('view-historico').style.display = 'none';
-        
-        document.getElementById('view-' + tela).style.display = 'block';
-        toggleMenu(false);
+document.getElementById("fData").valueAsDate = new Date();
+
+// ===================== SUBMIT & TOAST =====================
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(()=>{ t.style.display="none"; }, 3200);
+}
+
+document.getElementById("btnSubmit").addEventListener("click", async ()=>{
+  const data = document.getElementById("fData").value;
+  const turno = document.getElementById("fTurno").value;
+  const auditor = document.getElementById("fAuditor").value.trim();
+  const area = document.getElementById("fArea").value.trim();
+  const obsGerais = document.getElementById("fObsGerais").value.trim();
+  const planoAcao = document.getElementById("fPlanoAcao").value.trim();
+  const msgEl = document.getElementById("formMsg");
+
+  if(!data || !turno || !auditor || !area){
+    msgEl.textContent = "Preencha data, turno, auditor e área.";
+    msgEl.style.color = "var(--danger)";
+    return;
+  }
+  const semStatus = CHECKLIST.filter(i=>!itemState[i.id].status);
+  if(semStatus.length){
+    msgEl.textContent = "Preencha o status de todos os 12 itens do checklist.";
+    msgEl.style.color = "var(--danger)";
+    return;
+  }
+
+  document.getElementById("btnSubmit").disabled = true;
+  msgEl.style.color = "var(--muted)";
+  msgEl.textContent = "Salvando no Firebase...";
+
+  try{
+    const itemsPayload = [];
+    for(const item of CHECKLIST){
+      const st = itemState[item.id];
+      let url = null;
+      if(st.evidenciaFile){
+        const path = `evidencias/${data}_${turno}_${item.id}_${Date.now()}.jpg`;
+        const ref = storage.ref().child(path);
+        await ref.put(st.evidenciaFile);
+        url = await ref.getDownloadURL();
+      }
+      const conforme = (st.status === "conforme" || st.status === "abastecido" || st.status === "parcial");
+      itemsPayload.push({
+        id:item.id, titulo:item.titulo, peso:item.peso, status:st.status,
+        conforme, obs:st.obs || "", evidenciaURL:url
+      });
     }
 
-    function toggleMenu(forceClose = null) {
-        const sidebar = document.getElementById('sidebar');
-        if (forceClose === false) {
-            sidebar.classList.remove('active');
-        } else {
-            sidebar.classList.toggle('active');
-        }
-    }
+    const pesoConforme = itemsPayload.filter(i=>i.conforme).reduce((s,i)=>s+i.peso,0);
+    const percConformidade = Math.round((pesoConforme / PESO_TOTAL) * 100);
+    const naoConformidades = itemsPayload.filter(i=>!i.conforme).length;
 
-    function efetuarLogin() {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app-screen').style.display = 'block';
-        atualizarRelogio();
-        inicializarGrafico();
-    }
+    await db.collection(COLLECTION).add({
+      data, turno, auditor, area,
+      items: itemsPayload,
+      observacoesGerais: obsGerais,
+      planoAcao,
+      statusAcao: planoAcao ? "pendente" : "n/a",
+      percConformidade, naoConformidades,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
 
-    function logout() {
-        document.getElementById('app-screen').style.display = 'none';
-        document.getElementById('login-screen').style.display = 'block';
-    }
+    msgEl.style.color = "var(--accent-2)";
+    msgEl.textContent = "Auditoria salva com sucesso.";
+    showToast("Auditoria registrada!");
+    resetForm();
+  }catch(err){
+    console.error(err);
+    msgEl.style.color = "var(--danger)";
+    msgEl.textContent = "Erro ao salvar: " + err.message;
+  }finally{
+    document.getElementById("btnSubmit").disabled = false;
+  }
+});
 
-    function atualizarRelogio() {
-        setInterval(() => {
-            const agora = new Date();
-            document.getElementById('current-time').innerText = agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
-    }
+function resetForm(){
+  document.getElementById("fTurno").value = "";
+  document.getElementById("fAuditor").value = "";
+  document.getElementById("fObsGerais").value = "";
+  document.getElementById("fPlanoAcao").value = "";
+  document.getElementById("fData").valueAsDate = new Date();
+  CHECKLIST.forEach(item=>{
+    itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null};
+    const row = checklistWrap.querySelector(`.status-row[data-item="${item.id}"]`);
+    row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
+    const thumb = document.getElementById("thumb-"+item.id);
+    thumb.style.display = "none";
+  });
+  checklistWrap.querySelectorAll("textarea").forEach(t=>t.value="");
+  checklistWrap.querySelectorAll('input[type="file"]').forEach(f=>f.value="");
+}
 
-    // Gravação Direta no Firestore Database
-    function salvarAuditoria() {
-        const posicao = document.getElementById('aud-posicao').value;
-        const material = document.getElementById('aud-material').value;
-        const qtd = document.getElementById('aud-qtd').value;
+// ===================== TABS SWITCHERS =====================
+const tabFormBtn = document.getElementById("tabFormBtn");
+const tabDashBtn = document.getElementById("tabDashBtn");
+const formSection = document.getElementById("formSection");
+const dashboardSection = document.getElementById("dashboardSection");
 
-        if(!posicao || !material || !qtd) {
-            alert("Preencha todos os campos obrigatórios para auditoria!");
-            return;
-        }
+tabFormBtn.addEventListener("click", ()=>{
+  tabFormBtn.classList.add("active"); tabDashBtn.classList.remove("active");
+  formSection.style.display = "block"; dashboardSection.style.display = "none";
+});
+tabDashBtn.addEventListener("click", ()=>{
+  tabDashBtn.classList.add("active"); tabFormBtn.classList.remove("active");
+  dashboardSection.style.display = "block"; formSection.style.display = "none";
+  loadDashboard();
+});
 
-        db.collection("auditorias").add({
-            posicao: posicao,
-            material: material,
-            quantidade: parseInt(qtd),
-            dataHora: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(() => {
-            alert("Auditoria registrada com sucesso!");
-            document.getElementById('aud-posicao').value = '';
-            document.getElementById('aud-material').value = '';
-            document.getElementById('aud-qtd').value = '';
-            carregarDadosTabela();
-        })
-        .catch((error) => {
-            console.error("Erro ao registrar auditoria: ", error);
-        });
-    }
+// ===================== DASHBOARD MATH & CHARTS =====================
+let allAudits = [];
+let filteredAudits = [];
+let chartEvolucao, chartTurno, chartItens;
 
-    // Busca de Logs Atualizados do Firebase
-    function carregarDadosTabela() {
-        const tbody = document.getElementById('table-logs-body');
-        tbody.innerHTML = '';
-        
-        db.collection("auditorias").orderBy("dataHora", "desc").limit(15).get().then((querySnapshot) => {
-            document.getElementById('st-total').innerText = querySnapshot.size;
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><b>${data.posicao}</b></td>
-                    <td>${data.material}</td>
-                    <td>${data.quantidade}</td>
-                    <td>${data.dataHora ? new Date(data.dataHora.toDate()).toLocaleString('pt-BR') : 'Processando...'}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        });
-    }
+async function loadDashboard(){
+  const snap = await db.collection(COLLECTION).orderBy("data","asc").get();
+  allAudits = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  applyFilters();
+}
 
-    // Exportação Direta para Excel
-    function exportarTabelaExcel() {
-        const table = document.getElementById('tabela-auditorias-print');
-        const wb = XLSX.utils.table_to_book(table, { sheet: "Logs de Auditoria" });
-        XLSX.writeFile(wb, "Relatorio_Auditoria_ALB.xlsx");
-    }
+function applyFilters(){
+  const de = document.getElementById("fltDe").value;
+  const ate = document.getElementById("fltAte").value;
+  const turno = document.getElementById("fltTurno").value;
+  const area = document.getElementById("fltArea").value.trim().toLowerCase();
+  const auditor = document.getElementById("fltAuditor").value.trim().toLowerCase();
+  const status = document.getElementById("fltStatus").value;
 
-    // Inicialização do Gráfico Analytics
-    function inicializarGrafico() {
-        const ctx = document.getElementById('chart-auditoria').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Setor A', 'Setor B', 'Setor C'],
-                datasets: [{
-                    label: 'Itens Inspecionados',
-                    data: [15, 22, 12],
-                    backgroundColor: '#ff3e3e',
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
-                    x: { grid: { display: false }, ticks: { color: '#64748b' } }
-                },
-                plugins: { legend: { display: false } }
-            }
-        });
-        carregarDadosTabela();
-    }
+  filteredAudits = allAudits.filter(a=>{
+    if(de && a.data < de) return false;
+    if(ate && a.data > ate) return false;
+    if(turno && a.turno !== turno) return false;
+    if(area && !(a.area||"").toLowerCase().includes(area)) return false;
+    if(auditor && !(a.auditor||"").toLowerCase().includes(auditor)) return false;
+    if(status === "ok" && a.percConformidade < 80) return false;
+    if(status === "bad" && a.percConformidade >= 80) return false;
+    return true;
+  });
+
+  renderKpis();
+  renderCharts();
+  renderTable();
+}
+
+document.getElementById("btnFilter").addEventListener("click", applyFilters);
+
+function renderKpis(){
+  document.getElementById("kpiTotal").textContent = filteredAudits.length;
+  const media = filteredAudits.length
+    ? Math.round(filteredAudits.reduce((s,a)=>s+a.percConformidade,0)/filteredAudits.length)
+    : 0;
+  document.getElementById("kpiConform").textContent = media + "%";
+  document.getElementById("kpiNaoConform").textContent = filteredAudits.reduce((s,a)=>s+a.naoConformidades,0);
+  document.getElementById("kpiPendentes").textContent = filteredAudits.filter(a=>a.statusAcao==="pendente").length;
+}
+
+function renderCharts(){
+  const byDate = {};
+  filteredAudits.forEach(a=>{
+    if(!byDate[a.data]) byDate[a.data] = [];
+    byDate[a.data].push(a.percConformidade);
+  });
+  const dates = Object.keys(byDate).sort();
+  const avgByDate = dates.map(d=> Math.round(byDate[d].reduce((s,v)=>s+v,0)/byDate[d].length) );
+
+  if(chartEvolucao) chartEvolucao.destroy();
+  chartEvolucao = new Chart(document.getElementById("chartEvolucao"), {
+    type:"line",
+    data:{ labels:dates, datasets:[{ label:"% Conformidade", data:avgByDate, borderColor:"#3aa1ff", backgroundColor:"rgba(58,161,255,0.15)", fill:true, tension:0.3 }]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} } }, plugins:{legend:{labels:{color:"#e7ecf7"}}} }
+  });
+
+  const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
+  const naoConfPorTurno = turnos.map(t=>
+    filteredAudits.filter(a=>a.turno===t).reduce((s,a)=>s+a.naoConformidades,0)
+  );
+  if(chartTurno) chartTurno.destroy();
+  chartTurno = new Chart(document.getElementById("chartTurno"), {
+    type:"bar",
+    data:{ labels:turnos, datasets:[{ label:"Não conformidades", data:naoConfPorTurno, backgroundColor:"#ff5a67" }]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} } }, plugins:{legend:{display:false}} }
+  });
+
+  const desviosPorItem = {};
+  CHECKLIST.forEach(i=>desviosPorItem[i.id]=0);
+  filteredAudits.forEach(a=>{
+    (a.items||[]).forEach(it=>{ if(!it.conforme) desviosPorItem[it.id] = (desviosPorItem[it.id]||0)+1; });
+  });
+  const itemLabels = CHECKLIST.map(i=>`${i.id}. ${i.titulo.slice(0,28)}${i.titulo.length>28?"…":""}`);
+  const itemData = CHECKLIST.map(i=>desviosPorItem[i.id]);
+  if(chartItens) chartItens.destroy();
+  chartItens = new Chart(document.getElementById("chartItens"), {
+    type:"bar",
+    data:{ labels:itemLabels, datasets:[{ label:"Desvios", data:itemData, backgroundColor:"#ffb648" }]},
+    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false, scales:{ x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, y:{ ticks:{color:"#93a0bd", font:{size:11}}, grid:{color:"#24314f"} } }, plugins:{legend:{display:false}} }
+  });
+}
+
+function renderTable(){
+  const tbody = document.getElementById("auditTableBody");
+  tbody.innerHTML = "";
+  document.getElementById("emptyState").style.display = filteredAudits.length ? "none" : "block";
+
+  [...filteredAudits].reverse().forEach(a=>{
+    const tr = document.createElement("tr");
+    const tagClass = a.percConformidade >= 80 ? "ok" : "bad";
+    const acaoTag = a.statusAcao === "pendente" ? '<span class="tag pend">Pendente</span>'
+                   : a.statusAcao === "concluida" ? '<span class="tag ok">Concluída</span>' : "—";
+    tr.innerHTML = `
+      <td>${a.data}</td>
+      <td>${a.turno}</td>
+      <td>${a.auditor}</td>
+      <td>${a.area}</td>
+      <td><span class="tag ${tagClass}">${a.percConformidade}%</span></td>
+      <td>${a.naoConformidades}</td>
+      <td>${acaoTag}</td>
+      <td class="row-actions">
+        ${a.statusAcao === "pendente" ? `<button class="secondary small" data-conclude="${a.id}">Concluir ação</button>` : ""}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById("auditTableBody").addEventListener("click", async (e)=>{
+  const btn = e.target.closest("[data-conclude]");
+  if(!btn) return;
+  const id = btn.dataset.conclude;
+  await db.collection(COLLECTION).doc(id).update({statusAcao:"concluida"});
+  showToast("Ação marcada como concluída.");
+  await loadDashboard();
+});
+
+// ===================== EXPORTS DADOS =====================
+document.getElementById("btnExportExcel").addEventListener("click", ()=>{
+  const rows = filteredAudits.map(a=>({
+    Data:a.data, Turno:a.turno, Auditor:a.auditor, Área:a.area,
+    "% Conformidade":a.percConformidade, "Não conformidades":a.naoConformidades,
+    "Status da ação":a.statusAcao, "Observações gerais":a.observacoesGerais,
+    "Plano de ação":a.planoAcao
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Auditorias");
+  XLSX.writeFile(wb, `auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.xlsx`);
+});
+
+document.getElementById("btnExportPdf").addEventListener("click", ()=>{
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:"landscape"});
+  doc.setFontSize(14);
+  doc.text("Auditorias de Estoque - ALB", 14, 14);
+  doc.autoTable({
+    startY:20,
+    head:[["Data","Turno","Auditor","Área","% Conf.","Não conf.","Ação"]],
+    body: filteredAudits.map(a=>[a.data,a.turno,a.auditor,a.area,a.percConformidade+"%",a.naoConformidades,a.statusAcao]),
+    styles:{fontSize:8}
+  });
+  doc.save(`auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.pdf`);
+});
 </script>
 </body>
 </html>
