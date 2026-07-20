@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auditoria de Estoque - ALB</title>
+<title>Auditoria de Estoque · ALB</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -15,119 +19,199 @@
 
 <style>
   :root{
-    --bg: #0f172a;
-    --panel: #111c34;
-    --panel-2: #16223f;
-    --line: #24314f;
-    --text: #e7ecf7;
-    --muted: #93a0bd;
-    --accent: #3aa1ff;
-    --accent-2: #23c48f;
-    --danger: #ff5a67;
-    --warn: #ffb648;
-    --radius: 12px;
+    --bg: #0a0d14;
+    --bg-grid: #0d1119;
+    --panel: #12161f;
+    --panel-2: #171d2c;
+    --line: #232a3a;
+    --line-soft: #1a2030;
+    --text: #eef1f6;
+    --muted: #8b95ab;
+    --muted-dim: #5d6679;
+    --accent: #4f7cff;
+    --accent-dim: #2a3a63;
+    --ok: #2fd18f;
+    --ok-dim: #123024;
+    --mid: #ffb020;
+    --mid-dim: #3a2a06;
+    --bad: #ff4757;
+    --bad-dim: #3a1015;
+    --radius: 14px;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
   }
   *{box-sizing:border-box;}
+  ::selection{background:var(--accent); color:#04101f;}
   body{
-    margin:0; font-family:'Segoe UI', Roboto, Arial, sans-serif;
-    background: radial-gradient(1200px 600px at 10% -10%, #16264a 0%, var(--bg) 55%);
-    color:var(--text); min-height:100vh;
+    margin:0; font-family:var(--font-body);
+    background:
+      radial-gradient(900px 500px at 100% 0%, rgba(79,124,255,0.10) 0%, transparent 60%),
+      radial-gradient(700px 500px at 0% 100%, rgba(47,209,143,0.06) 0%, transparent 55%),
+      var(--bg);
+    background-attachment: fixed;
+    color:var(--text); min-height:100vh; line-height:1.5;
   }
+  /* ===== header ===== */
   header{
-    display:flex; align-items:center;
-    justify-content:space-between;
-    padding:18px 28px; border-bottom:1px solid var(--line);
-    background:rgba(17,28,52,0.7); backdrop-filter: blur(6px);
-    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 32px; border-bottom:1px solid var(--line);
+    background:rgba(10,13,20,0.75); backdrop-filter: blur(10px);
+    position:sticky; top:0; z-index:30;
   }
-  header h1{font-size:18px; margin:0; letter-spacing:.3px;}
-  header .sub{color:var(--muted); font-size:12px; margin-top:2px;}
-  nav.tabs{display:flex; gap:6px;}
+  .brand{display:flex; align-items:center; gap:14px;}
+  .brand-mark{
+    width:40px; height:40px; border-radius:10px; flex-shrink:0;
+    background:conic-gradient(from 220deg, var(--ok), var(--mid), var(--bad), var(--accent), var(--ok));
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .brand-mark::after{
+    content:""; position:absolute; inset:3px; border-radius:8px; background:var(--bg);
+  }
+  .brand-mark span{position:relative; z-index:2; font-family:var(--font-mono); font-weight:600; font-size:12px; color:var(--text);}
+  header h1{font-family:var(--font-display); font-size:19px; margin:0; letter-spacing:.2px; font-weight:600;}
+  header .sub{color:var(--muted); font-size:12px; margin-top:2px; font-family:var(--font-mono); letter-spacing:.3px;}
+  nav.tabs{display:flex; gap:4px; background:var(--panel); border:1px solid var(--line); padding:4px; border-radius:999px;}
   nav.tabs button{
-    background:transparent; border:1px solid var(--line); color:var(--muted);
-    padding:9px 16px; border-radius:999px; cursor:pointer; font-size:13px; transition:.15s;
+    background:transparent; border:none; color:var(--muted);
+    padding:9px 18px; border-radius:999px; cursor:pointer; font-size:13px; font-family:var(--font-body); font-weight:600;
+    transition:.18s ease;
   }
-  nav.tabs button.active{background:var(--accent); color:#04121f; border-color:var(--accent); font-weight:600;}
-  main{max-width:1180px; margin:0 auto; padding:24px 20px 80px;}
+  nav.tabs button.active{background:var(--accent); color:#04101f;}
+  nav.tabs button:not(.active):hover{color:var(--text);}
+
+  main{max-width:1220px; margin:0 auto; padding:28px 24px 90px;}
+
+  /* ===== legend / signature strip ===== */
+  .legend-strip{
+    display:flex; gap:18px; align-items:center; flex-wrap:wrap;
+    padding:12px 18px; border:1px solid var(--line); border-radius:999px;
+    background:var(--panel); margin-bottom:22px; font-size:12px; color:var(--muted);
+  }
+  .legend-strip b{color:var(--text); font-family:var(--font-mono); font-weight:600; margin-right:2px;}
+  .legend-dot{width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:6px;}
+
   .card{
-    background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-    border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; margin-bottom:16px;
+    background:linear-gradient(165deg, var(--panel) 0%, var(--panel-2) 100%);
+    border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; margin-bottom:18px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.02) inset;
   }
-  .grid{display:grid; gap:14px;}
+  .grid{display:grid; gap:16px;}
   .grid.cols-4{grid-template-columns:repeat(4,1fr);}
   .grid.cols-3{grid-template-columns:repeat(3,1fr);}
   .grid.cols-2{grid-template-columns:repeat(2,1fr);}
   @media (max-width:900px){ .grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr 1fr;} }
   @media (max-width:600px){ .grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr;} }
-  label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px;}
-  input[type=text], input[type=date], input[type=number], select, textarea{
-    width:100%; background:#0c1730; border:1px solid var(--line); color:var(--text);
-    padding:10px 12px; border-radius:8px; font-size:14px; outline:none;
-  }
-  input:focus, select:focus, textarea:focus{border-color:var(--accent);}
-  textarea{resize:vertical; min-height:64px; font-family:inherit;}
-  .field{margin-bottom:4px;}
-  h2.section-title{font-size:15px; margin:0 0 14px; color:var(--text); display:flex; align-items:center; gap:8px;}
-  h2.section-title .badge{background:var(--accent); color:#04121f; font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;}
 
-  .item-card{border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px; background:#0d1830;}
-  .item-head{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
-  .item-title{font-size:14px; font-weight:600;}
-  .item-desc{font-size:12.5px; color:var(--muted); margin-top:4px; line-height:1.45;}
-  .peso-chip{flex-shrink:0; font-size:11px; font-weight:700; background:#1c2b4f; color:var(--accent); border:1px solid var(--line); padding:3px 9px; border-radius:999px; white-space:nowrap;}
-  .status-row{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
-  .status-btn{
-    flex:1; min-width:110px; padding:9px 10px; border-radius:8px; border:1px solid var(--line);
-    background:#0c1730; color:var(--muted); cursor:pointer; font-size:13px; font-weight:600; transition:.15s;
+  label{display:block; font-size:11px; color:var(--muted); margin-bottom:7px; text-transform:uppercase; letter-spacing:.5px; font-weight:600;}
+  input[type=text], input[type=date], input[type=number], select, textarea{
+    width:100%; background:#0c101a; border:1px solid var(--line); color:var(--text);
+    padding:11px 13px; border-radius:9px; font-size:14px; outline:none; font-family:var(--font-body);
+    transition:.15s;
   }
-  .status-btn.ok.selected{background:var(--accent-2); color:#04231a; border-color:var(--accent-2);}
-  .status-btn.bad.selected{background:var(--danger); color:#2a0509; border-color:var(--danger);}
-  .status-btn.mid.selected{background:var(--warn); color:#2a1a02; border-color:var(--warn);}
-  .item-extra{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;}
+  input:focus, select:focus, textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-dim);}
+  textarea{resize:vertical; min-height:68px; font-family:inherit;}
+  .field{margin-bottom:4px;}
+
+  h2.section-title{
+    font-family:var(--font-display); font-size:15px; margin:0 0 16px; color:var(--text);
+    display:flex; align-items:center; gap:10px; font-weight:600;
+  }
+  h2.section-title .badge{
+    background:var(--accent); color:#04101f; font-family:var(--font-mono); font-size:11px; font-weight:600;
+    width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ===== checklist items ===== */
+  .item-card{
+    border:1px solid var(--line); border-left:3px solid var(--line-soft); border-radius:10px;
+    padding:16px 18px; margin-bottom:12px; background:#0d1219; transition:border-color .2s;
+  }
+  .item-card.state-conforme{border-left-color:var(--ok);}
+  .item-card.state-parcial{border-left-color:var(--mid);}
+  .item-card.state-nao_conforme{border-left-color:var(--bad);}
+  .item-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .item-num{font-family:var(--font-mono); color:var(--muted-dim); font-size:12px; margin-right:6px;}
+  .item-title{font-size:14px; font-weight:600; font-family:var(--font-body);}
+  .item-desc{font-size:12.5px; color:var(--muted); margin-top:5px; line-height:1.55; max-width:640px;}
+  .peso-chip{
+    flex-shrink:0; font-family:var(--font-mono); font-size:11px; font-weight:600;
+    background:var(--accent-dim); color:#a9c0ff; border:1px solid var(--line); padding:4px 10px; border-radius:999px; white-space:nowrap;
+  }
+  .status-row{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  .status-btn{
+    flex:1; min-width:150px; padding:10px 12px; border-radius:8px; border:1px solid var(--line);
+    background:#0c101a; color:var(--muted); cursor:pointer; font-size:12.5px; font-weight:600; transition:.15s;
+    font-family:var(--font-body);
+  }
+  .status-btn.ok.selected{background:var(--ok-dim); color:var(--ok); border-color:var(--ok);}
+  .status-btn.bad.selected{background:var(--bad-dim); color:var(--bad); border-color:var(--bad);}
+  .status-btn.mid.selected{background:var(--mid-dim); color:var(--mid); border-color:var(--mid);}
+  .status-btn:hover:not(.selected){border-color:var(--muted-dim); color:var(--text);}
+  .item-extra{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px;}
   @media (max-width:700px){ .item-extra{grid-template-columns:1fr;} }
   .file-drop{font-size:12px;}
-  .thumb{height:56px; border-radius:6px; margin-top:6px;}
+  .thumb{height:56px; border-radius:6px; margin-top:6px; border:1px solid var(--line);}
 
   button.primary{
-    background:var(--accent); color:#04121f; border:none; padding:12px 22px; border-radius:9px;
-    font-weight:700; font-size:14px; cursor:pointer;
+    background:var(--accent); color:#04101f; border:none; padding:13px 24px; border-radius:10px;
+    font-weight:700; font-size:14px; cursor:pointer; font-family:var(--font-body); transition:.15s;
   }
+  button.primary:hover{filter:brightness(1.08);}
+  button.primary:disabled{opacity:.5; cursor:not-allowed;}
   button.secondary{
     background:transparent; color:var(--text); border:1px solid var(--line); padding:11px 18px; border-radius:9px;
-    font-size:13px; cursor:pointer;
+    font-size:13px; cursor:pointer; font-family:var(--font-body); transition:.15s;
   }
-  button.small{padding:6px 12px; font-size:12px; border-radius:7px;}
-  .kpi{padding:16px 18px;}
-  .kpi .val{font-size:26px; font-weight:800;}
-  .kpi .lbl{font-size:12px; color:var(--muted); margin-top:4px;}
+  button.secondary:hover{border-color:var(--accent); color:var(--accent);}
+  button.small{padding:7px 13px; font-size:12px; border-radius:7px;}
+
+  .kpi{padding:18px 20px; display:flex; align-items:center; gap:14px;}
+  .kpi .val{font-family:var(--font-display); font-size:26px; font-weight:700;}
+  .kpi .lbl{font-size:11.5px; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:.4px;}
+
   table{width:100%; border-collapse:collapse; font-size:13px;}
-  th,td{padding:9px 10px; border-bottom:1px solid var(--line); text-align:left;}
-  th{color:var(--muted); font-weight:600; font-size:12px;}
-  tr:hover td{background:#0e1a34;}
-  .tag{font-size:11px; padding:3px 9px; border-radius:999px; font-weight:700;}
-  .tag.ok{background:#0f3327; color:var(--accent-2);}
-  .tag.bad{background:#3a1218; color:var(--danger);}
-  .tag.pend{background:#3a2a08; color:var(--warn);}
+  th,td{padding:11px 10px; border-bottom:1px solid var(--line); text-align:left;}
+  th{color:var(--muted); font-weight:600; font-size:11px; text-transform:uppercase; letter-spacing:.4px;}
+  td{font-family:var(--font-body);}
+  td.mono, th.mono{font-family:var(--font-mono);}
+  tr:hover td{background:#0e1420;}
+  .tag{font-size:11px; padding:4px 10px; border-radius:999px; font-weight:600; font-family:var(--font-mono);}
+  .tag.ok{background:var(--ok-dim); color:var(--ok);}
+  .tag.bad{background:var(--bad-dim); color:var(--bad);}
+  .tag.pend{background:var(--mid-dim); color:var(--mid);}
+
   .toast{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
-    background:var(--accent-2); color:#04231a; padding:12px 22px; border-radius:999px;
-    font-weight:600; font-size:14px; z-index:100; box-shadow:0 10px 30px rgba(0,0,0,.4);
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%);
+    background:var(--ok); color:#04231a; padding:13px 24px; border-radius:999px;
+    font-weight:600; font-size:14px; z-index:100; box-shadow:0 14px 34px rgba(0,0,0,.5);
+    font-family:var(--font-body);
   }
-  .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
-  .filters .field{flex:1; min-width:140px;}
-  .empty{color:var(--muted); text-align:center; padding:30px 0; font-size:13px;}
+  .filters{display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end;}
+  .filters .field{flex:1; min-width:145px;}
+  .empty{color:var(--muted); text-align:center; padding:34px 0; font-size:13px;}
   .row-actions{display:flex; gap:6px;}
   ::-webkit-scrollbar{height:8px; width:8px;}
   ::-webkit-scrollbar-thumb{background:var(--line); border-radius:4px;}
   .chart-wrap{position:relative; height:260px;}
+
+  /* ===== signature gauge ===== */
+  .gauge{position:relative; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .gauge svg{transform:rotate(-90deg);}
+  .gauge .pct{position:absolute; font-family:var(--font-mono); font-weight:600;}
+  .gauge-row{display:flex; align-items:center; gap:6px;}
 </style>
 </head>
 <body>
 
 <header>
-  <div>
-    <h1>Auditoria de Estoque · ALB</h1>
-    <div class="sub">Registro por turno e painel de acompanhamento</div>
+  <div class="brand">
+    <div class="brand-mark"><span>Ax</span></div>
+    <div>
+      <h1>Auditoria de Estoque · ALB</h1>
+      <div class="sub">PESO TOTAL 110 // CONFORME · PARCIAL · NÃO CONFORME</div>
+    </div>
   </div>
   <nav class="tabs">
     <button id="tabFormBtn" class="active">Nova auditoria</button>
@@ -137,6 +221,13 @@
 
 <main>
 
+  <div class="legend-strip">
+    <span><span class="legend-dot" style="background:var(--ok);"></span><b>Conforme</b> = peso cheio</span>
+    <span><span class="legend-dot" style="background:var(--mid);"></span><b>Parcialmente atendido</b> = metade do peso</span>
+    <span><span class="legend-dot" style="background:var(--bad);"></span><b>Não conforme</b> = zero</span>
+  </div>
+
+  <!-- ===================== FORM ===================== -->
   <section id="formSection">
 
     <div class="card">
@@ -158,7 +249,7 @@
     </div>
 
     <div class="card">
-      <h2 class="section-title"><span class="badge">2</span> Checklist (12 itens)</h2>
+      <h2 class="section-title"><span class="badge">2</span> Checklist · 12 itens · peso total 110</h2>
       <div id="checklistWrap"></div>
     </div>
 
@@ -170,12 +261,13 @@
       </div>
     </div>
 
-    <div style="display:flex; gap:10px; align-items:center;">
+    <div style="display:flex; gap:12px; align-items:center;">
       <button class="primary" id="btnSubmit">Salvar auditoria</button>
       <span id="formMsg" style="font-size:13px; color:var(--muted);"></span>
     </div>
   </section>
 
+  <!-- ===================== DASHBOARD ===================== -->
   <section id="dashboardSection" style="display:none;">
 
     <div class="card">
@@ -196,10 +288,10 @@
     </div>
 
     <div class="grid cols-4">
-      <div class="card kpi"><div class="val" id="kpiTotal">0</div><div class="lbl">Auditorias realizadas</div></div>
-      <div class="card kpi"><div class="val" id="kpiConform">0%</div><div class="lbl">Percentual de conformidade médio</div></div>
-      <div class="card kpi"><div class="val" id="kpiNaoConform">0</div><div class="lbl">Não conformidades (total de itens)</div></div>
-      <div class="card kpi"><div class="val" id="kpiPendentes">0</div><div class="lbl">Ações pendentes</div></div>
+      <div class="card kpi" id="kpiConformCard"><div><div class="val" id="kpiConform">0%</div><div class="lbl">Conformidade média</div></div></div>
+      <div class="card kpi"><div><div class="val" id="kpiTotal">0</div><div class="lbl">Auditorias realizadas</div></div></div>
+      <div class="card kpi"><div><div class="val" id="kpiNaoConform">0</div><div class="lbl">Itens com desvio</div></div></div>
+      <div class="card kpi"><div><div class="val" id="kpiPendentes">0</div><div class="lbl">Ações pendentes</div></div></div>
     </div>
 
     <div class="grid cols-2">
@@ -219,7 +311,7 @@
     </div>
 
     <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
         <h2 class="section-title" style="margin:0;">Auditorias</h2>
         <div style="display:flex; gap:8px;">
           <button class="secondary small" id="btnExportExcel">Exportar Excel</button>
@@ -229,7 +321,7 @@
       <div style="overflow-x:auto;">
         <table>
           <thead><tr>
-            <th>Data</th><th>Turno</th><th>Auditor</th><th>Área</th><th>Conformidade</th><th>Não conf.</th><th>Ação</th><th></th>
+            <th class="mono">Data</th><th>Turno</th><th>Auditor</th><th>Área</th><th>Conformidade</th><th class="mono">Desvios</th><th>Ação</th><th></th>
           </tr></thead>
           <tbody id="auditTableBody"></tbody>
         </table>
@@ -244,7 +336,7 @@
 <div id="toast" class="toast" style="display:none;"></div>
 
 <script>
-// ===================== FIREBASE REAL CONFIG INTEGRATION =====================
+// ===================== FIREBASE =====================
 const firebaseConfig = {
   apiKey: "AIzaSyAKNghp24dikj2ABigCWeq-sH-RMTVOFO8",
   authDomain: "auditoria-alb-f26bc.firebaseapp.com",
@@ -261,20 +353,50 @@ const COLLECTION = "auditorias_estoque_alb";
 
 // ===================== CHECKLIST CONFIG =====================
 const CHECKLIST = [
-  {id:1, titulo:"Paletes fora de posição do blocado ou mal posicionado", peso:5, desc:"O que avaliar: se o blocado está alinhado corretamente dentro das demarcações de faixa. Paletes tortos, desalinhados, fora de posição ou avançando nos corredores devem ser apontados.", tipo:"binario"},
-  {id:2, titulo:"Organização 5S", peso:10, desc:"O que avaliar: a limpeza e organização geral da área (ausência de lixo, poeira acumulada, fitas ou plásticos esticados no chão). Avalia se há senso de utilização e se tudo está limpo e em seu devido lugar.", tipo:"binario"},
-  {id:3, titulo:"Paletes avariados", peso:10, desc:"O que avaliar: as condições físicas das estruturas de madeira ou plástico dos paletes. Devem ser reportados paletes com ripas quebradas, pregos expostos, rachaduras graves ou qualquer sinal que comprometa a segurança do material.", tipo:"binario"},
-  {id:4, titulo:"Bloqueio de equipamentos de emergência", peso:10, desc:"O que avaliar: se o acesso a extintores de incêndio, hidrantes, macas, saídas de emergência e painéis elétricos está 100% livre. Nenhum objeto ou mercadoria pode estar obstruindo esses locais, mesmo que \"por instantes\".", tipo:"binario"},
-  {id:5, titulo:"Blocado misturado", peso:10, desc:"O que avaliar: se existem produtos de SKUs (códigos/lotes) diferentes misturados no mesmo blocado ou empilhamento, o que pode gerar erros graves na hora da separação ou carregamento.", tipo:"binario"},
-  {id:6, titulo:"Blocado retirado pela lateral", peso:5, desc:"O que avaliar: se a retirada incorreta de paletes deixando o blocado instável ou vulnerável a quedas e avarias.", tipo:"binario"},
-  {id:7, titulo:"Produtos sem identificação (sem etiqueta/etiqueta rasgada)", peso:5, desc:"O que avaliar: a presença e a legibilidade das etiquetas de identificação do palete/produto. Itens sem etiqueta ou com códigos de barras rasgados/borrados que impeçam a leitura do operador.", tipo:"binario"},
-  {id:8, titulo:"Organização da apanha", peso:10, desc:"O que avaliar: a situação da área de picking (separação). Avaliar se os produtos nas posições de apanha estão organizados, fáceis de separar e desobstruídos. Verificar paletes de retorno/reembalo posicionados de forma inadequada ou desnecessários impactando a separação.", tipo:"binario"},
-  {id:9, titulo:"Furo de FEFO", peso:10, desc:"O que avaliar: se a regra de validade está sendo respeitada (First Expired, First Out). Ocorre \"furo\" se um produto com validade mais próxima do vencimento foi deixado para trás enquanto uma data nova foi retirada antes.", tipo:"binario"},
-  {id:10, titulo:"Organização das gaiolas", peso:5, desc:"O que avaliar: se as gaiolas estão abastecidas de acordo com as etiquetas de identificação e se há materiais misturados nelas.", tipo:"binario"},
-  {id:11, titulo:"Espaçamento 50cm", peso:10, desc:"O que avaliar: se o espaçamento obrigatório de 50 cm entre os blocados está sendo respeitado.", tipo:"binario"},
-  {id:12, titulo:"Setor da apanha abastecida", peso:10, desc:"Avaliar se o setor de apanha está abastecido, parcialmente abastecido ou não abastecido.", tipo:"tres"}
+  {id:1, titulo:"Paletes fora de posição do blocado ou mal posicionado", peso:5,
+   desc:"O que avaliar: se o blocado está alinhado corretamente dentro das demarcações de faixa. Paletes tortos, desalinhados, fora de posição ou avançando nos corredores devem ser apontados."},
+  {id:2, titulo:"Organização 5S", peso:10,
+   desc:"O que avaliar: a limpeza e organização geral da área (ausência de lixo, poeira acumulada, fitas ou plásticos esticados no chão). Avalia se há senso de utilização e se tudo está limpo e em seu devido lugar."},
+  {id:3, titulo:"Paletes avariados", peso:10,
+   desc:"O que avaliar: as condições físicas das estruturas de madeira ou plástico dos paletes. Devem ser reportados paletes com ripas quebradas, pregos expostos, rachaduras graves ou qualquer sinal que comprometa a segurança do material."},
+  {id:4, titulo:"Bloqueio de equipamentos de emergência", peso:10,
+   desc:"O que avaliar: se o acesso a extintores de incêndio, hidrantes, macas, saídas de emergência e painéis elétricos está 100% livre. Nenhum objeto ou mercadoria pode estar obstruindo esses locais, mesmo que \"por instantes\"."},
+  {id:5, titulo:"Blocado misturado", peso:10,
+   desc:"O que avaliar: se existem produtos de SKUs (códigos/lotes) diferentes misturados no mesmo blocado ou empilhamento, o que pode gerar erros graves na hora da separação ou carregamento."},
+  {id:6, titulo:"Blocado retirado pela lateral", peso:5,
+   desc:"O que avaliar: se a retirada incorreta de paletes deixando o blocado instável ou vulnerável a quedas e avarias."},
+  {id:7, titulo:"Produtos sem identificação (sem etiqueta/etiqueta rasgada)", peso:5,
+   desc:"O que avaliar: a presença e a legibilidade das etiquetas de identificação do palete/produto. Itens sem etiqueta ou com códigos de barras rasgados/borrados que impeçam a leitura do operador."},
+  {id:8, titulo:"Organização da apanha", peso:10,
+   desc:"O que avaliar: a situação da área de picking (separação). Avaliar se os produtos nas posições de apanha estão organizados, fáceis de separar e desobstruídos. Verificar paletes de retorno/reembalo posicionados de forma inadequada ou desnecessários impactando a separação."},
+  {id:9, titulo:"Furo de FEFO", peso:10,
+   desc:"O que avaliar: se a regra de validade está sendo respeitada (First Expired, First Out). Ocorre \"furo\" se um produto com validade mais próxima do vencimento foi deixado para trás enquanto uma data nova foi retirada antes."},
+  {id:10, titulo:"Organização das gaiolas", peso:5,
+   desc:"O que avaliar: se as gaiolas estão abastecidas de acordo com as etiquetas de identificação e se há materiais misturados nelas."},
+  {id:11, titulo:"Espaçamento 50cm", peso:10,
+   desc:"O que avaliar: se o espaçamento obrigatório de 50 cm entre os blocados está sendo respeitado."},
+  {id:12, titulo:"Setor da apanha abastecida", peso:10,
+   desc:"O que avaliar: se o setor de apanha está abastecido, parcialmente abastecido ou não abastecido."}
 ];
 const PESO_TOTAL = CHECKLIST.reduce((s,i)=>s+i.peso,0);
+
+// ===================== GAUGE HELPER (signature element) =====================
+function gaugeSVG(percent, size=54, stroke=6){
+  const p = Math.max(0, Math.min(100, percent));
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (p/100) * c;
+  const color = p >= 80 ? "var(--ok)" : p >= 50 ? "var(--mid)" : "var(--bad)";
+  return `
+  <span class="gauge" style="width:${size}px;height:${size}px;">
+    <svg width="${size}" height="${size}">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="var(--line)" stroke-width="${stroke}" fill="none"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="${color}" stroke-width="${stroke}" fill="none"
+        stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+    </svg>
+    <span class="pct" style="font-size:${size*0.24}px; color:${color};">${p}%</span>
+  </span>`;
+}
 
 // ===================== RENDER CHECKLIST FORM =====================
 const checklistWrap = document.getElementById("checklistWrap");
@@ -284,22 +406,21 @@ CHECKLIST.forEach(item=>{
   itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null};
   const card = document.createElement("div");
   card.className = "item-card";
+  card.id = `itemcard-${item.id}`;
 
-  const statusButtons = item.tipo === "tres"
-    ? `<button type="button" class="status-btn ok" data-val="abastecido">Abastecido</button>
-       <button type="button" class="status-btn mid" data-val="parcial">Parcialmente abastecido</button>
-       <button type="button" class="status-btn bad" data-val="nao_abastecido">Não abastecido</button>`
-    : `<button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
-       <button type="button" class="status-btn bad" data-val="nao_conforme">Não conforme</button>`;
   card.innerHTML = `
     <div class="item-head">
       <div>
-        <div class="item-title">${item.id}. ${item.titulo}</div>
+        <div class="item-title"><span class="item-num">${String(item.id).padStart(2,"0")}</span>${item.titulo}</div>
         <div class="item-desc">${item.desc}</div>
       </div>
-      <div class="peso-chip">Peso ${item.peso}</div>
+      <div class="peso-chip">PESO ${item.peso}</div>
     </div>
-    <div class="status-row" data-item="${item.id}">${statusButtons}</div>
+    <div class="status-row" data-item="${item.id}">
+      <button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
+      <button type="button" class="status-btn mid" data-val="parcial">Parcialmente atendido</button>
+      <button type="button" class="status-btn bad" data-val="nao_conforme">Não conforme</button>
+    </div>
     <div class="item-extra">
       <div class="field">
         <label>Observação (opcional)</label>
@@ -323,6 +444,9 @@ checklistWrap.addEventListener("click", (e)=>{
   row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
   btn.classList.add("selected");
   itemState[itemId].status = btn.dataset.val;
+  const card = document.getElementById(`itemcard-${itemId}`);
+  card.classList.remove("state-conforme","state-parcial","state-nao_conforme");
+  card.classList.add(`state-${btn.dataset.val}`);
 });
 
 checklistWrap.addEventListener("input", (e)=>{
@@ -348,7 +472,7 @@ checklistWrap.addEventListener("change", (e)=>{
 
 document.getElementById("fData").valueAsDate = new Date();
 
-// ===================== SUBMIT & TOAST =====================
+// ===================== SUBMIT =====================
 function showToast(msg){
   const t = document.getElementById("toast");
   t.textContent = msg;
@@ -367,13 +491,13 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
 
   if(!data || !turno || !auditor || !area){
     msgEl.textContent = "Preencha data, turno, auditor e área.";
-    msgEl.style.color = "var(--danger)";
+    msgEl.style.color = "var(--bad)";
     return;
   }
   const semStatus = CHECKLIST.filter(i=>!itemState[i.id].status);
   if(semStatus.length){
     msgEl.textContent = "Preencha o status de todos os 12 itens do checklist.";
-    msgEl.style.color = "var(--danger)";
+    msgEl.style.color = "var(--bad)";
     return;
   }
 
@@ -392,15 +516,18 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
         await ref.put(st.evidenciaFile);
         url = await ref.getDownloadURL();
       }
-      const conforme = (st.status === "conforme" || st.status === "abastecido" || st.status === "parcial");
+      const conforme = (st.status === "conforme");
+      const scoreObtido = st.status === "conforme" ? item.peso
+                         : st.status === "parcial" ? item.peso / 2
+                         : 0;
       itemsPayload.push({
         id:item.id, titulo:item.titulo, peso:item.peso, status:st.status,
-        conforme, obs:st.obs || "", evidenciaURL:url
+        conforme, scoreObtido, obs:st.obs || "", evidenciaURL:url
       });
     }
 
-    const pesoConforme = itemsPayload.filter(i=>i.conforme).reduce((s,i)=>s+i.peso,0);
-    const percConformidade = Math.round((pesoConforme / PESO_TOTAL) * 100);
+    const pesoObtido = itemsPayload.reduce((s,i)=>s+i.scoreObtido,0);
+    const percConformidade = Math.round((pesoObtido / PESO_TOTAL) * 100);
     const naoConformidades = itemsPayload.filter(i=>!i.conforme).length;
 
     await db.collection(COLLECTION).add({
@@ -413,13 +540,13 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    msgEl.style.color = "var(--accent-2)";
+    msgEl.style.color = "var(--ok)";
     msgEl.textContent = "Auditoria salva com sucesso.";
     showToast("Auditoria registrada!");
     resetForm();
   }catch(err){
     console.error(err);
-    msgEl.style.color = "var(--danger)";
+    msgEl.style.color = "var(--bad)";
     msgEl.textContent = "Erro ao salvar: " + err.message;
   }finally{
     document.getElementById("btnSubmit").disabled = false;
@@ -436,6 +563,8 @@ function resetForm(){
     itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null};
     const row = checklistWrap.querySelector(`.status-row[data-item="${item.id}"]`);
     row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
+    const card = document.getElementById(`itemcard-${item.id}`);
+    card.classList.remove("state-conforme","state-parcial","state-nao_conforme");
     const thumb = document.getElementById("thumb-"+item.id);
     thumb.style.display = "none";
   });
@@ -443,7 +572,7 @@ function resetForm(){
   checklistWrap.querySelectorAll('input[type="file"]').forEach(f=>f.value="");
 }
 
-// ===================== TABS SWITCHERS =====================
+// ===================== TABS =====================
 const tabFormBtn = document.getElementById("tabFormBtn");
 const tabDashBtn = document.getElementById("tabDashBtn");
 const formSection = document.getElementById("formSection");
@@ -459,7 +588,7 @@ tabDashBtn.addEventListener("click", ()=>{
   loadDashboard();
 });
 
-// ===================== DASHBOARD MATH & CHARTS =====================
+// ===================== DASHBOARD =====================
 let allAudits = [];
 let filteredAudits = [];
 let chartEvolucao, chartTurno, chartItens;
@@ -488,6 +617,7 @@ function applyFilters(){
     if(status === "bad" && a.percConformidade >= 80) return false;
     return true;
   });
+
   renderKpis();
   renderCharts();
   renderTable();
@@ -501,6 +631,8 @@ function renderKpis(){
     ? Math.round(filteredAudits.reduce((s,a)=>s+a.percConformidade,0)/filteredAudits.length)
     : 0;
   document.getElementById("kpiConform").textContent = media + "%";
+  const card = document.getElementById("kpiConformCard");
+  card.style.borderLeft = "3px solid " + (media>=80?"var(--ok)":media>=50?"var(--mid)":"var(--bad)");
   document.getElementById("kpiNaoConform").textContent = filteredAudits.reduce((s,a)=>s+a.naoConformidades,0);
   document.getElementById("kpiPendentes").textContent = filteredAudits.filter(a=>a.statusAcao==="pendente").length;
 }
@@ -517,8 +649,8 @@ function renderCharts(){
   if(chartEvolucao) chartEvolucao.destroy();
   chartEvolucao = new Chart(document.getElementById("chartEvolucao"), {
     type:"line",
-    data:{ labels:dates, datasets:[{ label:"% Conformidade", data:avgByDate, borderColor:"#3aa1ff", backgroundColor:"rgba(58,161,255,0.15)", fill:true, tension:0.3 }]},
-    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} } }, plugins:{legend:{labels:{color:"#e7ecf7"}}} }
+    data:{ labels:dates, datasets:[{ label:"% Conformidade", data:avgByDate, borderColor:"#4f7cff", backgroundColor:"rgba(79,124,255,0.15)", fill:true, tension:0.3 }]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} } }, plugins:{legend:{labels:{color:"#eef1f6"}}} }
   });
 
   const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
@@ -528,8 +660,8 @@ function renderCharts(){
   if(chartTurno) chartTurno.destroy();
   chartTurno = new Chart(document.getElementById("chartTurno"), {
     type:"bar",
-    data:{ labels:turnos, datasets:[{ label:"Não conformidades", data:naoConfPorTurno, backgroundColor:"#ff5a67" }]},
-    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} } }, plugins:{legend:{display:false}} }
+    data:{ labels:turnos, datasets:[{ label:"Itens com desvio", data:naoConfPorTurno, backgroundColor:"#ff4757" }]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} } }, plugins:{legend:{display:false}} }
   });
 
   const desviosPorItem = {};
@@ -542,8 +674,8 @@ function renderCharts(){
   if(chartItens) chartItens.destroy();
   chartItens = new Chart(document.getElementById("chartItens"), {
     type:"bar",
-    data:{ labels:itemLabels, datasets:[{ label:"Desvios", data:itemData, backgroundColor:"#ffb648" }]},
-    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false, scales:{ x:{ ticks:{color:"#93a0bd"}, grid:{color:"#24314f"} }, y:{ ticks:{color:"#93a0bd", font:{size:11}}, grid:{color:"#24314f"} } }, plugins:{legend:{display:false}} }
+    data:{ labels:itemLabels, datasets:[{ label:"Desvios", data:itemData, backgroundColor:"#ffb020" }]},
+    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false, scales:{ x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, y:{ ticks:{color:"#8b95ab", font:{size:11}}, grid:{color:"#232a3a"} } }, plugins:{legend:{display:false}} }
   });
 }
 
@@ -551,18 +683,18 @@ function renderTable(){
   const tbody = document.getElementById("auditTableBody");
   tbody.innerHTML = "";
   document.getElementById("emptyState").style.display = filteredAudits.length ? "none" : "block";
+
   [...filteredAudits].reverse().forEach(a=>{
     const tr = document.createElement("tr");
-    const tagClass = a.percConformidade >= 80 ? "ok" : "bad";
     const acaoTag = a.statusAcao === "pendente" ? '<span class="tag pend">Pendente</span>'
                    : a.statusAcao === "concluida" ? '<span class="tag ok">Concluída</span>' : "—";
     tr.innerHTML = `
-      <td>${a.data}</td>
+      <td class="mono">${a.data}</td>
       <td>${a.turno}</td>
       <td>${a.auditor}</td>
       <td>${a.area}</td>
-      <td><span class="tag ${tagClass}">${a.percConformidade}%</span></td>
-      <td>${a.naoConformidades}</td>
+      <td><div class="gauge-row">${gaugeSVG(a.percConformidade, 36, 4)}</div></td>
+      <td class="mono">${a.naoConformidades}</td>
       <td>${acaoTag}</td>
       <td class="row-actions">
         ${a.statusAcao === "pendente" ? `<button class="secondary small" data-conclude="${a.id}">Concluir ação</button>` : ""}
@@ -581,11 +713,11 @@ document.getElementById("auditTableBody").addEventListener("click", async (e)=>{
   await loadDashboard();
 });
 
-// ===================== EXPORTS DADOS =====================
+// ===================== EXPORTS =====================
 document.getElementById("btnExportExcel").addEventListener("click", ()=>{
   const rows = filteredAudits.map(a=>({
     Data:a.data, Turno:a.turno, Auditor:a.auditor, Área:a.area,
-    "% Conformidade":a.percConformidade, "Não conformidades":a.naoConformidades,
+    "% Conformidade":a.percConformidade, "Itens com desvio":a.naoConformidades,
     "Status da ação":a.statusAcao, "Observações gerais":a.observacoesGerais,
     "Plano de ação":a.planoAcao
   }));
@@ -602,7 +734,7 @@ document.getElementById("btnExportPdf").addEventListener("click", ()=>{
   doc.text("Auditorias de Estoque - ALB", 14, 14);
   doc.autoTable({
     startY:20,
-    head:[["Data","Turno","Auditor","Área","% Conf.","Não conf.","Ação"]],
+    head:[["Data","Turno","Auditor","Área","% Conf.","Desvios","Ação"]],
     body: filteredAudits.map(a=>[a.data,a.turno,a.auditor,a.area,a.percConformidade+"%",a.naoConformidades,a.statusAcao]),
     styles:{fontSize:8}
   });
