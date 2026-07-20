@@ -177,7 +177,7 @@
                 <button class="btn-action" onclick="exportarTabelaExcel()" style="padding: 10px 15px; font-size: 10px; background: #107c41;">Exportar Excel</button>
             </div>
             <div class="wms-table-container">
-                <table class="wms-table">
+                <table class="wms-table" id="tabela-auditorias-print">
                     <thead>
                         <tr>
                             <th>Posição</th>
@@ -195,14 +195,16 @@
 </div>
 
 <script>
-    // Configurações do Firebase - Substitua com os dados obtidos da aba Web do Firebase Console
+    // Suas credenciais reais inseridas com sucesso
     const firebaseConfig = {
-        apiKey: "SUA_API_KEY_AQUI",
-        authDomain: "seu-projeto.firebaseapp.com",
-        projectId: "seu-projeto",
-        storageBucket: "seu-projeto.appspot.com",
-        messagingSenderId: "000000000000",
-        appId: "1:00000000:web:0000000000000"
+        apiKey: "AIzaSyCDv88ZkUdd8spsekIDtU-iMbAufqWKyzA",
+        authDomain: "auditoria-alb.firebaseapp.com",
+        databaseURL: "https://auditoria-alb-default-rtdb.firebaseio.com",
+        projectId: "auditoria-alb",
+        storageBucket: "auditoria-alb.firebasestorage.app",
+        messagingSenderId: "782871877045",
+        appId: "1:782871877045:web:5b1610725ab6adc832f5fc",
+        measurementId: "G-J932NK3MQ4"
     };
 
     // Inicialização segura do Firebase
@@ -231,7 +233,6 @@
     }
 
     function efetuarLogin() {
-        // Mock simples de validação visual para liberar o painel
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('app-screen').style.display = 'block';
         atualizarRelogio();
@@ -260,7 +261,6 @@
             return;
         }
 
-        // Salvamento direto no Firestore Database
         db.collection("auditorias").add({
             posicao: posicao,
             material: material,
@@ -283,7 +283,7 @@
         const tbody = document.getElementById('table-logs-body');
         tbody.innerHTML = '';
         
-        db.collection("auditorias").orderBy("dataHora", "desc").limit(10).get().then((querySnapshot) => {
+        db.collection("auditorias").orderBy("dataHora", "desc").limit(15).get().then((querySnapshot) => {
             document.getElementById('st-total').innerText = querySnapshot.size;
             querySnapshot.forEach((doc) => {
                 const data = doc.data();
@@ -292,11 +292,17 @@
                     <td><b>${data.posicao}</b></td>
                     <td>${data.material}</td>
                     <td>${data.quantidade}</td>
-                    <td>${data.dataHora ? new Date(data.dataHora.toDate()).toLocaleDateString('pt-BR') : 'Gravando...'}</td>
+                    <td>${data.dataHora ? new Date(data.dataHora.toDate()).toLocaleString('pt-BR') : 'Gravando...'}</td>
                 `;
                 tbody.appendChild(tr);
             });
         });
+    }
+
+    function exportarTabelaExcel() {
+        const table = document.getElementById('tabela-auditorias-print');
+        const wb = XLSX.utils.table_to_book(table, { sheet: "Auditorias" });
+        XLSX.writeFile(wb, "Relatorio_Auditoria_ALB.xlsx");
     }
 
     function inicializarGrafico() {
