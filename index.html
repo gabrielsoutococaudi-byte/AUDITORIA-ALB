@@ -16,28 +16,28 @@ const COLLECTION = "auditorias_estoque_alb";
 
 // ===================== CHECKLIST CONFIG =====================
 const CHECKLIST = [
-  {id:1, titulo:"Paletes fora de posição do blocado ou mal posicionado", peso:5, desc:"O que avaliar: se o blocado está alinhado corretamente dentro das demarcações de faixa. Paletes tortos, desalinhados, fora de posição ou avançando nos corredores devem ser apontados."}[cite: 72],
-  {id:2, titulo:"Organização 5S", peso:10, desc:"O que avaliar: a limpeza e organização geral da área (ausência de lixo, poeira acumulada, fitas ou plásticos esticados no chão). Avalia se há senso de utilização e se tudo está limpo e em seu devido lugar."}[cite: 72],
-  {id:3, titulo:"Paletes avariados", peso:10, desc:"O que avaliar: as condições físicas das estruturas de madeira ou plástico dos paletes. Devem ser reportados paletes com ripas quebradas, pregos expostos, rachaduras graves ou qualquer sinal que comprometa a segurança do material."}[cite: 73],
-  {id:4, titulo:"Bloqueio de equipamentos de emergência", peso:10, desc:"O que avaliar: se o acesso a extintores de incêndio, hidrantes, macas, saídas de emergência e painéis elétricos está 100% livre. Nenhum objeto ou mercadoria pode estar obstruindo esses locais, mesmo que \"por instantes\"."}[cite: 73, 74],
-  {id:5, titulo:"Blocado misturado", peso:10, desc:"O que avaliar: se existem produtos de SKUs (códigos/lotes) diferentes misturados no mesmo blocado ou empilhamento, o que pode gerar erros graves na hora da separação ou carregamento."}[cite: 74],
-  {id:6, titulo:"Blocado retirado pela lateral", peso:5, desc:"O que avaliar: se a retirada incorreta de paletes deixando o blocado instável ou vulnerável a quedas e avarias."}[cite: 74],
-  {id:7, titulo:"Produtos sem identificação (sem etiqueta/etiqueta rasgada)", peso:5, desc:"O que avaliar: a presença e a legibilidade das etiquetas de identificação do palete/produto. Itens sem etiqueta ou com códigos de barras rasgados/borrados que impeçam a leitura do operador."}[cite: 74, 75],
-  {id:8, titulo:"Organização da apanha", peso:10, desc:"O que avaliar: a situação da área de picking (separação). Avaliar se os produtos nas posições de apanha estão organizados, fáceis de separar e desobstruídos. Verificar paletes de retorno/reembalo posicionados de forma inadequada ou desnecessários impactando a separação."}[cite: 75, 76, 77],
-  {id:9, titulo:"Furo de FEFO", peso:10, desc:"O que avaliar: se a regra de validade está sendo respeitada (First Expired, First Out). Ocorre \"furo\" se um produto com validade mais próxima do vencimento foi deixado para trás enquanto uma data nova foi retirada antes."}[cite: 77, 78],
-  {id:10, titulo:"Organização das gaiolas", peso:5, desc:"O que avaliar: se as gaiolas estão abastecidas de acordo com as etiquetas de identificação e se há materiais misturados nelas."}[cite: 78],
-  {id:11, titulo:"Espaçamento 50cm", peso:10, desc:"O que avaliar: se o espaçamento obrigatório de 50 cm entre os blocados está sendo respeitado."}[cite: 78],
-  {id:12, titulo:"Setor da apanha abastecida", peso:10, desc:"O que avaliar: se o setor de apanha está abastecido, parcialmente abastecido ou não abastecido."} [cite: 78]
+  {id:1, titulo:"Paletes fora de posição do blocado ou mal posicionado", peso:5, desc:"O que avaliar: se o blocado está alinhado corretamente dentro das demarcações de faixa. Paletes tortos, desalinhados, fora de posição ou avançando nos corredores devem ser apontados."},
+  {id:2, titulo:"Organização 5S", peso:10, desc:"O que avaliar: a limpeza e organização geral da área (ausência de lixo, poeira acumulada, fitas ou plásticos esticados no chão). Avalia se há senso de utilização e se tudo está limpo e em seu devido lugar."},
+  {id:3, titulo:"Paletes avariados", peso:10, desc:"O que avaliar: as condições físicas das estruturas de madeira ou plástico dos paletes. Devem ser reportados paletes com ripas quebradas, pregos expostos, rachaduras graves ou qualquer sinal que comprometa a segurança do material."},
+  {id:4, titulo:"Bloqueio de equipamentos de emergência", peso:10, desc:"O que avaliar: se o acesso a extintores de incêndio, hidrantes, macas, saídas de emergência e painéis elétricos está 100% livre. Nenhum objeto ou mercadoria pode estar obstruindo esses locais, mesmo que \"por instantes\"."},
+  {id:5, titulo:"Blocado misturado", peso:10, desc:"O que avaliar: se existem produtos de SKUs (códigos/lotes) diferentes misturados no mesmo blocado ou empilhamento, o que pode gerar erros graves na hora da separação ou carregamento."},
+  {id:6, titulo:"Blocado retirado pela lateral", peso:5, desc:"O que avaliar: se a retirada incorreta de paletes deixando o blocado instável ou vulnerável a quedas e avarias."},
+  {id:7, titulo:"Produtos sem identificação (sem etiqueta/etiqueta rasgada)", peso:5, desc:"O que avaliar: a presença e a legibilidade das etiquetas de identificação do palete/produto. Itens sem etiqueta ou com códigos de barras rasgados/borrados que impeçam a leitura do operador."},
+  {id:8, titulo:"Organização da apanha", peso:10, desc:"O que avaliar: a situação da área de picking (separação). Avaliar se os produtos nas posições de apanha estão organizados, fáceis de separar e desobstruídos. Verificar paletes de retorno/reembalo posicionados de forma inadequada ou desnecessários impactando a separação."},
+  {id:9, titulo:"Furo de FEFO", peso:10, desc:"O que avaliar: se a regra de validade está sendo respeitada (First Expired, First Out). Ocorre \"furo\" se um produto com validade mais próxima do vencimento foi deixado para trás enquanto uma data nova foi retirada antes."},
+  {id:10, titulo:"Organização das gaiolas", peso:5, desc:"O que avaliar: se as gaiolas estão abastecidas de acordo com as etiquetas de identificação e se há materiais misturados nelas."},
+  {id:11, titulo:"Espaçamento 50cm", peso:10, desc:"O que avaliar: se o espaçamento obrigatório de 50 cm entre os blocados está sendo respeitado."},
+  {id:12, titulo:"Setor da apanha abastecida", peso:10, desc:"O que avaliar: se o setor de apanha está abastecido, parcialmente abastecido ou não abastecido."}
 ];
-const PESO_TOTAL = CHECKLIST.reduce((s,i)=>s+i.peso,0)[cite: 78, 79];
+const PESO_TOTAL = CHECKLIST.reduce((s,i)=>s+i.peso,0);
 
 // ===================== GAUGE HELPER =====================
 function gaugeSVG(percent, size=54, stroke=6){
-  const p = Math.max(0, Math.min(100, percent))[cite: 79];
-  const r = (size - stroke) / 2[cite: 79];
-  const c = 2 * Math.PI * r[cite: 79];
-  const offset = c - (p/100) * c[cite: 79];
-  const color = p >= 80 ? "var(--ok)" : p >= 50 ? "var(--mid)" : "var(--bad)"[cite: 79, 80];
+  const p = Math.max(0, Math.min(100, percent));
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (p/100) * c;
+  const color = p >= 80 ? "var(--ok)" : p >= 50 ? "var(--mid)" : "var(--bad)";
   return `
   <span class="gauge" style="width:${size}px;height:${size}px;">
     <svg width="${size}" height="${size}">
@@ -46,27 +46,17 @@ function gaugeSVG(percent, size=54, stroke=6){
         stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
     </svg>
     <span class="pct" style="font-size:${size*0.24}px; color:${color};">${p}%</span>
-  </span>`[cite: 80];
-}
-
-// Helper para converter imagem em Base64
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
-    reader.readAsDataURL(file);
-  });
+  </span>`;
 }
 
 // ===================== RENDER CHECKLIST FORM =====================
-const checklistWrap = document.getElementById("checklistWrap")[cite: 81];
-const itemState = {}[cite: 81];
+const checklistWrap = document.getElementById("checklistWrap");
+const itemState = {};
 CHECKLIST.forEach(item=>{
-  itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null}[cite: 82];
-  const card = document.createElement("div")[cite: 82];
-  card.className = "item-card"[cite: 82];
-  card.id = `itemcard-${item.id}`[cite: 82];
+  itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null, base64:null};
+  const card = document.createElement("div");
+  card.className = "item-card";
+  card.id = `itemcard-${item.id}`;
 
   card.innerHTML = `
     <div class="item-head">
@@ -92,123 +82,112 @@ CHECKLIST.forEach(item=>{
         <img class="thumb" id="thumb-${item.id}" style="display:none;">
       </div>
     </div>
-  `[cite: 82, 83, 84];
-  checklistWrap.appendChild(card)[cite: 84];
+  `;
+  checklistWrap.appendChild(card);
 });
 
 checklistWrap.addEventListener("click", (e)=>{
-  const btn = e.target.closest(".status-btn")[cite: 84];
-  if(!btn) return[cite: 84];
-  const row = btn.closest(".status-row")[cite: 84];
-  const itemId = row.dataset.item[cite: 84];
-  row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"))[cite: 84];
-  btn.classList.add("selected")[cite: 84];
-  itemState[itemId].status = btn.dataset.val[cite: 84];
-  const card = document.getElementById(`itemcard-${itemId}`)[cite: 84];
-  card.classList.remove("state-conforme","state-parcial","state-nao_conforme")[cite: 84];
-  card.classList.add(`state-${btn.dataset.val}`)[cite: 84];
+  const btn = e.target.closest(".status-btn");
+  if(!btn) return;
+  const row = btn.closest(".status-row");
+  const itemId = row.dataset.item;
+  row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  itemState[itemId].status = btn.dataset.val;
+  const card = document.getElementById(`itemcard-${itemId}`);
+  card.classList.remove("state-conforme","state-parcial","state-nao_conforme");
+  card.classList.add(`state-${btn.dataset.val}`);
 });
 
 checklistWrap.addEventListener("input", (e)=>{
   if(e.target.dataset.obs){
-    itemState[e.target.dataset.obs].obs = e.target.value[cite: 85];
+    itemState[e.target.dataset.obs].obs = e.target.value;
   }
 });
 
 checklistWrap.addEventListener("change", (e)=>{
   if(e.target.dataset.evidencia){
-    const id = e.target.dataset.evidencia[cite: 86];
-    const file = e.target.files[0][cite: 86];
-    itemState[id].evidenciaFile = file || null[cite: 86];
-    const thumb = document.getElementById("thumb-"+id)[cite: 86];
+    const id = e.target.dataset.evidencia;
+    const file = e.target.files[0];
+    itemState[id].evidenciaFile = file || null;
+    const thumb = document.getElementById("thumb-"+id);
     if(file){
-      thumb.src = URL.createObjectURL(file)[cite: 86];
-      thumb.style.display = "block"[cite: 86];
+      thumb.src = URL.createObjectURL(file);
+      thumb.style.display = "block";
+      // Converte a imagem local para Base64 para anexar direto no PDF sem erros de CORS
+      const reader = new FileReader();
+      reader.onload = (evt) => { itemState[id].base64 = evt.target.result; };
+      reader.readAsDataURL(file);
     } else {
-      thumb.style.display = "none"[cite: 86];
+      thumb.style.display = "none";
+      itemState[id].base64 = null;
     }
   }
 });
 
-document.getElementById("fData").valueAsDate = new Date()[cite: 87];
+document.getElementById("fData").valueAsDate = new Date();
 
-// ===================== SUBMIT & EXPORT PDF =====================
+// ===================== SUBMIT & EXPORT PDF AUTOMÁTICO =====================
 function showToast(msg){
-  const t = document.getElementById("toast")[cite: 87];
-  t.textContent = msg[cite: 87];
-  t.style.display = "block"[cite: 87];
-  setTimeout(()=>{ t.style.display="none"; }, 3200)[cite: 88];
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(()=>{ t.style.display="none"; }, 3200);
 }
 
 document.getElementById("btnSubmit").addEventListener("click", async ()=>{
-  const data = document.getElementById("fData").value[cite: 88];
-  const turno = document.getElementById("fTurno").value[cite: 88];
-  const auditor = document.getElementById("fAuditor").value.trim()[cite: 88];
-  const area = document.getElementById("fArea").value.trim()[cite: 88];
-  const obsGerais = document.getElementById("fObsGerais").value.trim()[cite: 88];
-  const planoAcao = document.getElementById("fPlanoAcao").value.trim()[cite: 88];
-  const msgEl = document.getElementById("formMsg")[cite: 88];
+  const data = document.getElementById("fData").value;
+  const turno = document.getElementById("fTurno").value;
+  const auditor = document.getElementById("fAuditor").value.trim();
+  const area = document.getElementById("fArea").value.trim();
+  const obsGerais = document.getElementById("fObsGerais").value.trim();
+  const planoAcao = document.getElementById("fPlanoAcao").value.trim();
+  const msgEl = document.getElementById("formMsg");
 
   if(!data || !turno || !auditor || !area){
-    msgEl.textContent = "Preencha data, turno, auditor e área."[cite: 88];
-    msgEl.style.color = "var(--bad)"[cite: 88];
+    msgEl.textContent = "Preencha data, turno, auditor e área.";
+    msgEl.style.color = "var(--bad)";
     return;
   }
-  const semStatus = CHECKLIST.filter(i=>!itemState[i.id].status)[cite: 88];
+  const semStatus = CHECKLIST.filter(i=>!itemState[i.id].status);
   if(semStatus.length){
-    msgEl.textContent = "Preencha o status de todos os 12 itens do checklist."[cite: 88];
-    msgEl.style.color = "var(--bad)"[cite: 88, 89];
+    msgEl.textContent = "Preencha o status de todos os 12 itens do checklist.";
+    msgEl.style.color = "var(--bad)";
     return;
   }
 
-  document.getElementById("btnSubmit").disabled = true[cite: 89];
-  msgEl.style.color = "var(--muted)"[cite: 89];
-  msgEl.textContent = "Processando imagens e salvando..."[cite: 89];
+  document.getElementById("btnSubmit").disabled = true;
+  msgEl.style.color = "var(--muted)";
+  msgEl.textContent = "Salvando no Firebase e gerando PDF...";
 
   try{
     const itemsPayload = [];
     for(const item of CHECKLIST){
-      const st = itemState[item.id][cite: 90];
+      const st = itemState[item.id];
       let url = null;
-      let base64 = null;
-
       if(st.evidenciaFile){
-        try {
-          base64 = await fileToBase64(st.evidenciaFile);
-          const path = `evidencias/${data}_${turno}_${item.id}_${Date.now()}.jpg`[cite: 91];
-          const ref = storage.ref().child(path)[cite: 91];
-          await ref.put(st.evidenciaFile)[cite: 92];
-          url = await ref.getDownloadURL()[cite: 92];
-        } catch(storageErr) {
-          console.warn("Erro ao subir imagem no Storage, mantendo base64 local para PDF:", storageErr);
-        }
+        const path = `evidencias/${data}_${turno}_${item.id}_${Date.now()}.jpg`;
+        const ref = storage.ref().child(path);
+        await ref.put(st.evidenciaFile);
+        url = await ref.getDownloadURL();
       }
-
-      const conforme = (st.status === "conforme")[cite: 92];
+      const conforme = (st.status === "conforme");
       const scoreObtido = st.status === "conforme" ? item.peso
                          : st.status === "parcial" ? item.peso / 2
-                         : 0[cite: 93, 94];
-
+                         : 0;
       itemsPayload.push({
-        id: item.id,
-        titulo: item.titulo,
-        peso: item.peso,
-        status: st.status,
-        conforme,
-        scoreObtido,
-        obs: st.obs || "",
-        evidenciaURL: url,
-        base64: base64
-      })[cite: 95];
+        id:item.id, titulo:item.titulo, peso:item.peso, status:st.status,
+        conforme, scoreObtido, obs:st.obs || "", evidenciaURL:url, base64: st.base64
+      });
     }
 
-    const pesoObtido = itemsPayload.reduce((s,i)=>s+i.scoreObtido,0)[cite: 96];
-    const percConformidade = Math.round((pesoObtido / PESO_TOTAL) * 100)[cite: 96];
-    const naoConformidades = itemsPayload.filter(i=>!i.conforme).length[cite: 96];
+    const pesoObtido = itemsPayload.reduce((s,i)=>s+i.scoreObtido,0);
+    const percConformidade = Math.round((pesoObtido / PESO_TOTAL) * 100);
+    const naoConformidades = itemsPayload.filter(i=>!i.conforme).length;
 
     const auditDataObj = {
       data, turno, auditor, area,
-      items: itemsPayload.map(({base64, ...rest}) => rest), // Não salva o base64 pesado no Firestore
+      items: itemsPayload,
       observacoesGerais: obsGerais,
       planoAcao,
       statusAcao: planoAcao ? "pendente" : "n/a",
@@ -216,26 +195,26 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    // 1. Salva no Firestore
-    await db.collection(COLLECTION).add(auditDataObj)[cite: 97];
+    // 1. Salva no Firebase
+    await db.collection(COLLECTION).add(auditDataObj);
 
-    // 2. Exporta o PDF automaticamente com as fotos locais
-    exportarPdfIndividual({...auditDataObj, items: itemsPayload});
+    // 2. Exporta em PDF Automaticamente
+    exportarPdfIndividual(auditDataObj);
 
-    msgEl.style.color = "var(--ok)"[cite: 98];
-    msgEl.textContent = "Auditoria salva com sucesso!"[cite: 98];
-    showToast("Auditoria registrada e PDF baixado!")[cite: 98];
-    resetForm()[cite: 98];
+    msgEl.style.color = "var(--ok)";
+    msgEl.textContent = "Auditoria salva e PDF exportado com sucesso!";
+    showToast("Auditoria registrada e PDF baixado!");
+    resetForm();
   }catch(err){
-    console.error(err)[cite: 98];
-    msgEl.style.color = "var(--bad)"[cite: 98];
-    msgEl.textContent = "Erro ao salvar: " + err.message[cite: 99];
+    console.error(err);
+    msgEl.style.color = "var(--bad)";
+    msgEl.textContent = "Erro ao salvar: " + err.message;
   }finally{
-    document.getElementById("btnSubmit").disabled = false[cite: 99];
+    document.getElementById("btnSubmit").disabled = false;
   }
 });
 
-// ===================== FUNÇÃO EXPORTAR PDF INDIVIDUAL =====================
+// ===================== FUNÇÃO DE GERAR PDF COMPLETO COM FOTOS E OBS =====================
 function exportarPdfIndividual(audit){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: "portrait" });
@@ -266,25 +245,22 @@ function exportarPdfIndividual(audit){
   let currentY = doc.lastAutoTable.finalY + 10;
 
   if (audit.observacoesGerais || audit.planoAcao) {
-    if (currentY > 240) { doc.addPage(); currentY = 20; }
+    if (currentY > 250) { doc.addPage(); currentY = 20; }
     doc.setFontSize(11);
     doc.text("Observações Gerais e Plano de Ação:", 14, currentY);
     currentY += 6;
     doc.setFontSize(9);
-    
     if(audit.observacoesGerais) {
-      const splitObs = doc.splitTextToSize(`Obs: ${audit.observacoesGerais}`, 180);
-      doc.text(splitObs, 14, currentY);
-      currentY += (splitObs.length * 5);
+      doc.text(`Obs: ${audit.observacoesGerais}`, 14, currentY);
+      currentY += 6;
     }
     if(audit.planoAcao) {
-      const splitPlano = doc.splitTextToSize(`Plano de Ação: ${audit.planoAcao}`, 180);
-      doc.text(splitPlano, 14, currentY);
-      currentY += (splitPlano.length * 5) + 4;
+      doc.text(`Plano de Ação: ${audit.planoAcao}`, 14, currentY);
+      currentY += 10;
     }
   }
 
-  // Anexa fotos das evidências
+  // Adiciona as fotos das evidências no PDF (caso existam)
   const comEvidencias = audit.items.filter(i => i.base64);
   if (comEvidencias.length > 0) {
     if (currentY > 200) { doc.addPage(); currentY = 20; }
@@ -297,10 +273,10 @@ function exportarPdfIndividual(audit){
       doc.setFontSize(9);
       doc.text(`Item ${item.id}: ${item.titulo}`, 14, currentY);
       try {
-        doc.addImage(item.base64, 14, currentY + 2, 50, 38);
+        doc.addImage(item.base64, "JPEG", 14, currentY + 2, 50, 38);
         currentY += 45;
       } catch (e) {
-        console.error("Erro ao desenhar imagem no PDF:", e);
+        console.error("Erro ao inserir imagem no PDF", e);
         currentY += 6;
       }
     });
@@ -310,136 +286,136 @@ function exportarPdfIndividual(audit){
 }
 
 function resetForm(){
-  document.getElementById("fTurno").value = ""[cite: 100];
-  document.getElementById("fAuditor").value = ""[cite: 100];
-  document.getElementById("fObsGerais").value = ""[cite: 100];
-  document.getElementById("fPlanoAcao").value = ""[cite: 100];
-  document.getElementById("fData").valueAsDate = new Date()[cite: 100];
+  document.getElementById("fTurno").value = "";
+  document.getElementById("fAuditor").value = "";
+  document.getElementById("fObsGerais").value = "";
+  document.getElementById("fPlanoAcao").value = "";
+  document.getElementById("fData").valueAsDate = new Date();
   CHECKLIST.forEach(item=>{
-    itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null}[cite: 101];
-    const row = checklistWrap.querySelector(`.status-row[data-item="${item.id}"]`)[cite: 101];
-    row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"))[cite: 101];
-    const card = document.getElementById(`itemcard-${item.id}`)[cite: 101];
-    card.classList.remove("state-conforme","state-parcial","state-nao_conforme")[cite: 101];
-    const thumb = document.getElementById("thumb-"+item.id)[cite: 101];
-    thumb.style.display = "none"[cite: 101];
+    itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null, base64:null};
+    const row = checklistWrap.querySelector(`.status-row[data-item="${item.id}"]`);
+    row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
+    const card = document.getElementById(`itemcard-${item.id}`);
+    card.classList.remove("state-conforme","state-parcial","state-nao_conforme");
+    const thumb = document.getElementById("thumb-"+item.id);
+    thumb.style.display = "none";
   });
-  checklistWrap.querySelectorAll("textarea").forEach(t=>t.value="")[cite: 102];
-  checklistWrap.querySelectorAll('input[type="file"]').forEach(f=>f.value="")[cite: 102];
+  checklistWrap.querySelectorAll("textarea").forEach(t=>t.value="");
+  checklistWrap.querySelectorAll('input[type="file"]').forEach(f=>f.value="");
 }
 
 // ===================== TABS =====================
-const tabFormBtn = document.getElementById("tabFormBtn")[cite: 102];
-const tabDashBtn = document.getElementById("tabDashBtn")[cite: 102];
-const formSection = document.getElementById("formSection")[cite: 102];
-const dashboardSection = document.getElementById("dashboardSection")[cite: 103];
+const tabFormBtn = document.getElementById("tabFormBtn");
+const tabDashBtn = document.getElementById("tabDashBtn");
+const formSection = document.getElementById("formSection");
+const dashboardSection = document.getElementById("dashboardSection");
 
 tabFormBtn.addEventListener("click", ()=>{
-  tabFormBtn.classList.add("active"); tabDashBtn.classList.remove("active")[cite: 103];
-  formSection.style.display = "block"; dashboardSection.style.display = "none"[cite: 103];
+  tabFormBtn.classList.add("active"); tabDashBtn.classList.remove("active");
+  formSection.style.display = "block"; dashboardSection.style.display = "none";
 });
 tabDashBtn.addEventListener("click", ()=>{
-  tabDashBtn.classList.add("active"); tabFormBtn.classList.remove("active")[cite: 104];
-  dashboardSection.style.display = "block"; formSection.style.display = "none"[cite: 104];
-  loadDashboard()[cite: 104];
+  tabDashBtn.classList.add("active"); tabFormBtn.classList.remove("active");
+  dashboardSection.style.display = "block"; formSection.style.display = "none";
+  loadDashboard();
 });
 
 // ===================== DASHBOARD =====================
-let allAudits = [][cite: 105];
-let filteredAudits = [][cite: 105];
-let chartEvolucao, chartTurno, chartItens[cite: 105];
+let allAudits = [];
+let filteredAudits = [];
+let chartEvolucao, chartTurno, chartItens;
 
 async function loadDashboard(){
-  const snap = await db.collection(COLLECTION).orderBy("data","asc").get()[cite: 106];
-  allAudits = snap.docs.map(d=>({id:d.id, ...d.data()}))[cite: 106];
-  applyFilters()[cite: 106];
+  const snap = await db.collection(COLLECTION).orderBy("data","asc").get();
+  allAudits = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  applyFilters();
 }
 
 function applyFilters(){
-  const de = document.getElementById("fltDe").value[cite: 107];
-  const ate = document.getElementById("fltAte").value[cite: 107];
-  const turno = document.getElementById("fltTurno").value[cite: 107];
-  const area = document.getElementById("fltArea").value.trim().toLowerCase()[cite: 107];
-  const auditor = document.getElementById("fltAuditor").value.trim().toLowerCase()[cite: 108];
-  const status = document.getElementById("fltStatus").value[cite: 108];
+  const de = document.getElementById("fltDe").value;
+  const ate = document.getElementById("fltAte").value;
+  const turno = document.getElementById("fltTurno").value;
+  const area = document.getElementById("fltArea").value.trim().toLowerCase();
+  const auditor = document.getElementById("fltAuditor").value.trim().toLowerCase();
+  const status = document.getElementById("fltStatus").value;
 
   filteredAudits = allAudits.filter(a=>{
-    if(de && a.data < de) return false[cite: 108];
-    if(ate && a.data > ate) return false[cite: 108];
-    if(turno && a.turno !== turno) return false[cite: 108];
-    if(area && !(a.area||"").toLowerCase().includes(area)) return false[cite: 108];
-    if(auditor && !(a.auditor||"").toLowerCase().includes(auditor)) return false[cite: 108];
-    if(status === "ok" && a.percConformidade < 80) return false[cite: 108];
-    if(status === "bad" && a.percConformidade >= 80) return false[cite: 108];
-    return true[cite: 108];
+    if(de && a.data < de) return false;
+    if(ate && a.data > ate) return false;
+    if(turno && a.turno !== turno) return false;
+    if(area && !(a.area||"").toLowerCase().includes(area)) return false;
+    if(auditor && !(a.auditor||"").toLowerCase().includes(auditor)) return false;
+    if(status === "ok" && a.percConformidade < 80) return false;
+    if(status === "bad" && a.percConformidade >= 80) return false;
+    return true;
   });
-  renderKpis()[cite: 109];
-  renderCharts()[cite: 109];
-  renderTable()[cite: 109];
+  renderKpis();
+  renderCharts();
+  renderTable();
 }
 
-document.getElementById("btnFilter").addEventListener("click", applyFilters)[cite: 109];
+document.getElementById("btnFilter").addEventListener("click", applyFilters);
 
 function renderKpis(){
-  document.getElementById("kpiTotal").textContent = filteredAudits.length[cite: 109];
+  document.getElementById("kpiTotal").textContent = filteredAudits.length;
   const media = filteredAudits.length
-    ? Math.round(filteredAudits.reduce((s,a)=>s+a.percConformidade,0)/filteredAudits.length) [cite: 110]
-    : 0[cite: 110];
-  document.getElementById("kpiConform").textContent = media + "%"[cite: 110];
-  const card = document.getElementById("kpiConformCard")[cite: 110];
-  card.style.borderLeft = "3px solid " + (media>=80?"var(--ok)":media>=50?"var(--mid)":"var(--bad)")[cite: 111];
-  document.getElementById("kpiNaoConform").textContent = filteredAudits.reduce((s,a)=>s+a.naoConformidades,0)[cite: 111];
-  document.getElementById("kpiPendentes").textContent = filteredAudits.filter(a=>a.statusAcao==="pendente").length[cite: 111];
+    ? Math.round(filteredAudits.reduce((s,a)=>s+a.percConformidade,0)/filteredAudits.length)
+    : 0;
+  document.getElementById("kpiConform").textContent = media + "%";
+  const card = document.getElementById("kpiConformCard");
+  card.style.borderLeft = "3px solid " + (media>=80?"var(--ok)":media>=50?"var(--mid)":"var(--bad)");
+  document.getElementById("kpiNaoConform").textContent = filteredAudits.reduce((s,a)=>s+a.naoConformidades,0);
+  document.getElementById("kpiPendentes").textContent = filteredAudits.filter(a=>a.statusAcao==="pendente").length;
 }
 
 function renderCharts(){
-  const byDate = {}[cite: 112];
+  const byDate = {};
   filteredAudits.forEach(a=>{
-    if(!byDate[a.data]) byDate[a.data] = [][cite: 112];
-    byDate[a.data].push(a.percConformidade)[cite: 112];
+    if(!byDate[a.data]) byDate[a.data] = [];
+    byDate[a.data].push(a.percConformidade);
   });
-  const dates = Object.keys(byDate).sort()[cite: 112];
-  const avgByDate = dates.map(d=> Math.round(byDate[d].reduce((s,v)=>s+v,0)/byDate[d].length) )[cite: 113];
+  const dates = Object.keys(byDate).sort();
+  const avgByDate = dates.map(d=> Math.round(byDate[d].reduce((s,v)=>s+v,0)/byDate[d].length) );
 
-  if(chartEvolucao) chartEvolucao.destroy()[cite: 113];
+  if(chartEvolucao) chartEvolucao.destroy();
   chartEvolucao = new Chart(document.getElementById("chartEvolucao"), {
     type:"line",
     data:{ labels:dates, datasets:[{ label:"% Conformidade", data:avgByDate, borderColor:"#4f7cff", backgroundColor:"rgba(79,124,255,0.15)", fill:true, tension:0.3 }]},
     options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} } }, plugins:{legend:{labels:{color:"#eef1f6"}}} }
-  })[cite: 113];
-  const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"][cite: 114];
+  });
+  const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
   const naoConfPorTurno = turnos.map(t=>
-    filteredAudits.filter(a=>a.turno===t).reduce((s,a)=>s+a.naoConformidades,0) [cite: 114]
+    filteredAudits.filter(a=>a.turno===t).reduce((s,a)=>s+a.naoConformidades,0)
   );
-  if(chartTurno) chartTurno.destroy()[cite: 114];
+  if(chartTurno) chartTurno.destroy();
   chartTurno = new Chart(document.getElementById("chartTurno"), {
     type:"bar",
     data:{ labels:turnos, datasets:[{ label:"Itens com desvio", data:naoConfPorTurno, backgroundColor:"#ff4757" }]},
     options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} } }, plugins:{legend:{display:false}} }
-  })[cite: 115];
-  const desviosPorItem = {}[cite: 116];
-  CHECKLIST.forEach(i=>desviosPorItem[i.id]=0)[cite: 116];
-  filteredAudits.forEach(a=>{
-    (a.items||[]).forEach(it=>{ if(!it.conforme) desviosPorItem[it.id] = (desviosPorItem[it.id]||0)+1; })[cite: 116];
   });
-  const itemLabels = CHECKLIST.map(i=>`${i.id}. ${i.titulo.slice(0,28)}${i.titulo.length>28?"…":""}`)[cite: 117];
-  const itemData = CHECKLIST.map(i=>desviosPorItem[i.id])[cite: 117];
-  if(chartItens) chartItens.destroy()[cite: 117];
+  const desviosPorItem = {};
+  CHECKLIST.forEach(i=>desviosPorItem[i.id]=0);
+  filteredAudits.forEach(a=>{
+    (a.items||[]).forEach(it=>{ if(!it.conforme) desviosPorItem[it.id] = (desviosPorItem[it.id]||0)+1; });
+  });
+  const itemLabels = CHECKLIST.map(i=>`${i.id}. ${i.titulo.slice(0,28)}${i.titulo.length>28?"…":""}`);
+  const itemData = CHECKLIST.map(i=>desviosPorItem[i.id]);
+  if(chartItens) chartItens.destroy();
   chartItens = new Chart(document.getElementById("chartItens"), {
     type:"bar",
     data:{ labels:itemLabels, datasets:[{ label:"Desvios", data:itemData, backgroundColor:"#ffb020" }]},
     options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false, scales:{ x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, y:{ ticks:{color:"#8b95ab", font:{size:11}}, grid:{color:"#232a3a"} } }, plugins:{legend:{display:false}} }
-  })[cite: 118];
+  });
 }
 
 function renderTable(){
-  const tbody = document.getElementById("auditTableBody")[cite: 119];
-  tbody.innerHTML = ""[cite: 119];
-  document.getElementById("emptyState").style.display = filteredAudits.length ? "none" : "block"[cite: 119];
+  const tbody = document.getElementById("auditTableBody");
+  tbody.innerHTML = "";
+  document.getElementById("emptyState").style.display = filteredAudits.length ? "none" : "block";
   [...filteredAudits].reverse().forEach(a=>{
-    const tr = document.createElement("tr")[cite: 120];
-    const acaoTag = a.statusAcao === "pendente" ? '<span class="tag pend">Pendente</span>' [cite: 120]
-                   : a.statusAcao === "concluida" ? '<span class="tag ok">Concluída</span>' : "—"[cite: 120];
+    const tr = document.createElement("tr");
+    const acaoTag = a.statusAcao === "pendente" ? '<span class="tag pend">Pendente</span>'
+                   : a.statusAcao === "concluida" ? '<span class="tag ok">Concluída</span>' : "—";
     tr.innerHTML = `
       <td class="mono">${a.data}</td>
       <td>${a.turno}</td>
@@ -451,45 +427,45 @@ function renderTable(){
       <td class="row-actions">
         ${a.statusAcao === "pendente" ? `<button class="secondary small" data-conclude="${a.id}">Concluir ação</button>` : ""}
       </td>
-    `[cite: 120, 121];
-    tbody.appendChild(tr)[cite: 121];
+    `;
+    tbody.appendChild(tr);
   });
 }
 
 document.getElementById("auditTableBody").addEventListener("click", async (e)=>{
-  const btn = e.target.closest("[data-conclude]")[cite: 122];
-  if(!btn) return[cite: 122];
-  const id = btn.dataset.conclude[cite: 122];
-  await db.collection(COLLECTION).doc(id).update({statusAcao:"concluida"})[cite: 122];
-  showToast("Ação marcada como concluída.")[cite: 122];
-  await loadDashboard()[cite: 122];
+  const btn = e.target.closest("[data-conclude]");
+  if(!btn) return;
+  const id = btn.dataset.conclude;
+  await db.collection(COLLECTION).doc(id).update({statusAcao:"concluida"});
+  showToast("Ação marcada como concluída.");
+  await loadDashboard();
 });
 
-// ===================== EXPORTS =====================
+// ===================== EXPORTS PAINEL =====================
 document.getElementById("btnExportExcel").addEventListener("click", ()=>{
   const rows = filteredAudits.map(a=>({
     Data:a.data, Turno:a.turno, Auditor:a.auditor, Área:a.area,
     "% Conformidade":a.percConformidade, "Itens com desvio":a.naoConformidades,
     "Status da ação":a.statusAcao, "Observações gerais":a.observacoesGerais,
     "Plano de ação":a.planoAcao
-  }))[cite: 123];
-  const ws = XLSX.utils.json_to_sheet(rows)[cite: 123];
-  const wb = XLSX.utils.book_new()[cite: 123];
-  XLSX.utils.book_append_sheet(wb, ws, "Auditorias")[cite: 123];
-  XLSX.writeFile(wb, `auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.xlsx`)[cite: 123];
+  }));
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Auditorias");
+  XLSX.writeFile(wb, `auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.xlsx`);
 });
 
 document.getElementById("btnExportPdf").addEventListener("click", ()=>{
-  const { jsPDF } = window.jspdf[cite: 124];
-  const doc = new jsPDF({orientation:"landscape"})[cite: 124];
-  doc.setFontSize(14)[cite: 124];
-  doc.text("Auditorias de Estoque - ALB", 14, 14)[cite: 124];
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:"landscape"});
+  doc.setFontSize(14);
+  doc.text("Auditorias de Estoque - ALB", 14, 14);
   doc.autoTable({
     startY:20,
     head:[["Data","Turno","Auditor","Área","% Conf.","Desvios","Ação"]],
     body: filteredAudits.map(a=>[a.data,a.turno,a.auditor,a.area,a.percConformidade+"%",a.naoConformidades,a.statusAcao]),
     styles:{fontSize:8}
-  })[cite: 124];
-  doc.save(`auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.pdf`)[cite: 124];
+  });
+  doc.save(`auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.pdf`);
 });
 </script>
