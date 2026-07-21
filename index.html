@@ -465,12 +465,20 @@ checklistWrap.addEventListener("change", (e)=>{
     if(file){
       thumb.src = URL.createObjectURL(file);
       thumb.style.display = "block";
-      // Convert file to base64 for PDF embedding
-      const reader = new FileReader();
-      reader.onload = function(evt){
-        itemState[id].evidenciaBase64 = evt.target.result;
-      };
-      reader.readAsDataURL(file);
+      // Convert file to base64 immediately for PDF embedding (fallback if Firebase upload fails)
+      try{
+        const reader = new FileReader();
+        reader.onload = function(evt){
+          itemState[id].evidenciaBase64 = evt.target.result;
+          console.log("Imagem base64 pronta para item", id);
+        };
+        reader.onerror = function(){
+          console.warn("Erro ao converter imagem para base64 (item", id, ")");
+        };
+        reader.readAsDataURL(file);
+      }catch(e){
+        console.warn("Erro FileReader (item", id, "):", e);
+      }
     } else {
       thumb.style.display = "none";
     }
@@ -749,13 +757,26 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
       let url = null;
       let base64 = st.evidenciaBase64;
       if(st.evidenciaFile){
-        const path = `evidencias/${data}_${turno}_${item.id}_${Date.now()}.jpg`;
-        const ref = storage.ref().child(path);
-        await ref.put(st.evidenciaFile);
-        url = await ref.getDownloadURL();
+        // Upload to Firebase Storage with error handling
+        try{
+          const path = `evidencias/${data}_${turno}_${item.id}_${Date.now()}.jpg`;
+          const ref = storage.ref().child(path);
+          const uploadTask = ref.put(st.evidenciaFile);
+          // Wait with timeout (15 seconds max per file)
+          url = await Promise.race([
+            uploadTask.then(snap => snap.ref.getDownloadURL()),
+            new Promise((_, reject) => setTimeout(()=> reject(new Error("Timeout upload imagem")), 15000))
+          ]);
+          showToast(`Imagem ${String(item.id).padStart(2,"0")} enviada ao Firebase.`);
+        }catch(uploadErr){
+          console.warn(`Falha ao enviar imagem do item ${item.id}:`, uploadErr);
+          url = null;
+          // If upload failed, we still have base64 for the PDF
+        }
         // If base64 not available from FileReader, convert now
         if(!base64){
-          base64 = await fileToBase64(st.evidenciaFile);
+          try{ base64 = await fileToBase64(st.evidenciaFile); }
+          catch(e){ console.warn("Erro base64 item", item.id, e); base64 = null; }
         }
       }
       const conforme = (st.status === "conforme");
@@ -792,8 +813,10 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
     showToast("Auditoria registrada!");
 
     // AUTO-GENERATE AND DOWNLOAD PDF
-    showToast("Gerando PDF com evidências...");
+    msgEl.textContent = "Gerando PDF com evidências...";
+    msgEl.style.color = "var(--muted)";
     await generateAuditPDF(auditData, imagesMap);
+    msgEl.textContent = "PDF gerado com sucesso!";
     showToast("Auditoria salva e PDF baixado com sucesso!");
 
     resetForm();
