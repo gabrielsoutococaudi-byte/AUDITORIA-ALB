@@ -489,7 +489,10 @@ async function compressImage(file) {
       img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 1000;
+        // Dimensionado para o tamanho em que a foto realmente aparece no
+        // PDF (~80mm de largura) — isso é suficiente para boa nitidez e
+        // deixa a geração do PDF (e o download) bem mais rápidos.
+        const MAX_WIDTH = 720;
         let width = img.width;
         let height = img.height;
 
@@ -505,7 +508,7 @@ async function compressImage(file) {
 
         canvas.toBlob((blob) => {
           resolve(blob);
-        }, 'image/jpeg', 0.6);
+        }, 'image/jpeg', 0.5);
       };
     };
   });
@@ -910,6 +913,17 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   if(!data || !turno || !auditor) return alert("Preencha os campos obrigatórios!");
   if(CHECKLIST.some(i => !itemState[i.id].status)) return alert("Responda todo o checklist!");
 
+  // Feedback imediato: trava o botão e avisa que está processando ANTES de
+  // montar o PDF, e cede o controle ao navegador (dupla espera por frame)
+  // para garantir que essa mudança apareça na tela antes do trabalho pesado
+  // e síncrono de montagem do PDF começar.
+  const btn = document.getElementById("btnSubmit");
+  const msg = document.getElementById("formMsg");
+  btn.disabled = true;
+  btn.textContent = "Gerando PDF...";
+  msg.textContent = "Montando o relatório, o download começa em instantes...";
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
   const snapshotItems = [];
   const imagesMap = {};
   let pesoObtido = 0;
@@ -939,6 +953,7 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
 
   const doc = generateAuditPDF(auditData, imagesMap);
   doc.save(`Auditoria_UR_${auditData.data}.pdf`);
+  document.getElementById("formMsg").textContent = "✓ PDF baixado!";
   showToast("✓ PDF Gerado! Salvando dados em segundo plano...");
 
   const pdfBlob = doc.output('blob');
