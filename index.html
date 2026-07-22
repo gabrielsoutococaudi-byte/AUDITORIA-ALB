@@ -290,16 +290,7 @@
     <div class="grid cols-4">
       <div class="card kpi" id="kpiConformCard"><div><div class="val" id="kpiConform">0%</div><div class="lbl">Conformidade média</div></div></div>
       <div class="card kpi"><div><div class="val" id="kpiTotal">0</div><div class="lbl">Auditorias realizadas</div></div></div>
-      <div class="card kpi"><div><div class="val" id="kpiNaoConform">0</div><div class="lbl">Itens com desvio</div></div></div>
-      <div class="card kpi"><div><div class="val" id="kpiPendentes">0</div><div class="lbl">Ações pendentes</div></div></div>
-    </div>
-
-    <div class="grid cols-2">
-      <div class="card">
-        <h2 class="section-title">Evolução da conformidade</h2>
-        <div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div>
-      </div>
-      <div class="card">
+      <div class="card kpi">
         <h2 class="section-title">Não conformidades por turno</h2>
         <div class="chart-wrap"><canvas id="chartTurno"></canvas></div>
       </div>
@@ -498,7 +489,7 @@ function fileToBase64(file){
 }
 
 function urlToBase64(url){
-  return new Promise(async(resolve, reject)=>{
+  return new Promise(async (resolve, reject)=>{
     try{
       const resp = await fetch(url);
       const blob = await resp.blob();
@@ -752,45 +743,49 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
     const snapshotItems = [];
     const imagesMap = {};
     
-    for(const item of CHECKLIST){
+    // UPLOAD IMAGES IN PARALLEL TO SPEED UP
+    const uploadPromises = CHECKLIST.map(async (item) => {
       const st = itemState[item.id];
       let url = null;
       let base64 = st.evidenciaBase64;
+      
       if(st.evidenciaFile){
-        // Upload to Firebase Storage with error handling
         try{
           const path = `evidencias/${data}_${turno}_${item.id}_${Date.now()}.jpg`;
           const ref = storage.ref().child(path);
           const uploadTask = ref.put(st.evidenciaFile);
-          // Wait with timeout (15 seconds max per file)
           url = await Promise.race([
             uploadTask.then(snap => snap.ref.getDownloadURL()),
-            new Promise((_, reject) => setTimeout(()=> reject(new Error("Timeout upload imagem")), 15000))
+            new Promise((_, reject) => setTimeout(()=> reject(new Error("Timeout upload")), 10000))
           ]);
-          showToast(`Imagem ${String(item.id).padStart(2,"0")} enviada ao Firebase.`);
         }catch(uploadErr){
-          console.warn(`Falha ao enviar imagem do item ${item.id}:`, uploadErr);
+          console.warn(`Falha upload item ${item.id}:`, uploadErr);
           url = null;
-          // If upload failed, we still have base64 for the PDF
         }
-        // If base64 not available from FileReader, convert now
-        if(!base64){
-          try{ base64 = await fileToBase64(st.evidenciaFile); }
-          catch(e){ console.warn("Erro base64 item", item.id, e); base64 = null; }
+        if(!base64) {
+           try{ base64 = await fileToBase64(st.evidenciaFile); } catch(e){}
         }
       }
-      const conforme = (st.status === "conforme");
+
       const scoreObtido = st.status === "conforme" ? item.peso
                          : st.status === "parcial" ? item.peso / 2
                          : 0;
-      snapshotItems.push({
-        id:item.id, titulo:item.titulo, peso:item.peso, status:st.status,
-        conforme, scoreObtido, obs:st.obs || "", evidenciaURL:url
-      });
-      if(base64){
-        imagesMap[item.id] = base64;
-      }
-    }
+      
+      return {
+        itemData: {
+          id:item.id, titulo:item.titulo, peso:item.peso, status:st.status,
+          conforme: (st.status === "conforme"), scoreObtido, obs:st.obs || "", evidenciaURL:url
+        },
+        base64,
+        id: item.id
+      };
+    });
+
+    const results = await Promise.all(uploadPromises);
+    results.forEach(res => {
+      snapshotItems.push(res.itemData);
+      if(res.base64) imagesMap[res.id] = res.base64;
+    });
 
     const pesoObtido = snapshotItems.reduce((s,i)=>s+i.scoreObtido,0);
     const percConformidade = Math.round((pesoObtido / PESO_TOTAL) * 100);
@@ -813,12 +808,9 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
     showToast("Auditoria registrada!");
 
     // AUTO-GENERATE AND DOWNLOAD PDF
-    msgEl.textContent = "Gerando PDF com evidências...";
-    msgEl.style.color = "var(--muted)";
-    await generateAuditPDF(auditData, imagesMap);
-    msgEl.textContent = "PDF gerado com sucesso!";
-    showToast("Auditoria salva e PDF baixado com sucesso!");
-
+    msgEl.textContent = "Gerando PDF...";
+    generateAuditPDF(auditData, imagesMap); // Don't await PDF to let user continue
+    
     resetForm();
   }catch(err){
     console.error(err);
@@ -887,153 +879,140 @@ function applyFilters(){
     if(de && a.data < de) return false;
     if(ate && a.data > ate) return false;
     if(turno && a.turno !== turno) return false;
-    if(area && !(a.area||"").toLowerCase().includes(area)) return false;
-    if(auditor && !(a.auditor||"").toLowerCase().includes(auditor)) return false;
+    if(area && !a.area.toLowerCase().includes(area)) return false;
+    if(auditor && !a.auditor.toLowerCase().includes(auditor)) return false;
     if(status === "ok" && a.percConformidade < 80) return false;
     if(status === "bad" && a.percConformidade >= 80) return false;
     return true;
   });
 
-  renderKpis();
-  renderCharts();
-  renderTable();
+  renderDashboard();
 }
 
-document.getElementById("btnFilter").addEventListener("click", applyFilters);
+function renderDashboard(){
+  const total = filteredAudits.length;
+  const avg = total ? Math.round(filteredAudits.reduce((s,a)=>s+a.percConformidade,0)/total) : 0;
+  
+  document.getElementById("kpiTotal").textContent = total;
+  document.getElementById("kpiConform").textContent = avg + "%";
+  document.getElementById("kpiConformCard").style.borderLeft = `4px solid ${avg>=80?'var(--ok)':avg>=50?'var(--mid)':'var(--bad)'}`;
 
-function renderKpis(){
-  document.getElementById("kpiTotal").textContent = filteredAudits.length;
-  const media = filteredAudits.length
-    ? Math.round(filteredAudits.reduce((s,a)=>s+a.percConformidade,0)/filteredAudits.length)
-    : 0;
-  document.getElementById("kpiConform").textContent = media + "%";
-  const card = document.getElementById("kpiConformCard");
-  card.style.borderLeft = "3px solid " + (media>=80?"var(--ok)":media>=50?"var(--mid)":"var(--bad)");
-  document.getElementById("kpiNaoConform").textContent = filteredAudits.reduce((s,a)=>s+a.naoConformidades,0);
-  document.getElementById("kpiPendentes").textContent = filteredAudits.filter(a=>a.statusAcao==="pendente").length;
-}
-
-function renderCharts(){
-  const byDate = {};
-  filteredAudits.forEach(a=>{
-    if(!byDate[a.data]) byDate[a.data] = [];
-    byDate[a.data].push(a.percConformidade);
-  });
-  const dates = Object.keys(byDate).sort();
-  const avgByDate = dates.map(d=> Math.round(byDate[d].reduce((s,v)=>s+v,0)/byDate[d].length) );
-
-  if(chartEvolucao) chartEvolucao.destroy();
-  chartEvolucao = new Chart(document.getElementById("chartEvolucao"), {
-    type:"line",
-    data:{ labels:dates, datasets:[{ label:"% Conformidade", data:avgByDate, borderColor:"#4f7cff", backgroundColor:"rgba(79,124,255,0.15)", fill:true, tension:0.3 }]},
-    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} } }, plugins:{legend:{labels:{color:"#eef1f6"}}} }
-  });
-
-  const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
-  const naoConfPorTurno = turnos.map(t=>
-    filteredAudits.filter(a=>a.turno===t).reduce((s,a)=>s+a.naoConformidades,0)
-  );
-  if(chartTurno) chartTurno.destroy();
-  chartTurno = new Chart(document.getElementById("chartTurno"), {
-    type:"bar",
-    data:{ labels:turnos, datasets:[{ label:"Itens com desvio", data:naoConfPorTurno, backgroundColor:"#ff4757" }]},
-    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} } }, plugins:{legend:{display:false}} }
-  });
-
-  const desviosPorItem = {};
-  CHECKLIST.forEach(i=>desviosPorItem[i.id]=0);
-  filteredAudits.forEach(a=>{
-    (a.items||[]).forEach(it=>{ if(!it.conforme) desviosPorItem[it.id] = (desviosPorItem[it.id]||0)+1; });
-  });
-  const itemLabels = CHECKLIST.map(i=>`${i.id}. ${i.titulo.slice(0,28)}${i.titulo.length>28?"…":""}`);
-  const itemData = CHECKLIST.map(i=>desviosPorItem[i.id]);
-  if(chartItens) chartItens.destroy();
-  chartItens = new Chart(document.getElementById("chartItens"), {
-    type:"bar",
-    data:{ labels:itemLabels, datasets:[{ label:"Desvios", data:itemData, backgroundColor:"#ffb020" }]},
-    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false, scales:{ x:{ ticks:{color:"#8b95ab"}, grid:{color:"#232a3a"} }, y:{ ticks:{color:"#8b95ab", font:{size:11}}, grid:{color:"#232a3a"} } }, plugins:{legend:{display:false}} }
-  });
-}
-
-function renderTable(){
   const tbody = document.getElementById("auditTableBody");
   tbody.innerHTML = "";
-  document.getElementById("emptyState").style.display = filteredAudits.length ? "none" : "block";
+  document.getElementById("emptyState").style.display = total ? "none" : "block";
 
-  [...filteredAudits].reverse().forEach(a=>{
+  filteredAudits.slice().reverse().forEach(a=>{
     const tr = document.createElement("tr");
-    const acaoTag = a.statusAcao === "pendente" ? '<span class="tag pend">Pendente</span>'
-                   : a.statusAcao === "concluida" ? '<span class="tag ok">Concluída</span>' : "—";
+    const dtStr = a.data.split("-").reverse().join("/");
+    const statusClass = a.percConformidade >= 80 ? "ok" : a.percConformidade >= 50 ? "pend" : "bad";
+    
     tr.innerHTML = `
-      <td class="mono">${a.data}</td>
+      <td class="mono">${dtStr}</td>
       <td>${a.turno}</td>
       <td>${a.auditor}</td>
       <td>${a.area}</td>
-      <td><div class="gauge-row">${gaugeSVG(a.percConformidade, 36, 4)}</div></td>
+      <td><span class="tag ${statusClass}">${a.percConformidade}%</span></td>
       <td class="mono">${a.naoConformidades}</td>
-      <td>${acaoTag}</td>
+      <td><span class="tag ${a.statusAcao==='pendente'?'bad':'ok'}">${a.statusAcao}</span></td>
       <td class="row-actions">
-        ${a.statusAcao === "pendente" ? `<button class="secondary small" data-conclude="${a.id}">Concluir ação</button>` : ""}
+        <button class="secondary small" onclick="downloadAuditPDFById('${a.id}')">PDF</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
+
+  updateCharts();
 }
 
-document.getElementById("auditTableBody").addEventListener("click", async (e)=>{
-  const btn = e.target.closest("[data-conclude]");
-  if(!btn) return;
-  const id = btn.dataset.conclude;
-  await db.collection(COLLECTION).doc(id).update({statusAcao:"concluida"});
-  showToast("Ação marcada como concluída.");
-  await loadDashboard();
-});
+async function downloadAuditPDFById(id){
+  const audit = allAudits.find(a=>a.id === id);
+  if(!audit) return;
+  showToast("Preparando PDF...");
+  
+  const imagesMap = {};
+  for(const item of audit.items){
+    if(item.evidenciaURL){
+      try{ imagesMap[item.id] = await urlToBase64(item.evidenciaURL); }
+      catch(e){ console.warn("Erro ao baixar imagem para PDF", e); }
+    }
+  }
+  generateAuditPDF(audit, imagesMap);
+}
 
-// ===================== EXPORTS =====================
+function updateCharts(){
+  if(chartTurno) chartTurno.destroy();
+  if(chartItens) chartItens.destroy();
+
+  const ctxTurno = document.getElementById("chartTurno").getContext("2d");
+  const turnosData = { "Turno A":0, "Turno B":0, "Turno Intermediário":0, "Turno C":0 };
+  filteredAudits.forEach(a => {
+    if(turnosData[a.turno] !== undefined) turnosData[a.turno] += a.naoConformidades;
+  });
+
+  chartTurno = new Chart(ctxTurno, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(turnosData),
+      datasets: [{
+        label: 'Não conformidades',
+        data: Object.values(turnosData),
+        backgroundColor: '#4f7cff',
+        borderRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, grid: { color: '#1a2030' } }, x: { grid: { display: false } } }
+    }
+  });
+
+  const ctxItens = document.getElementById("chartItens").getContext("2d");
+  const itensFrequencia = {};
+  CHECKLIST.forEach(i => itensFrequencia[i.titulo] = 0);
+  filteredAudits.forEach(a => {
+    a.items.forEach(it => {
+      if(!it.conforme) itensFrequencia[it.titulo]++;
+    });
+  });
+
+  const sortedItens = Object.entries(itensFrequencia)
+    .sort((a,b) => b[1] - a[1])
+    .slice(0, 8);
+
+  chartItens = new Chart(ctxItens, {
+    type: 'bar',
+    data: {
+      labels: sortedItens.map(i => i[0].substring(0, 30) + "..."),
+      datasets: [{
+        label: 'Ocorrências',
+        data: sortedItens.map(i => i[1]),
+        backgroundColor: '#ff4757',
+        borderRadius: 5
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { x: { beginAtZero: true, grid: { color: '#1a2030' } }, y: { grid: { display: false } } }
+    }
+  });
+}
+
+document.getElementById("btnFilter").addEventListener("click", applyFilters);
 document.getElementById("btnExportExcel").addEventListener("click", ()=>{
-  const rows = filteredAudits.map(a=>({
-    Data:a.data, Turno:a.turno, Auditor:a.auditor, Área:a.area,
-    "% Conformidade":a.percConformidade, "Itens com desvio":a.naoConformidades,
-    "Status da ação":a.statusAcao, "Observações gerais":a.observacoesGerais,
-    "Plano de ação":a.planoAcao
+  if(!filteredAudits.length) return;
+  const wsData = filteredAudits.map(a => ({
+    Data: a.data, Turno: a.turno, Auditor: a.auditor, Area: a.area, 
+    Conformidade: a.percConformidade+"%", Desvios: a.naoConformidades, StatusAcao: a.statusAcao
   }));
-  const ws = XLSX.utils.json_to_sheet(rows);
+  const ws = XLSX.utils.json_to_sheet(wsData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Auditorias");
-  XLSX.writeFile(wb, `auditorias_estoque_alb_${new Date().toISOString().slice(0,10)}.xlsx`);
+  XLSX.writeFile(wb, `relatorio_auditorias_${new Date().getTime()}.xlsx`);
 });
 
-document.getElementById("btnExportPdf").addEventListener("click", async ()=>{
-  if(filteredAudits.length === 0){
-    showToast("Nenhuma auditoria para exportar.");
-    return;
-  }
-  showToast("Gerando PDF com evidências...");
-
-  // Create a combined PDF for all filtered audits
-  const { jsPDF } = window.jspdf;
-  let firstPDF = null;
-
-  for(let i = 0; i < filteredAudits.length; i++){
-    const audit = filteredAudits[i];
-    
-    // Fetch images from Firebase Storage URLs
-    const imagesMap = {};
-    for(const item of audit.items){
-      if(item.evidenciaURL){
-        try{
-          const base64 = await urlToBase64(item.evidenciaURL);
-          imagesMap[item.id] = base64;
-        }catch(err){
-          console.warn("Não foi possível carregar imagem do item", item.id, err);
-        }
-      }
-    }
-
-    // Generate PDF for this audit
-    await generateAuditPDF(audit, imagesMap);
-  }
-});
 </script>
 </body>
 </html>
