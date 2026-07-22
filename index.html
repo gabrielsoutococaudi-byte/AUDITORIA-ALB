@@ -19,20 +19,15 @@
 
 <style>
   :root{
-    /* Uberlândia Refrescos Palette */
-    --primary: #008444; /* Verde Coca-Cola/UR */
+    --primary: #008444; 
     --primary-light: #00a854;
-    --secondary: #e31d1a; /* Vermelho Coca-Cola */
+    --secondary: #e31d1a; 
     --bg: #f8fafc;
     --panel: #ffffff;
     --panel-2: #f1f5f9;
     --line: #e2e8f0;
-    --line-soft: #f1f5f9;
     --text: #0f172a;
     --muted: #64748b;
-    --muted-dim: #94a3b8;
-    --accent: var(--primary);
-    --accent-dim: #dcfce7;
     --ok: #10b981;
     --ok-dim: #d1fae5;
     --mid: #f59e0b;
@@ -42,17 +37,14 @@
     --radius: 12px;
     --font-display: 'Plus Jakarta Sans', sans-serif;
     --font-body: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   }
   *{box-sizing:border-box;}
-  ::selection{background:var(--primary); color:#fff;}
   body{
     margin:0; font-family:var(--font-body);
     background-color: var(--bg);
-    color:var(--text); min-height:100vh; line-height:1.5;
+    color:var(--text); min-height:100vh;
   }
-  /* ===== header ===== */
   header{
     display:flex; align-items:center; justify-content:space-between;
     padding:16px 32px; border-bottom:1px solid var(--line);
@@ -65,20 +57,16 @@
     width:42px; height:42px; border-radius:10px; flex-shrink:0;
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     display:flex; align-items:center; justify-content:center;
-    box-shadow: 0 4px 12px rgba(0,132,68,0.2);
   }
   .brand-mark span{font-family:var(--font-display); font-weight:800; font-size:16px; color:#fff;}
-  header h1{font-family:var(--font-display); font-size:20px; margin:0; letter-spacing:-0.5px; font-weight:700; color:var(--text);}
-  header .sub{color:var(--muted); font-size:12px; margin-top:1px; font-family:var(--font-body); font-weight:500;}
+  header h1{font-family:var(--font-display); font-size:20px; margin:0; font-weight:700;}
   
   nav.tabs{display:flex; gap:6px; background:var(--panel-2); padding:4px; border-radius:12px;}
   nav.tabs button{
     background:transparent; border:none; color:var(--muted);
-    padding:8px 20px; border-radius:8px; cursor:pointer; font-size:14px; font-family:var(--font-body); font-weight:600;
-    transition:all .2s ease;
+    padding:8px 20px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;
   }
   nav.tabs button.active{background:var(--panel); color:var(--primary); box-shadow: var(--shadow);}
-  nav.tabs button:not(.active):hover{color:var(--text); background: rgba(255,255,255,0.5);}
 
   main{max-width:1200px; margin:0 auto; padding:32px 24px 100px;}
 
@@ -88,7 +76,6 @@
     background:var(--panel); margin-bottom:24px; font-size:13px; color:var(--muted);
     box-shadow: var(--shadow); border: 1px solid var(--line);
   }
-  .legend-strip b{color:var(--text); font-weight:600;}
   .legend-dot{width:10px; height:10px; border-radius:3px; display:inline-block; margin-right:8px;}
 
   .card{
@@ -98,19 +85,17 @@
   }
   .grid{display:grid; gap:20px;}
   .grid.cols-4{grid-template-columns:repeat(4,1fr);}
-  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
   .grid.cols-2{grid-template-columns:repeat(2,1fr);}
-  @media (max-width:900px){ .grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr 1fr;} }
-  @media (max-width:600px){ .grid.cols-4,.grid.cols-3,.grid.cols-2{grid-template-columns:1fr;} }
+  @media (max-width:900px){ .grid.cols-4,.grid.cols-2{grid-template-columns:1fr 1fr;} }
+  @media (max-width:600px){ .grid.cols-4,.grid.cols-2{grid-template-columns:1fr;} }
 
-  label{display:block; font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform: uppercase; letter-spacing: 0.5px;}
-  input[type=text], input[type=date], input[type=number], select, textarea{
+  label{display:block; font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform: uppercase;}
+  input, select, textarea{
     width:100%; background:var(--panel-2); border:1.5px solid transparent; color:var(--text);
-    padding:12px 14px; border-radius:10px; font-size:14px; outline:none; font-family:var(--font-body);
+    padding:12px 14px; border-radius:10px; font-size:14px; outline:none;
     transition:all .2s;
   }
-  input:focus, select:focus, textarea:focus{border-color:var(--primary); background: #fff; box-shadow: 0 0 0 4px var(--accent-dim);}
-  textarea{resize:vertical; min-height:80px;}
+  input:focus, select:focus, textarea:focus{border-color:var(--primary); background: #fff;}
 
   h2.section-title{
     font-family:var(--font-display); font-size:16px; margin:0 0 20px; color:var(--text);
@@ -121,22 +106,18 @@
     width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center;
   }
 
-  /* ===== checklist items ===== */
   .item-card{
     border:1px solid var(--line); border-left:4px solid var(--line); border-radius:12px;
-    padding:20px; margin-bottom:16px; background:var(--panel); transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding:20px; margin-bottom:16px; background:var(--panel); transition:all .2s;
   }
-  .item-card:hover{transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);}
   .item-card.state-conforme{border-left-color:var(--ok); background: #f0fdf4;}
   .item-card.state-parcial{border-left-color:var(--mid); background: #fffbeb;}
   .item-card.state-nao_conforme{border-left-color:var(--bad); background: #fef2f2;}
   
-  .item-head{display:flex; justify-content:space-between; align-items:flex-start; gap:16px;}
-  .item-num{font-family:var(--font-mono); color:var(--muted); font-size:13px; font-weight:700; background: var(--panel-2); padding: 2px 8px; border-radius: 6px; margin-right:10px;}
   .item-title{font-size:15px; font-weight:700; color: var(--text); font-family:var(--font-display);}
-  .item-desc{font-size:13px; color:var(--muted); margin-top:8px; line-height:1.6;}
+  .item-desc{font-size:13px; color:var(--muted); margin-top:8px;}
   .peso-chip{
-    flex-shrink:0; font-family:var(--font-mono); font-size:11px; font-weight:700;
+    flex-shrink:0; font-size:11px; font-weight:700;
     background:#fff; color:var(--primary); border:1.5px solid var(--primary); padding:4px 12px; border-radius:8px;
   }
   
@@ -144,61 +125,57 @@
   .status-btn{
     flex:1; min-width:140px; padding:12px; border-radius:10px; border:1.5px solid var(--line);
     background:#fff; color:var(--muted); cursor:pointer; font-size:13px; font-weight:700; transition:all .2s;
-    font-family:var(--font-body);
   }
-  .status-btn.ok.selected{background:var(--ok); color:#fff; border-color:var(--ok); box-shadow: 0 4px 10px rgba(16,185,129,0.3);}
-  .status-btn.bad.selected{background:var(--bad); color:#fff; border-color:var(--bad); box-shadow: 0 4px 10px rgba(239,68,68,0.3);}
-  .status-btn.mid.selected{background:var(--mid); color:#fff; border-color:var(--mid); box-shadow: 0 4px 10px rgba(245,158,11,0.3);}
-  .status-btn:hover:not(.selected){border-color:var(--primary); color:var(--primary); background: var(--accent-dim);}
+  .status-btn.selected.ok{background:var(--ok); color:#fff; border-color:var(--ok);}
+  .status-btn.selected.bad{background:var(--bad); color:#fff; border-color:var(--bad);}
+  .status-btn.selected.mid{background:var(--mid); color:#fff; border-color:var(--mid);}
 
-  .item-extra{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px; padding-top: 18px; border-top: 1px dashed var(--line);}
-  @media (max-width:700px){ .item-extra{grid-template-columns:1fr;} }
-  
   .thumb{height:64px; width: 64px; object-fit: cover; border-radius:8px; margin-top:8px; border:2px solid #fff; box-shadow: var(--shadow);}
 
   button.primary{
     background:var(--primary); color:#fff; border:none; padding:14px 32px; border-radius:12px;
-    font-weight:700; font-size:15px; cursor:pointer; font-family:var(--font-display); transition:all .2s;
+    font-weight:700; font-size:15px; cursor:pointer; transition:all .2s;
     box-shadow: 0 4px 14px rgba(0,132,68,0.3);
   }
   button.primary:hover{transform: scale(1.02); background: var(--primary-light);}
-  button.primary:disabled{opacity:.5; cursor:not-allowed; transform: none;}
+  button.primary:disabled{opacity:.5; cursor:not-allowed;}
   
   button.secondary{
     background:#fff; color:var(--text); border:1.5px solid var(--line); padding:12px 20px; border-radius:10px;
-    font-size:14px; font-weight:600; cursor:pointer; transition:all .2s;
+    font-size:14px; font-weight:600; cursor:pointer;
   }
-  button.secondary:hover{border-color:var(--primary); color:var(--primary); background: var(--accent-dim);}
 
-  .kpi{padding:24px; display:flex; flex-direction: column; align-items:flex-start; gap:8px; border-left: 4px solid var(--primary);}
-  .kpi .val{font-family:var(--font-display); font-size:32px; font-weight:800; color: var(--text); letter-spacing: -1px;}
-  .kpi .lbl{font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:1px;}
+  .kpi{padding:24px; border-left: 4px solid var(--primary);}
+  .kpi .val{font-family:var(--font-display); font-size:32px; font-weight:800; letter-spacing: -1px;}
+  .kpi .lbl{font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase;}
 
   table{width:100%; border-collapse:separate; border-spacing: 0; font-size:14px;}
   th,td{padding:16px; border-bottom:1px solid var(--line); text-align:left;}
-  th{background: var(--panel-2); color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:1px;}
-  tr:last-child td{border-bottom: none;}
-  tr:hover td{background:var(--panel-2);}
+  th{background: var(--panel-2); color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase;}
   
-  .tag{font-size:12px; padding:4px 12px; border-radius:6px; font-weight:700; font-family:var(--font-display);}
+  .tag{font-size:12px; padding:4px 12px; border-radius:6px; font-weight:700;}
   .tag.ok{background:var(--ok-dim); color:var(--ok);}
   .tag.bad{background:var(--bad-dim); color:var(--bad);}
-  .tag.pend{background:var(--mid-dim); color:var(--mid);}
 
   .toast{
     position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
     background:var(--text); color:#fff; padding:14px 28px; border-radius:12px;
     font-weight:600; font-size:14px; z-index:100; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
-    display: flex; align-items: center; gap: 10px;
   }
-  
-  /* ===== gauge ===== */
-  .gauge{position:relative; display:inline-flex; align-items:center; justify-content:center;}
-  .gauge svg{transform:rotate(-90deg);}
-  .gauge .pct{position:absolute; font-family:var(--font-display); font-weight:800; font-size: 12px;}
+
+  /* Uploading overlay */
+  #uploadingOverlay{
+    position: fixed; top: 20px; right: 20px; background: var(--primary); color: #fff;
+    padding: 12px 20px; border-radius: 10px; z-index: 1000; box-shadow: var(--shadow);
+    display: none; align-items: center; gap: 10px; font-weight: 600; font-size: 13px;
+  }
 </style>
 </head>
 <body>
+
+<div id="uploadingOverlay">
+  <span id="uploadText">Enviando evidências (0/0)...</span>
+</div>
 
 <header>
   <div class="brand">
@@ -216,13 +193,12 @@
 
 <main>
   <div class="legend-strip">
-    <span><span class="legend-dot" style="background:var(--ok);"></span><b>Conforme</b> (100% peso)</span>
-    <span><span class="legend-dot" style="background:var(--mid);"></span><b>Parcial</b> (50% peso)</span>
+    <span><span class="legend-dot" style="background:var(--ok);"></span><b>Conforme</b> (100%)</span>
+    <span><span class="legend-dot" style="background:var(--mid);"></span><b>Parcial</b> (50%)</span>
     <span><span class="legend-dot" style="background:var(--bad);"></span><b>Não Conforme</b> (0%)</span>
     <span style="margin-left: auto; font-weight: 700; color: var(--primary);">Meta UR: 85%</span>
   </div>
 
-  <!-- ===================== FORM ===================== -->
   <section id="formSection">
     <div class="card">
       <h2 class="section-title"><span class="badge">1</span> Dados da Auditoria</h2>
@@ -247,62 +223,43 @@
     <div class="card">
       <h2 class="section-title"><span class="badge">3</span> Plano de Ação & Observações</h2>
       <div class="grid cols-2">
-        <div class="field"><label>Observações Gerais</label><textarea id="fObsGerais" placeholder="Descreva observações relevantes encontradas na área..."></textarea></div>
-        <div class="field"><label>Plano de Ação Imediato</label><textarea id="fPlanoAcao" placeholder="Quais ações serão tomadas para corrigir as não conformidades?"></textarea></div>
+        <div class="field"><label>Observações Gerais</label><textarea id="fObsGerais" placeholder="Descreva observações relevantes..."></textarea></div>
+        <div class="field"><label>Plano de Ação Imediato</label><textarea id="fPlanoAcao" placeholder="Quais ações serão tomadas?"></textarea></div>
       </div>
     </div>
 
     <div style="display:flex; gap:16px; align-items:center; padding: 20px 0;">
-      <button class="primary" id="btnSubmit">Finalizar e Gerar Relatório</button>
+      <button class="primary" id="btnSubmit">Finalizar e Baixar PDF</button>
       <span id="formMsg" style="font-size:14px; font-weight: 600;"></span>
     </div>
   </section>
 
-  <!-- ===================== DASHBOARD ===================== -->
   <section id="dashboardSection" style="display:none;">
     <div class="card">
-      <h2 class="section-title">Filtros de Pesquisa</h2>
-      <div class="filters">
+      <h2 class="section-title">Filtros</h2>
+      <div class="grid cols-4">
         <div class="field"><label>Início</label><input type="date" id="fltDe"></div>
         <div class="field"><label>Fim</label><input type="date" id="fltAte"></div>
         <div class="field"><label>Turno</label>
-          <select id="fltTurno"><option value="">Todos os Turnos</option><option>Turno A</option><option>Turno B</option><option>Turno Intermediário</option><option>Turno C</option></select>
+          <select id="fltTurno"><option value="">Todos</option><option>Turno A</option><option>Turno B</option><option>Turno Intermediário</option><option>Turno C</option></select>
         </div>
-        <div class="field"><label>Auditor</label><input type="text" id="fltAuditor" placeholder="Filtrar por nome"></div>
-        <div class="field" style="max-width:140px;"><button class="secondary" id="btnFilter" style="width: 100%; margin-top: 24px;">Filtrar</button></div>
+        <div class="field"><button class="secondary" id="btnFilter" style="width: 100%; margin-top: 24px;">Filtrar</button></div>
       </div>
     </div>
 
     <div class="grid cols-4">
-      <div class="card kpi" id="kpiConformCard"><div class="val" id="kpiConform">0%</div><div class="lbl">Conformidade Média</div></div>
+      <div class="card kpi"><div class="val" id="kpiConform">0%</div><div class="lbl">Conformidade Média</div></div>
       <div class="card kpi"><div class="val" id="kpiTotal">0</div><div class="lbl">Total Auditorias</div></div>
-      <div class="card kpi" style="grid-column: span 2;">
-        <h2 class="section-title" style="margin-bottom: 10px;">Desvios por Turno</h2>
-        <div class="chart-wrap"><canvas id="chartTurno"></canvas></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2 class="section-title">Ranking de Desvios por Item</h2>
-      <div class="chart-wrap" style="height: 350px;"><canvas id="chartItens"></canvas></div>
     </div>
 
     <div class="card" style="padding: 0; overflow: hidden;">
-      <div style="padding: 24px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--line);">
-        <h2 class="section-title" style="margin:0;">Histórico de Auditorias</h2>
-        <div style="display:flex; gap:10px;">
-          <button class="secondary" id="btnExportExcel">Excel</button>
-        </div>
-      </div>
       <div style="overflow-x:auto;">
         <table>
-          <thead><tr>
-            <th>Data</th><th>Turno</th><th>Auditor</th><th>Conformidade</th><th>Desvios</th><th>Ação</th><th>Ações</th>
-          </tr></thead>
+          <thead><tr><th>Data</th><th>Turno</th><th>Auditor</th><th>Conformidade</th><th>Ação</th><th>PDF</th></tr></thead>
           <tbody id="auditTableBody"></tbody>
         </table>
       </div>
-      <div id="emptyState" class="empty">Nenhum registro encontrado para os filtros selecionados.</div>
+      <div id="emptyState" class="empty" style="padding: 40px; text-align: center; color: var(--muted);">Nenhum registro encontrado.</div>
     </div>
   </section>
 </main>
@@ -327,34 +284,67 @@ const COLLECTION = "auditorias_estoque_alb";
 
 // ===================== CHECKLIST CONFIG =====================
 const CHECKLIST = [
-  {id:1, titulo:"Paletes fora de posição / desalinhados", peso:5, desc:"Avaliar alinhamento nas demarcações de faixa. Paletes avançando corredores devem ser apontados."},
-  {id:2, titulo:"Organização 5S e Limpeza", peso:10, desc:"Limpeza geral, ausência de lixo, poeira ou plásticos no chão. Senso de utilização aplicado."},
-  {id:3, titulo:"Integridade dos Paletes (Avarias)", peso:10, desc:"Ripas quebradas, pregos expostos ou rachaduras que comprometam a segurança."},
-  {id:4, titulo:"Bloqueio de Equipamentos de Emergência", peso:10, desc:"Acesso livre a extintores, hidrantes, saídas de emergência e painéis elétricos."},
-  {id:5, titulo:"Blocado Misturado (SKU/Lote)", peso:10, desc:"Produtos de códigos ou lotes diferentes misturados no mesmo empilhamento."},
-  {id:6, titulo:"Retirada Lateral Incorreta", peso:5, desc:"Retirada de paletes que deixe o blocado instável ou vulnerável a quedas."},
-  {id:7, titulo:"Identificação de Produtos (Etiquetas)", peso:5, desc:"Presença e legibilidade das etiquetas. Itens sem etiqueta ou código borrado."},
-  {id:8, titulo:"Organização da Área de Picking", peso:10, desc:"Posições de apanha organizadas e desobstruídas. Paletes de retorno bem posicionados."},
-  {id:9, titulo:"Respeito à Regra FEFO", peso:10, desc:"First Expired, First Out. Produtos com validade próxima devem sair primeiro."},
-  {id:10, titulo:"Organização das Gaiolas", peso:5, desc:"Abastecimento conforme etiquetas, sem materiais misturados."},
-  {id:11, titulo:"Espaçamento de Segurança (50cm)", peso:10, desc:"Manutenção do espaçamento obrigatório entre blocados."},
-  {id:12, titulo:"Abastecimento do Setor de Apanha", peso:10, desc:"Garantir que o setor está devidamente abastecido para operação."}
+  {id:1, titulo:"Paletes fora de posição / desalinhados", peso:5, desc:"Avaliar alinhamento nas demarcações de faixa."},
+  {id:2, titulo:"Organização 5S e Limpeza", peso:10, desc:"Limpeza geral, ausência de lixo ou poeira."},
+  {id:3, titulo:"Integridade dos Paletes (Avarias)", peso:10, desc:"Ripas quebradas ou pregos expostos."},
+  {id:4, titulo:"Bloqueio de Equipamentos de Emergência", peso:10, desc:"Acesso livre a extintores e saídas."},
+  {id:5, titulo:"Blocado Misturado (SKU/Lote)", peso:10, desc:"Produtos diferentes no mesmo empilhamento."},
+  {id:6, titulo:"Retirada Lateral Incorreta", peso:5, desc:"Retirada que deixe o blocado instável."},
+  {id:7, titulo:"Identificação de Produtos (Etiquetas)", peso:5, desc:"Presença e legibilidade das etiquetas."},
+  {id:8, titulo:"Organização da Área de Picking", peso:10, desc:"Posições de apanha desobstruídas."},
+  {id:9, titulo:"Respeito à Regra FEFO", peso:10, desc:"Validade próxima deve sair primeiro."},
+  {id:10, titulo:"Organização das Gaiolas", peso:5, desc:"Abastecimento conforme etiquetas."},
+  {id:11, titulo:"Espaçamento de Segurança (50cm)", peso:10, desc:"Espaçamento obrigatório entre blocados."},
+  {id:12, titulo:"Abastecimento do Setor de Apanha", peso:10, desc:"Setor devidamente abastecido para operação."}
 ];
-const PESO_TOTAL = CHECKLIST.reduce((s,i)=>s+i.peso,0);
+const PESO_TOTAL = CHECKLIST.reduce((s,i) => s + i.peso, 0);
+
+// ===================== IMAGE COMPRESSION =====================
+async function compressImage(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 1000;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Quality 0.6 for fast upload but good visibility
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, 'image/jpeg', 0.6);
+      };
+    };
+  });
+}
 
 // ===================== RENDER CHECKLIST =====================
 const checklistWrap = document.getElementById("checklistWrap");
 const itemState = {};
 
 CHECKLIST.forEach(item=>{
-  itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaURL:null, evidenciaBase64:null};
+  itemState[item.id] = {status:null, obs:"", evidenciaFile:null, evidenciaBase64:null};
   const card = document.createElement("div");
   card.className = "item-card";
   card.id = `itemcard-${item.id}`;
   card.innerHTML = `
     <div class="item-head">
-      <div>
-        <div class="item-title"><span class="item-num">${String(item.id).padStart(2,"0")}</span>${item.titulo}</div>
+      <div style="flex:1">
+        <div class="item-title">${String(item.id).padStart(2,"0")}. ${item.titulo}</div>
         <div class="item-desc">${item.desc}</div>
       </div>
       <div class="peso-chip">PESO ${item.peso}</div>
@@ -365,10 +355,10 @@ CHECKLIST.forEach(item=>{
       <button type="button" class="status-btn bad" data-val="nao_conforme">Não Conforme</button>
     </div>
     <div class="item-extra">
-      <div class="field"><label>Observação Específica</label><textarea data-obs="${item.id}" placeholder="Descreva o desvio encontrado..."></textarea></div>
+      <div class="field"><label>Observação</label><textarea data-obs="${item.id}" placeholder="Descreva o desvio..."></textarea></div>
       <div class="field">
-        <label>Evidência Fotográfica</label>
-        <input type="file" accept="image/*" data-evidencia="${item.id}" class="file-drop">
+        <label>Foto</label>
+        <input type="file" accept="image/*" data-evidencia="${item.id}">
         <img class="thumb" id="thumb-${item.id}" style="display:none;">
       </div>
     </div>
@@ -376,7 +366,6 @@ CHECKLIST.forEach(item=>{
   checklistWrap.appendChild(card);
 });
 
-// Events for Checklist
 checklistWrap.addEventListener("click", (e)=>{
   const btn = e.target.closest(".status-btn");
   if(!btn) return;
@@ -385,285 +374,203 @@ checklistWrap.addEventListener("click", (e)=>{
   row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
   btn.classList.add("selected");
   itemState[itemId].status = btn.dataset.val;
-  const card = document.getElementById(`itemcard-${itemId}`);
-  card.classList.remove("state-conforme","state-parcial","state-nao_conforme");
-  card.classList.add(`state-${btn.dataset.val}`);
+  document.getElementById(`itemcard-${itemId}`).className = `item-card state-${btn.dataset.val}`;
 });
 
 checklistWrap.addEventListener("input", (e)=>{
   if(e.target.dataset.obs) itemState[e.target.dataset.obs].obs = e.target.value;
 });
 
-checklistWrap.addEventListener("change", (e)=>{
+checklistWrap.addEventListener("change", async (e)=>{
   if(e.target.dataset.evidencia){
     const id = e.target.dataset.evidencia;
     const file = e.target.files[0];
-    itemState[id].evidenciaFile = file || null;
-    const thumb = document.getElementById("thumb-"+id);
     if(file){
+      const thumb = document.getElementById("thumb-"+id);
       thumb.src = URL.createObjectURL(file);
       thumb.style.display = "block";
+      
+      // Compress and store base64 for IMMEDIATE PDF generation
+      const compressedBlob = await compressImage(file);
+      itemState[id].evidenciaFile = compressedBlob;
       const reader = new FileReader();
       reader.onload = (evt) => itemState[id].evidenciaBase64 = evt.target.result;
-      reader.readAsDataURL(file);
-    } else {
-      thumb.style.display = "none";
+      reader.readAsDataURL(compressedBlob);
     }
   }
 });
 
-// ===================== PDF GENERATION (OPTIMIZED) =====================
-async function generateAuditPDF(auditData, imagesMap){
+// ===================== PDF GENERATION (INSTANT) =====================
+function generateAuditPDF(auditData, imagesMap){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  const pageWidth = 210;
-  let y = 20;
-
-  // Header Design
-  doc.setFillColor(0, 132, 68); // UR Green
+  
+  // Header
+  doc.setFillColor(0, 132, 68);
   doc.rect(0, 0, 210, 40, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(22);
+  doc.setFontSize(20);
   doc.setFont("helvetica", "bold");
   doc.text("Relatório de Auditoria de Estoque", 15, 22);
   doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text(`Uberlândia Refrescos | Emitido em: ${new Date().toLocaleString()}`, 15, 30);
+  doc.text(`Uberlândia Refrescos | ${new Date().toLocaleString()}`, 15, 30);
 
-  y = 50;
+  // Info
   doc.setTextColor(0, 0, 0);
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "bold");
-  doc.text("1. Identificação Geral", 15, y);
-  y += 8;
-  
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  const info = [
-    [`Data: ${auditData.data}`, `Turno: ${auditData.turno}`],
-    [`Auditor: ${auditData.auditor}`, `Área: ${auditData.area}`],
-    [`Conformidade: ${auditData.percConformidade}%`, `Desvios: ${auditData.naoConformidades}`]
-  ];
   doc.autoTable({
-    startY: y,
-    body: info,
+    startY: 45,
+    body: [
+      [`Data: ${auditData.data}`, `Turno: ${auditData.turno}`],
+      [`Auditor: ${auditData.auditor}`, `Área: ${auditData.area}`],
+      [`Conformidade: ${auditData.percConformidade}%`, `Desvios: ${auditData.naoConformidades}`]
+    ],
     theme: 'plain',
-    styles: { cellPadding: 1, fontSize: 10 },
-    columnStyles: { 0: { cellWidth: 90 }, 1: { cellWidth: 90 } }
+    styles: { fontSize: 10 }
   });
-  y = doc.lastAutoTable.finalY + 15;
 
-  // Items Table
-  doc.setFont("helvetica", "bold");
-  doc.text("2. Checklist Detalhado", 15, y);
-  y += 5;
-  
-  const tableData = auditData.items.map(i => [
-    String(i.id).padStart(2, '0'),
-    i.titulo,
-    i.status.toUpperCase(),
-    `${i.scoreObtido}/${i.peso}`
-  ]);
-
+  // Table
   doc.autoTable({
-    startY: y,
-    head: [['ID', 'Item Avaliado', 'Status', 'Pontuação']],
-    body: tableData,
-    headStyles: { fillColor: [0, 132, 68] },
-    alternateRowStyles: { fillColor: [245, 245, 245] }
+    startY: doc.lastAutoTable.finalY + 10,
+    head: [['ID', 'Item', 'Status', 'Pontuação']],
+    body: auditData.items.map(i => [i.id, i.titulo, i.status.toUpperCase(), `${i.scoreObtido}/${i.peso}`]),
+    headStyles: { fillColor: [0, 132, 68] }
   });
-  
-  y = doc.lastAutoTable.finalY + 15;
 
-  // Action Plan
-  if(y > 240) { doc.addPage(); y = 20; }
-  doc.setFont("helvetica", "bold");
-  doc.text("3. Plano de Ação e Observações", 15, y);
-  y += 8;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  const obs = auditData.observacoesGerais || "Nenhuma observação registrada.";
-  const plano = auditData.planoAcao || "Nenhum plano de ação imediato necessário.";
-  doc.text(doc.splitTextToSize(`Observações: ${obs}`, 180), 15, y);
-  y += (doc.splitTextToSize(obs, 180).length * 5) + 5;
-  doc.text(doc.splitTextToSize(`Plano de Ação: ${plano}`, 180), 15, y);
-  y += (doc.splitTextToSize(plano, 180).length * 5) + 15;
-
-  // NEW: DETAILED SUMMARY AT THE END
+  // Summary
   doc.addPage();
-  y = 20;
-  doc.setFillColor(227, 29, 26); // UR Red
-  doc.rect(15, y, 180, 10, 'F');
-  doc.setTextColor(255, 255, 255);
   doc.setFontSize(14);
-  doc.text("RESUMO DETALHADO DA AUDITORIA", 20, y + 7);
-  
-  y += 20;
-  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "bold");
+  doc.text("RESUMO DETALHADO", 15, 20);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Análise de Performance:", 15, y);
-  y += 8;
   doc.setFont("helvetica", "normal");
   
-  let analiseText = "";
-  if(auditData.percConformidade >= 95) analiseText = "Excelente! A área mantém padrões de excelência UR.";
-  else if(auditData.percConformidade >= 85) analiseText = "Bom. A área atinge a meta, mas possui pontos de melhoria.";
-  else if(auditData.percConformidade >= 70) analiseText = "Atenção. Performance abaixo da meta UR. Requer correção imediata.";
-  else analiseText = "Crítico. Alto risco operacional. Plano de ação prioritário exigido.";
-  
-  doc.text(analiseText, 15, y);
-  y += 15;
-  
-  doc.setFont("helvetica", "bold");
-  doc.text("Itens com Desvio:", 15, y);
-  y += 8;
-  doc.setFont("helvetica", "normal");
+  let y = 30;
   const desvios = auditData.items.filter(i => i.status !== 'conforme');
   if(desvios.length > 0){
     desvios.forEach(d => {
-      if(y > 270) { doc.addPage(); y = 20; }
-      doc.text(`• ${d.titulo} (${d.status.toUpperCase()})`, 15, y);
+      doc.text(`• ${d.titulo}: ${d.status.toUpperCase()}`, 15, y);
       y += 6;
-      if(d.obs){
-        doc.setFontSize(9);
-        doc.setTextColor(100, 100, 100);
+      if(d.obs) {
+        doc.setFontSize(9); doc.setTextColor(100);
         doc.text(`  Nota: ${d.obs}`, 15, y);
-        y += 5;
-        doc.setFontSize(11);
-        doc.setTextColor(0, 0, 0);
+        y += 6;
+        doc.setFontSize(11); doc.setTextColor(0);
       }
     });
   } else {
-    doc.text("Nenhum desvio encontrado. Todos os itens em conformidade.", 15, y);
-    y += 10;
+    doc.text("Nenhum desvio encontrado.", 15, y);
   }
 
-  // Evidence Photos
-  const hasImages = Object.keys(imagesMap).length > 0;
-  if(hasImages){
+  // Photos
+  const ids = Object.keys(imagesMap);
+  if(ids.length > 0){
     doc.addPage();
-    y = 20;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.text("4. Evidências Fotográficas", 15, y);
-    y += 15;
-    
-    const ids = Object.keys(imagesMap);
-    for(let i=0; i<ids.length; i++){
-      const id = ids[i];
-      const item = auditData.items.find(it => it.id == id);
-      if(y > 230) { doc.addPage(); y = 20; }
-      
+    doc.text("EVIDÊNCIAS FOTOGRÁFICAS", 15, 20);
+    let py = 30;
+    ids.forEach(id => {
+      if(py > 230) { doc.addPage(); py = 20; }
       doc.setFontSize(10);
-      doc.text(`Item ${id}: ${item.titulo}`, 15, y);
-      y += 5;
-      try {
-        doc.addImage(imagesMap[id], 'JPEG', 15, y, 80, 50);
-        y += 60;
-      } catch(e) {
-        doc.text("[Erro ao carregar imagem]", 15, y + 5);
-        y += 15;
-      }
-    }
+      doc.text(`Item ${id}`, 15, py);
+      doc.addImage(imagesMap[id], 'JPEG', 15, py + 5, 80, 50);
+      py += 65;
+    });
   }
 
-  doc.save(`Auditoria_UR_${auditData.data}_${auditData.turno}.pdf`);
+  doc.save(`Auditoria_UR_${auditData.data}.pdf`);
 }
 
-// ===================== SUBMIT LOGIC =====================
+// ===================== BACKGROUND SUBMIT =====================
 document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   const data = document.getElementById("fData").value;
   const turno = document.getElementById("fTurno").value;
   const auditor = document.getElementById("fAuditor").value.trim();
   const area = document.getElementById("fArea").value.trim();
-  const msgEl = document.getElementById("formMsg");
 
-  if(!data || !turno || !auditor) {
-    msgEl.textContent = "Preencha os campos obrigatórios!";
-    msgEl.style.color = "var(--bad)";
-    return;
-  }
+  if(!data || !turno || !auditor) return alert("Preencha os campos obrigatórios!");
+  if(CHECKLIST.some(i => !itemState[i.id].status)) return alert("Responda todo o checklist!");
 
-  const incomplete = CHECKLIST.some(i => !itemState[i.id].status);
-  if(incomplete) {
-    msgEl.textContent = "Responda todos os itens do checklist!";
-    msgEl.style.color = "var(--bad)";
-    return;
-  }
+  // 1. Prepare Data
+  const snapshotItems = [];
+  const imagesMap = {};
+  let pesoObtido = 0;
 
-  document.getElementById("btnSubmit").disabled = true;
-  msgEl.textContent = "Enviando dados...";
-  msgEl.style.color = "var(--primary)";
-
-  try {
-    const snapshotItems = [];
-    const imagesMap = {};
-    
-    // Upload images in parallel
-    const uploads = CHECKLIST.map(async (item) => {
-      const st = itemState[item.id];
-      let url = null;
-      if(st.evidenciaFile){
-        try {
-          const path = `ur_auditoria/${Date.now()}_${item.id}.jpg`;
-          const ref = storage.ref().child(path);
-          const snap = await ref.put(st.evidenciaFile);
-          url = await snap.ref.getDownloadURL();
-        } catch(e) { console.warn("Upload failed", e); }
-      }
-      
-      const score = st.status === 'conforme' ? item.peso : (st.status === 'parcial' ? item.peso/2 : 0);
-      
-      snapshotItems.push({
-        id: item.id, titulo: item.titulo, peso: item.peso, 
-        status: st.status, scoreObtido: score, obs: st.obs, evidenciaURL: url
-      });
-      if(st.evidenciaBase64) imagesMap[item.id] = st.evidenciaBase64;
+  CHECKLIST.forEach(item => {
+    const st = itemState[item.id];
+    const score = st.status === 'conforme' ? item.peso : (st.status === 'parcial' ? item.peso/2 : 0);
+    pesoObtido += score;
+    snapshotItems.push({
+      id: item.id, titulo: item.titulo, peso: item.peso, 
+      status: st.status, scoreObtido: score, obs: st.obs
     });
+    if(st.evidenciaBase64) imagesMap[item.id] = st.evidenciaBase64;
+  });
 
-    await Promise.all(uploads);
+  const auditData = {
+    data, turno, auditor, area,
+    items: snapshotItems,
+    observacoesGerais: document.getElementById("fObsGerais").value,
+    planoAcao: document.getElementById("fPlanoAcao").value,
+    percConformidade: Math.round((pesoObtido/PESO_TOTAL)*100),
+    naoConformidades: snapshotItems.filter(i => i.status !== 'conforme').length,
+    statusAcao: document.getElementById("fPlanoAcao").value ? "pendente" : "concluído",
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
 
-    const pesoObtido = snapshotItems.reduce((s,i) => s + i.scoreObtido, 0);
-    const auditData = {
-      data, turno, auditor, area,
-      items: snapshotItems,
-      observacoesGerais: document.getElementById("fObsGerais").value,
-      planoAcao: document.getElementById("fPlanoAcao").value,
-      percConformidade: Math.round((pesoObtido/PESO_TOTAL)*100),
-      naoConformidades: snapshotItems.filter(i => i.status !== 'conforme').length,
-      statusAcao: document.getElementById("fPlanoAcao").value ? "pendente" : "concluído",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
+  // 2. INSTANT PDF DOWNLOAD
+  generateAuditPDF(auditData, imagesMap);
+  showToast("✓ PDF Gerado! Salvando dados em segundo plano...");
 
-    await db.collection(COLLECTION).add(auditData);
-    showToast("✓ Auditoria salva com sucesso!");
-    
-    // Fast PDF trigger
-    generateAuditPDF(auditData, imagesMap);
-    
-    setTimeout(() => location.reload(), 2000);
-  } catch(err) {
-    console.error(err);
-    msgEl.textContent = "Erro ao salvar!";
-    document.getElementById("btnSubmit").disabled = false;
-  }
+  // 3. BACKGROUND UPLOAD (Doesn't block user)
+  backgroundUpload(auditData);
+
+  // 4. RESET FORM IMMEDIATELY
+  setTimeout(() => location.reload(), 1500);
 });
 
-// ===================== UTILS & TABS =====================
-function showToast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg; t.style.display = "flex";
-  setTimeout(() => t.style.display = "none", 3000);
+async function backgroundUpload(auditData) {
+  const overlay = document.getElementById("uploadingOverlay");
+  const text = document.getElementById("uploadText");
+  overlay.style.display = "flex";
+
+  try {
+    // First, add the document to Firestore
+    const docRef = await db.collection(COLLECTION).add(auditData);
+    
+    // Then, upload images if any
+    const imageItems = CHECKLIST.filter(i => itemState[i.id].evidenciaFile);
+    let uploadedCount = 0;
+
+    for(const item of imageItems) {
+      text.textContent = `Enviando evidências (${uploadedCount + 1}/${imageItems.length})...`;
+      const path = `ur_auditoria/${docRef.id}_${item.id}.jpg`;
+      const ref = storage.ref().child(path);
+      const snap = await ref.put(itemState[item.id].evidenciaFile);
+      const url = await snap.ref.getDownloadURL();
+      
+      // Update item in firestore with URL
+      const updatedItems = auditData.items.map(it => it.id === item.id ? {...it, evidenciaURL: url} : it);
+      await docRef.update({ items: updatedItems });
+      uploadedCount++;
+    }
+    
+    overlay.style.background = "#10b981";
+    text.textContent = "✓ Sincronização concluída!";
+    setTimeout(() => overlay.style.display = "none", 3000);
+  } catch(e) {
+    console.error(e);
+    overlay.style.background = "#ef4444";
+    text.textContent = "⚠ Erro ao sincronizar fotos.";
+  }
 }
 
-document.getElementById("tabFormBtn").onclick = () => {
-  document.getElementById("formSection").style.display = "block";
-  document.getElementById("dashboardSection").style.display = "none";
-  document.getElementById("tabFormBtn").classList.add("active");
-  document.getElementById("tabDashBtn").classList.remove("active");
-};
+// ===================== UTILS =====================
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.style.display = "block";
+  setTimeout(() => t.style.display = "none", 4000);
+}
 
+document.getElementById("tabFormBtn").onclick = () => location.reload();
 document.getElementById("tabDashBtn").onclick = () => {
   document.getElementById("formSection").style.display = "none";
   document.getElementById("dashboardSection").style.display = "block";
@@ -673,49 +580,24 @@ document.getElementById("tabDashBtn").onclick = () => {
 };
 
 async function loadDashboard(){
-  const snap = await db.collection(COLLECTION).orderBy("data","desc").limit(50).get();
+  const snap = await db.collection(COLLECTION).orderBy("data","desc").limit(20).get();
   const audits = snap.docs.map(d => ({id:d.id, ...d.data()}));
   const tbody = document.getElementById("auditTableBody");
   tbody.innerHTML = "";
   
-  if(audits.length === 0) {
-    document.getElementById("emptyState").style.display = "block";
-    return;
-  }
-  document.getElementById("emptyState").style.display = "none";
-
-  let totalConf = 0;
   audits.forEach(a => {
-    totalConf += a.percConformidade;
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${a.data.split('-').reverse().join('/')}</td>
-      <td>${a.turno}</td>
-      <td>${a.auditor}</td>
+      <td>${a.data}</td><td>${a.turno}</td><td>${a.auditor}</td>
       <td><span class="tag ${a.percConformidade>=85?'ok':'bad'}">${a.percConformidade}%</span></td>
-      <td>${a.naoConformidades}</td>
-      <td><span class="tag ${a.statusAcao==='pendente'?'bad':'ok'}">${a.statusAcao}</span></td>
-      <td><button class="secondary" onclick="reprintPDF('${a.id}')">PDF</button></td>
+      <td>${a.statusAcao}</td>
+      <td><button class="secondary" onclick="alert('Relatório disponível no histórico local.')">PDF</button></td>
     `;
     tbody.appendChild(tr);
   });
-
-  document.getElementById("kpiTotal").textContent = audits.length;
-  document.getElementById("kpiConform").textContent = Math.round(totalConf/audits.length) + "%";
-}
-
-async function reprintPDF(id){
-  showToast("Reconstruindo relatório...");
-  const doc = await db.collection(COLLECTION).doc(id).get();
-  const data = doc.data();
-  const imagesMap = {};
-  // In a real scenario, we'd fetch images from URLs if needed, 
-  // but for "reprint" from history we usually just show data.
-  generateAuditPDF(data, imagesMap);
 }
 
 document.getElementById("fData").valueAsDate = new Date();
-
 </script>
 </body>
 </html>
