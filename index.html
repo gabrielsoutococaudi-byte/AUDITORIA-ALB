@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -19,153 +19,209 @@
 
 <style>
   :root{
-    --primary: #008444; 
-    --primary-light: #00a854;
-    --secondary: #e31d1a; 
-    --bg: #f8fafc;
-    --panel: #ffffff;
-    --panel-2: #f1f5f9;
-    --line: #e2e8f0;
-    --text: #0f172a;
-    --muted: #64748b;
-    --ok: #10b981;
-    --ok-dim: #d1fae5;
-    --mid: #f59e0b;
-    --mid-dim: #fef3c7;
-    --bad: #ef4444;
-    --bad-dim: #fee2e2;
-    --radius: 12px;
-    --font-display: 'Plus Jakarta Sans', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    /* ---- UR token system ---- */
+    --primary:#C8102E;        /* vermelho da marca */
+    --primary-dark:#8F0A1F;
+    --accent:#00843D;         /* verde refresco */
+    --accent-light:#00B04F;
+    --gold:#F5A524;           /* selo / destaque */
+    --ink:#10151C;
+    --bg:#F3F5F8;
+    --panel:#FFFFFF;
+    --panel-2:#EEF1F6;
+    --line:#E4E8EF;
+    --muted:#6B7686;
+    --ok:#00843D; --ok-dim:#E2F5EA;
+    --mid:#F5A524; --mid-dim:#FEF2DC;
+    --bad:#C8102E; --bad-dim:#FBE5E9;
+    --radius:16px;
+    --font-display:'Plus Jakarta Sans', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --shadow: 0 10px 30px -12px rgba(16,21,28,0.18);
+    --shadow-sm: 0 2px 8px -2px rgba(16,21,28,0.10);
   }
   *{box-sizing:border-box;}
   body{
     margin:0; font-family:var(--font-body);
-    background-color: var(--bg);
-    color:var(--text); min-height:100vh;
+    background:var(--bg);
+    color:var(--ink); min-height:100vh;
   }
+
+  /* ===================== HEADER ===================== */
   header{
+    position:sticky; top:0; z-index:40;
+    background:#fff; border-bottom:1px solid var(--line);
     display:flex; align-items:center; justify-content:space-between;
-    padding:16px 32px; border-bottom:1px solid var(--line);
-    background:rgba(255,255,255,0.9); backdrop-filter: blur(12px);
-    position:sticky; top:0; z-index:30;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    padding:14px 32px;
   }
   .brand{display:flex; align-items:center; gap:14px;}
   .brand-mark{
-    width:42px; height:42px; border-radius:10px; flex-shrink:0;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    display:flex; align-items:center; justify-content:center;
+    width:44px; height:44px; border-radius:50%; flex-shrink:0; position:relative;
+    background: repeating-conic-gradient(var(--primary) 0deg 8deg, var(--primary-dark) 8deg 16deg);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px var(--line);
   }
-  .brand-mark span{font-family:var(--font-display); font-weight:800; font-size:16px; color:#fff;}
-  header h1{font-family:var(--font-display); font-size:20px; margin:0; font-weight:700;}
-  
-  nav.tabs{display:flex; gap:6px; background:var(--panel-2); padding:4px; border-radius:12px;}
+  .brand-mark::after{
+    content:"UR"; position:absolute; inset:6px; border-radius:50%;
+    background:#fff; color:var(--primary); display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:800; font-size:13px;
+  }
+  header h1{font-family:var(--font-display); font-size:19px; margin:0; font-weight:800; letter-spacing:-.2px;}
+  header .sub{font-size:12px; color:var(--muted); font-weight:600; margin-top:1px;}
+
+  nav.tabs{display:flex; gap:4px; background:var(--panel-2); padding:4px; border-radius:12px;}
   nav.tabs button{
     background:transparent; border:none; color:var(--muted);
-    padding:8px 20px; border-radius:8px; cursor:pointer; font-size:14px; font-weight:600;
+    padding:9px 20px; border-radius:9px; cursor:pointer; font-size:13.5px; font-weight:700;
+    font-family:var(--font-body); transition:all .15s;
   }
-  nav.tabs button.active{background:var(--panel); color:var(--primary); box-shadow: var(--shadow);}
+  nav.tabs button.active{background:var(--ink); color:#fff;}
 
-  main{max-width:1200px; margin:0 auto; padding:32px 24px 100px;}
+  /* ===================== HERO BAND ===================== */
+  .hero{
+    position:relative; overflow:hidden;
+    background:
+      linear-gradient(115deg, rgba(200,16,46,.94), rgba(15,20,27,.96) 55%, rgba(0,132,61,.9)),
+      repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 2px, transparent 2px 34px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 34px);
+    color:#fff; padding:34px 32px 30px;
+  }
+  .hero-inner{max-width:1200px; margin:0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;}
+  .hero h2{font-family:var(--font-display); font-size:26px; font-weight:800; margin:0 0 6px; letter-spacing:-.4px;}
+  .hero p{margin:0; font-size:13.5px; color:rgba(255,255,255,.75); max-width:520px; line-height:1.5;}
+  .hero-badge{
+    display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25); padding:10px 18px; border-radius:14px;
+    backdrop-filter: blur(6px);
+  }
+  .hero-badge .n{font-family:var(--font-mono); font-weight:700; font-size:20px;}
+  .hero-badge .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.7); font-weight:700;}
+
+  main{max-width:1200px; margin:0 auto; padding:28px 24px 100px;}
 
   .legend-strip{
     display:flex; gap:20px; align-items:center; flex-wrap:wrap;
     padding:14px 20px; border-radius:12px;
     background:var(--panel); margin-bottom:24px; font-size:13px; color:var(--muted);
-    box-shadow: var(--shadow); border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm); border: 1px solid var(--line);
   }
   .legend-dot{width:10px; height:10px; border-radius:3px; display:inline-block; margin-right:8px;}
 
   .card{
     background: var(--panel);
-    border: 1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:24px;
-    box-shadow: var(--shadow);
+    border: 1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:22px;
+    box-shadow: var(--shadow-sm);
   }
-  .grid{display:grid; gap:20px;}
+  .grid{display:grid; gap:18px;}
   .grid.cols-4{grid-template-columns:repeat(4,1fr);}
   .grid.cols-2{grid-template-columns:repeat(2,1fr);}
-  @media (max-width:900px){ .grid.cols-4,.grid.cols-2{grid-template-columns:1fr 1fr;} }
-  @media (max-width:600px){ .grid.cols-4,.grid.cols-2{grid-template-columns:1fr;} }
+  .grid.cols-3{grid-template-columns:repeat(3,1fr);}
+  @media (max-width:900px){ .grid.cols-4,.grid.cols-2,.grid.cols-3{grid-template-columns:1fr 1fr;} }
+  @media (max-width:600px){ .grid.cols-4,.grid.cols-2,.grid.cols-3{grid-template-columns:1fr;} }
 
-  label{display:block; font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform: uppercase;}
+  label{display:block; font-size:11.5px; color:var(--muted); margin-bottom:8px; font-weight:700; text-transform: uppercase; letter-spacing:.03em;}
   input, select, textarea{
-    width:100%; background:var(--panel-2); border:1.5px solid transparent; color:var(--text);
-    padding:12px 14px; border-radius:10px; font-size:14px; outline:none;
+    width:100%; background:var(--panel-2); border:1.5px solid transparent; color:var(--ink);
+    padding:12px 14px; border-radius:10px; font-size:14px; outline:none; font-family:var(--font-body);
     transition:all .2s;
   }
   input:focus, select:focus, textarea:focus{border-color:var(--primary); background: #fff;}
 
   h2.section-title{
-    font-family:var(--font-display); font-size:16px; margin:0 0 20px; color:var(--text);
-    display:flex; align-items:center; gap:12px; font-weight:700;
+    font-family:var(--font-display); font-size:16px; margin:0 0 20px; color:var(--ink);
+    display:flex; align-items:center; gap:12px; font-weight:800;
   }
   h2.section-title .badge{
-    background:var(--secondary); color:#fff; font-size:12px; font-weight:800;
-    width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center;
+    background:var(--ink); color:#fff; font-size:12px; font-weight:800;
+    width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono);
   }
 
   .item-card{
-    border:1px solid var(--line); border-left:4px solid var(--line); border-radius:12px;
-    padding:20px; margin-bottom:16px; background:var(--panel); transition:all .2s;
+    display:flex; gap:16px; align-items:flex-start;
+    border:1px solid var(--line); border-radius:14px;
+    padding:18px; margin-bottom:14px; background:var(--panel); transition:all .2s;
   }
-  .item-card.state-conforme{border-left-color:var(--ok); background: #f0fdf4;}
-  .item-card.state-parcial{border-left-color:var(--mid); background: #fffbeb;}
-  .item-card.state-nao_conforme{border-left-color:var(--bad); background: #fef2f2;}
-  
-  .item-title{font-size:15px; font-weight:700; color: var(--text); font-family:var(--font-display);}
-  .item-desc{font-size:13px; color:var(--muted); margin-top:8px;}
+  .item-card.state-conforme{border-color:var(--ok); background: linear-gradient(0deg,#fff,#fff), var(--ok-dim); background-blend-mode:normal; background-color:#F8FDFA;}
+  .item-card.state-parcial{background-color:#FFFBF2; border-color:var(--mid);}
+  .item-card.state-nao_conforme{background-color:#FEF6F7; border-color:var(--bad);}
+
+  .cap-badge{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0; position:relative;
+    background: repeating-conic-gradient(var(--muted) 0deg 9deg, #cfd5df 9deg 18deg);
+    box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--line);
+  }
+  .item-card.state-conforme .cap-badge{background: repeating-conic-gradient(var(--ok) 0deg 9deg, #036b32 9deg 18deg);}
+  .item-card.state-parcial .cap-badge{background: repeating-conic-gradient(var(--mid) 0deg 9deg, #c9860f 9deg 18deg);}
+  .item-card.state-nao_conforme .cap-badge{background: repeating-conic-gradient(var(--bad) 0deg 9deg, var(--primary-dark) 9deg 18deg);}
+  .cap-badge::after{
+    content: attr(data-n); position:absolute; inset:5px; border-radius:50%; background:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:700; font-size:12px; color:var(--ink);
+  }
+
+  .item-body{flex:1; min-width:0;}
+  .item-title{font-size:14.5px; font-weight:700; color: var(--ink); font-family:var(--font-display);}
+  .item-desc{font-size:12.5px; color:var(--muted); margin-top:4px;}
+  .item-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px;}
   .peso-chip{
-    flex-shrink:0; font-size:11px; font-weight:700;
-    background:#fff; color:var(--primary); border:1.5px solid var(--primary); padding:4px 12px; border-radius:8px;
+    flex-shrink:0; font-size:10.5px; font-weight:800; font-family:var(--font-mono);
+    background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:4px 10px; border-radius:8px;
   }
-  
-  .status-row{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;}
+
+  .status-row{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
   .status-btn{
-    flex:1; min-width:140px; padding:12px; border-radius:10px; border:1.5px solid var(--line);
-    background:#fff; color:var(--muted); cursor:pointer; font-size:13px; font-weight:700; transition:all .2s;
+    flex:1; min-width:130px; padding:11px; border-radius:10px; border:1.5px solid var(--line);
+    background:#fff; color:var(--muted); cursor:pointer; font-size:12.5px; font-weight:700; transition:all .15s;
   }
   .status-btn.selected.ok{background:var(--ok); color:#fff; border-color:var(--ok);}
   .status-btn.selected.bad{background:var(--bad); color:#fff; border-color:var(--bad);}
   .status-btn.selected.mid{background:var(--mid); color:#fff; border-color:var(--mid);}
 
-  .thumb{height:64px; width: 64px; object-fit: cover; border-radius:8px; margin-top:8px; border:2px solid #fff; box-shadow: var(--shadow);}
+  .item-extra{display:grid; grid-template-columns:2fr 1fr; gap:14px; margin-top:14px;}
+  @media (max-width:640px){ .item-extra{grid-template-columns:1fr;} }
+  .thumb{height:60px; width: 60px; object-fit: cover; border-radius:8px; margin-top:8px; border:2px solid #fff; box-shadow: var(--shadow-sm);}
 
   button.primary{
     background:var(--primary); color:#fff; border:none; padding:14px 32px; border-radius:12px;
-    font-weight:700; font-size:15px; cursor:pointer; transition:all .2s;
-    box-shadow: 0 4px 14px rgba(0,132,68,0.3);
+    font-weight:700; font-size:15px; cursor:pointer; transition:all .2s; font-family:var(--font-body);
+    box-shadow: 0 8px 20px -6px rgba(200,16,46,0.45);
   }
-  button.primary:hover{transform: scale(1.02); background: var(--primary-light);}
+  button.primary:hover{transform: translateY(-1px); background: var(--primary-dark);}
   button.primary:disabled{opacity:.5; cursor:not-allowed;}
-  
+
   button.secondary{
-    background:#fff; color:var(--text); border:1.5px solid var(--line); padding:12px 20px; border-radius:10px;
-    font-size:14px; font-weight:600; cursor:pointer;
+    background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:11px 18px; border-radius:10px;
+    font-size:13.5px; font-weight:700; cursor:pointer;
   }
 
-  .kpi{padding:24px; border-left: 4px solid var(--primary);}
-  .kpi .val{font-family:var(--font-display); font-size:32px; font-weight:800; letter-spacing: -1px;}
-  .kpi .lbl{font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase;}
+  .kpi{padding:20px 22px; position:relative; overflow:hidden;}
+  .kpi::before{content:""; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--kpi-color, var(--primary));}
+  .kpi .val{font-family:var(--font-mono); font-size:28px; font-weight:700; letter-spacing: -0.5px; color:var(--ink);}
+  .kpi .lbl{font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;}
+  .kpi .trend{font-size:11.5px; font-weight:700; margin-top:8px;}
+  .kpi .trend.up{color:var(--ok);} .kpi .trend.down{color:var(--bad);}
 
-  table{width:100%; border-collapse:separate; border-spacing: 0; font-size:14px;}
-  th,td{padding:16px; border-bottom:1px solid var(--line); text-align:left;}
-  th{background: var(--panel-2); color:var(--muted); font-weight:700; font-size:11px; text-transform:uppercase;}
-  
-  .tag{font-size:12px; padding:4px 12px; border-radius:6px; font-weight:700;}
+  .chart-card{padding:20px 22px 12px;}
+  .chart-card h3{font-family:var(--font-display); font-size:14px; margin:0 0 14px; font-weight:700; color:var(--ink);}
+  .chart-wrap{position:relative; height:240px;}
+
+  table{width:100%; border-collapse:separate; border-spacing: 0; font-size:13.5px;}
+  th,td{padding:14px 16px; border-bottom:1px solid var(--line); text-align:left;}
+  th{background: var(--panel-2); color:var(--muted); font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;}
+  tbody tr:hover{background:var(--panel-2);}
+
+  .tag{font-size:11.5px; padding:4px 12px; border-radius:7px; font-weight:800; font-family:var(--font-mono);}
   .tag.ok{background:var(--ok-dim); color:var(--ok);}
   .tag.bad{background:var(--bad-dim); color:var(--bad);}
 
   .toast{
     position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
-    background:var(--text); color:#fff; padding:14px 28px; border-radius:12px;
-    font-weight:600; font-size:14px; z-index:100; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
+    background:var(--ink); color:#fff; padding:14px 28px; border-radius:12px;
+    font-weight:600; font-size:14px; z-index:100; box-shadow: var(--shadow);
   }
 
-  /* Uploading overlay */
   #uploadingOverlay{
-    position: fixed; top: 20px; right: 20px; background: var(--primary); color: #fff;
+    position: fixed; top: 20px; right: 20px; background: var(--ink); color: #fff;
     padding: 12px 20px; border-radius: 10px; z-index: 1000; box-shadow: var(--shadow);
     display: none; align-items: center; gap: 10px; font-weight: 600; font-size: 13px;
   }
@@ -179,7 +235,7 @@
 
 <header>
   <div class="brand">
-    <div class="brand-mark"><span>UR</span></div>
+    <div class="brand-mark"></div>
     <div>
       <h1>Auditoria de Estoque</h1>
       <div class="sub">Uberlândia Refrescos · Sistema de Gestão de Qualidade</div>
@@ -191,12 +247,27 @@
   </nav>
 </header>
 
+<div class="hero" id="heroBand">
+  <div class="hero-inner">
+    <div>
+      <h2 id="heroTitle">Checklist de Conformidade — Área de Estoque</h2>
+      <p>Avalie os 12 pontos críticos de organização, segurança e giro de estoque. Cada item pesa proporcionalmente à sua criticidade operacional.</p>
+    </div>
+    <div class="hero-badge">
+      <div>
+        <div class="n">85%</div>
+        <div class="l">Meta UR</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <main>
   <div class="legend-strip">
     <span><span class="legend-dot" style="background:var(--ok);"></span><b>Conforme</b> (100%)</span>
     <span><span class="legend-dot" style="background:var(--mid);"></span><b>Parcial</b> (50%)</span>
     <span><span class="legend-dot" style="background:var(--bad);"></span><b>Não Conforme</b> (0%)</span>
-    <span style="margin-left: auto; font-weight: 700; color: var(--primary);">Meta UR: 85%</span>
+    <span style="margin-left: auto; font-weight: 800; color: var(--primary);">Meta UR: 85%</span>
   </div>
 
   <section id="formSection">
@@ -218,6 +289,9 @@
       </div>
     </div>
 
+    <div class="card" style="padding:20px 24px 6px;">
+      <h2 class="section-title" style="margin-bottom:14px;"><span class="badge">2</span> Checklist</h2>
+    </div>
     <div id="checklistWrap"></div>
 
     <div class="card">
@@ -247,12 +321,24 @@
       </div>
     </div>
 
-    <div class="grid cols-4">
-      <div class="card kpi"><div class="val" id="kpiConform">0%</div><div class="lbl">Conformidade Média</div></div>
-      <div class="card kpi"><div class="val" id="kpiTotal">0</div><div class="lbl">Total Auditorias</div></div>
+    <div class="grid cols-4" id="kpiRow">
+      <div class="card kpi" style="--kpi-color:var(--primary);"><div class="val" id="kpiConform">0%</div><div class="lbl">Conformidade Média</div><div class="trend" id="kpiConformTrend"></div></div>
+      <div class="card kpi" style="--kpi-color:var(--ink);"><div class="val" id="kpiTotal">0</div><div class="lbl">Total de Auditorias</div></div>
+      <div class="card kpi" style="--kpi-color:var(--bad);"><div class="val" id="kpiDesvios">0</div><div class="lbl">Desvios Registrados</div></div>
+      <div class="card kpi" style="--kpi-color:var(--gold);"><div class="val" id="kpiTopItem" style="font-size:15px; line-height:1.3;">—</div><div class="lbl">Item Mais Recorrente</div></div>
+    </div>
+
+    <div class="grid cols-2">
+      <div class="card chart-card"><h3>Evolução da Conformidade (%)</h3><div class="chart-wrap"><canvas id="chartEvolucao"></canvas></div></div>
+      <div class="card chart-card"><h3>Distribuição de Status dos Itens</h3><div class="chart-wrap"><canvas id="chartStatus"></canvas></div></div>
+    </div>
+    <div class="grid cols-2">
+      <div class="card chart-card"><h3>Conformidade Média por Turno</h3><div class="chart-wrap"><canvas id="chartTurno"></canvas></div></div>
+      <div class="card chart-card"><h3>Ranking de Desvios por Item</h3><div class="chart-wrap"><canvas id="chartRanking"></canvas></div></div>
     </div>
 
     <div class="card" style="padding: 0; overflow: hidden;">
+      <div style="padding:20px 24px 4px;"><h2 class="section-title" style="margin-bottom:6px;">Histórico de Auditorias</h2></div>
       <div style="overflow-x:auto;">
         <table>
           <thead><tr><th>Data</th><th>Turno</th><th>Auditor</th><th>Conformidade</th><th>Ação</th><th>PDF</th></tr></thead>
@@ -322,8 +408,7 @@ async function compressImage(file) {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        
-        // Quality 0.6 for fast upload but good visibility
+
         canvas.toBlob((blob) => {
           resolve(blob);
         }, 'image/jpeg', 0.6);
@@ -342,24 +427,27 @@ CHECKLIST.forEach(item=>{
   card.className = "item-card";
   card.id = `itemcard-${item.id}`;
   card.innerHTML = `
-    <div class="item-head">
-      <div style="flex:1">
-        <div class="item-title">${String(item.id).padStart(2,"0")}. ${item.titulo}</div>
-        <div class="item-desc">${item.desc}</div>
+    <div class="cap-badge" data-n="${String(item.id).padStart(2,"0")}"></div>
+    <div class="item-body">
+      <div class="item-head">
+        <div>
+          <div class="item-title">${item.titulo}</div>
+          <div class="item-desc">${item.desc}</div>
+        </div>
+        <div class="peso-chip">PESO ${item.peso}</div>
       </div>
-      <div class="peso-chip">PESO ${item.peso}</div>
-    </div>
-    <div class="status-row" data-item="${item.id}">
-      <button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
-      <button type="button" class="status-btn mid" data-val="parcial">Parcial</button>
-      <button type="button" class="status-btn bad" data-val="nao_conforme">Não Conforme</button>
-    </div>
-    <div class="item-extra">
-      <div class="field"><label>Observação</label><textarea data-obs="${item.id}" placeholder="Descreva o desvio..."></textarea></div>
-      <div class="field">
-        <label>Foto</label>
-        <input type="file" accept="image/*" data-evidencia="${item.id}">
-        <img class="thumb" id="thumb-${item.id}" style="display:none;">
+      <div class="status-row" data-item="${item.id}">
+        <button type="button" class="status-btn ok" data-val="conforme">Conforme</button>
+        <button type="button" class="status-btn mid" data-val="parcial">Parcial</button>
+        <button type="button" class="status-btn bad" data-val="nao_conforme">Não Conforme</button>
+      </div>
+      <div class="item-extra">
+        <div class="field"><label>Observação</label><textarea data-obs="${item.id}" placeholder="Descreva o desvio..."></textarea></div>
+        <div class="field">
+          <label>Foto</label>
+          <input type="file" accept="image/*" data-evidencia="${item.id}">
+          <img class="thumb" id="thumb-${item.id}" style="display:none;">
+        </div>
       </div>
     </div>
   `;
@@ -389,8 +477,7 @@ checklistWrap.addEventListener("change", async (e)=>{
       const thumb = document.getElementById("thumb-"+id);
       thumb.src = URL.createObjectURL(file);
       thumb.style.display = "block";
-      
-      // Compress and store base64 for IMMEDIATE PDF generation
+
       const compressedBlob = await compressImage(file);
       itemState[id].evidenciaFile = compressedBlob;
       const reader = new FileReader();
@@ -400,82 +487,183 @@ checklistWrap.addEventListener("change", async (e)=>{
   }
 });
 
-// ===================== PDF GENERATION (INSTANT) =====================
+// ===================== PDF GENERATION (MODERNO) =====================
+const UR_RED = [200,16,46];
+const UR_RED_DARK = [143,10,31];
+const UR_GREEN = [0,132,61];
+const UR_INK = [16,21,28];
+const UR_MUTED = [107,118,134];
+
+function pdfHeader(doc, title, subtitle){
+  const w = doc.internal.pageSize.getWidth();
+  doc.setFillColor(...UR_INK);
+  doc.rect(0, 0, w, 34, 'F');
+  doc.setFillColor(...UR_RED);
+  doc.rect(0, 34, w, 3, 'F');
+  doc.setFillColor(...UR_GREEN);
+  doc.rect(0, 37, w, 1.4, 'F');
+
+  // bottle-cap mark
+  doc.setFillColor(...UR_RED);
+  doc.circle(18, 17, 9, 'F');
+  doc.setFillColor(255,255,255);
+  doc.setFontSize(9);
+  doc.setFont("helvetica","bold");
+  doc.text("UR", 18, 19.5, {align:"center"});
+
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(15);
+  doc.setFont("helvetica", "bold");
+  doc.text(title, 34, 15);
+  doc.setFontSize(9.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(220,220,225);
+  doc.text(subtitle, 34, 22);
+}
+
+function pdfFooter(doc){
+  const pageCount = doc.internal.getNumberOfPages();
+  const w = doc.internal.pageSize.getWidth();
+  const h = doc.internal.pageSize.getHeight();
+  for(let i=1;i<=pageCount;i++){
+    doc.setPage(i);
+    doc.setDrawColor(230,230,230);
+    doc.line(15, h-14, w-15, h-14);
+    doc.setFontSize(8);
+    doc.setTextColor(...UR_MUTED);
+    doc.setFont("helvetica","normal");
+    doc.text("Uberlândia Refrescos · Sistema de Gestão de Qualidade", 15, h-9);
+    doc.text(`Página ${i} de ${pageCount}`, w-15, h-9, {align:"right"});
+  }
+}
+
+function statusLabel(s){
+  return s === 'conforme' ? 'Conforme' : (s === 'parcial' ? 'Parcial' : 'Não Conforme');
+}
+
 function generateAuditPDF(auditData, imagesMap){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-  
-  // Header
-  doc.setFillColor(0, 132, 68);
-  doc.rect(0, 0, 210, 40, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(20);
-  doc.setFont("helvetica", "bold");
-  doc.text("Relatório de Auditoria de Estoque", 15, 22);
-  doc.setFontSize(10);
-  doc.text(`Uberlândia Refrescos | ${new Date().toLocaleString()}`, 15, 30);
 
-  // Info
-  doc.setTextColor(0, 0, 0);
+  pdfHeader(doc, "Relatório de Auditoria de Estoque", `Uberlândia Refrescos  ·  ${new Date().toLocaleString('pt-BR')}`);
+
+  // ---- meta info card ----
   doc.autoTable({
-    startY: 45,
+    startY: 46,
+    theme: 'grid',
+    styles:{ fontSize:9.5, cellPadding:5, lineColor:[228,232,239], lineWidth:0.2 },
+    headStyles:{ fillColor: UR_INK, textColor:255, fontStyle:'bold' },
     body: [
-      [`Data: ${auditData.data}`, `Turno: ${auditData.turno}`],
-      [`Auditor: ${auditData.auditor}`, `Área: ${auditData.area}`],
-      [`Conformidade: ${auditData.percConformidade}%`, `Desvios: ${auditData.naoConformidades}`]
+      ['Data', auditData.data, 'Turno', auditData.turno],
+      ['Auditor', auditData.auditor, 'Área', auditData.area],
+      ['Conformidade', `${auditData.percConformidade}%`, 'Desvios', String(auditData.naoConformidades)]
     ],
-    theme: 'plain',
-    styles: { fontSize: 10 }
+    columnStyles:{0:{fontStyle:'bold', textColor:UR_MUTED, cellWidth:30}, 2:{fontStyle:'bold', textColor:UR_MUTED, cellWidth:30}}
   });
 
-  // Table
-  doc.autoTable({
-    startY: doc.lastAutoTable.finalY + 10,
-    head: [['ID', 'Item', 'Status', 'Pontuação']],
-    body: auditData.items.map(i => [i.id, i.titulo, i.status.toUpperCase(), `${i.scoreObtido}/${i.peso}`]),
-    headStyles: { fillColor: [0, 132, 68] }
-  });
-
-  // Summary
-  doc.addPage();
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
-  doc.text("RESUMO DETALHADO", 15, 20);
+  // ---- conformidade banner ----
+  let y = doc.lastAutoTable.finalY + 8;
+  const meta = auditData.percConformidade >= 85;
+  doc.setFillColor(...(meta ? UR_GREEN : UR_RED));
+  doc.roundedRect(15, y, doc.internal.pageSize.getWidth()-30, 14, 3, 3, 'F');
+  doc.setTextColor(255,255,255);
   doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
-  
-  let y = 30;
+  doc.setFont("helvetica","bold");
+  doc.text(`Conformidade geral: ${auditData.percConformidade}%  —  ${meta ? 'Dentro da meta UR (85%)' : 'Abaixo da meta UR (85%)'}`, 20, y+9.5);
+
+  // ---- checklist table ----
+  doc.autoTable({
+    startY: y + 20,
+    head: [['#', 'Item', 'Status', 'Pontuação']],
+    body: auditData.items.map(i => [String(i.id).padStart(2,'0'), i.titulo, statusLabel(i.status), `${i.scoreObtido}/${i.peso}`]),
+    theme:'striped',
+    styles:{ fontSize:9, cellPadding:5 },
+    headStyles:{ fillColor: UR_INK, textColor:255, fontStyle:'bold' },
+    columnStyles:{0:{cellWidth:10, halign:'center'}, 2:{cellWidth:32}, 3:{cellWidth:24, halign:'center'}},
+    didParseCell: (data) => {
+      if(data.section === 'body' && data.column.index === 2){
+        const raw = auditData.items[data.row.index].status;
+        if(raw === 'conforme'){ data.cell.styles.fillColor = [226,245,234]; data.cell.styles.textColor = UR_GREEN; }
+        else if(raw === 'parcial'){ data.cell.styles.fillColor = [254,242,220]; data.cell.styles.textColor = [180,120,10]; }
+        else { data.cell.styles.fillColor = [251,229,233]; data.cell.styles.textColor = UR_RED; }
+        data.cell.styles.fontStyle = 'bold';
+      }
+    }
+  });
+
+  // ---- summary page ----
+  doc.addPage();
+  pdfHeader(doc, "Resumo Detalhado de Desvios", "Uberlândia Refrescos");
+  let sy = 46;
   const desvios = auditData.items.filter(i => i.status !== 'conforme');
   if(desvios.length > 0){
     desvios.forEach(d => {
-      doc.text(`• ${d.titulo}: ${d.status.toUpperCase()}`, 15, y);
-      y += 6;
-      if(d.obs) {
-        doc.setFontSize(9); doc.setTextColor(100);
-        doc.text(`  Nota: ${d.obs}`, 15, y);
-        y += 6;
-        doc.setFontSize(11); doc.setTextColor(0);
+      const color = d.status === 'parcial' ? [254,242,220] : [251,229,233];
+      const textColor = d.status === 'parcial' ? [180,120,10] : UR_RED;
+      doc.setFillColor(...color);
+      doc.roundedRect(15, sy-5, doc.internal.pageSize.getWidth()-30, d.obs ? 20 : 12, 2, 2, 'F');
+      doc.setTextColor(...textColor);
+      doc.setFontSize(10.5);
+      doc.setFont("helvetica","bold");
+      doc.text(`${statusLabel(d.status)}  ·  ${d.titulo}`, 19, sy);
+      if(d.obs){
+        doc.setFontSize(9);
+        doc.setFont("helvetica","normal");
+        doc.setTextColor(...UR_INK);
+        doc.text(doc.splitTextToSize(`Nota: ${d.obs}`, doc.internal.pageSize.getWidth()-42), 19, sy+7);
+        sy += 8;
       }
+      sy += 18;
+      if(sy > 260){ doc.addPage(); pdfHeader(doc, "Resumo Detalhado de Desvios", "Uberlândia Refrescos"); sy = 46; }
     });
   } else {
-    doc.text("Nenhum desvio encontrado.", 15, y);
+    doc.setTextColor(...UR_GREEN);
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("Nenhum desvio encontrado — operação 100% conforme.", 15, sy);
   }
 
-  // Photos
+  if(auditData.observacoesGerais || auditData.planoAcao){
+    sy += 6;
+    if(sy > 240){ doc.addPage(); pdfHeader(doc, "Resumo Detalhado de Desvios", "Uberlândia Refrescos"); sy = 46; }
+    doc.setDrawColor(228,232,239);
+    doc.line(15, sy, doc.internal.pageSize.getWidth()-15, sy);
+    sy += 10;
+    doc.setTextColor(...UR_INK);
+    doc.setFontSize(10.5);
+    doc.setFont("helvetica","bold");
+    doc.text("Observações Gerais", 15, sy); sy += 6;
+    doc.setFont("helvetica","normal"); doc.setFontSize(9.5);
+    doc.text(doc.splitTextToSize(auditData.observacoesGerais || "—", 180), 15, sy);
+    sy += 18;
+    doc.setFont("helvetica","bold"); doc.setFontSize(10.5);
+    doc.text("Plano de Ação Imediato", 15, sy); sy += 6;
+    doc.setFont("helvetica","normal"); doc.setFontSize(9.5);
+    doc.text(doc.splitTextToSize(auditData.planoAcao || "—", 180), 15, sy);
+  }
+
+  // ---- photo evidence ----
   const ids = Object.keys(imagesMap);
   if(ids.length > 0){
     doc.addPage();
-    doc.text("EVIDÊNCIAS FOTOGRÁFICAS", 15, 20);
-    let py = 30;
+    pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos");
+    let px = 15, py = 46, col = 0;
     ids.forEach(id => {
-      if(py > 230) { doc.addPage(); py = 20; }
-      doc.setFontSize(10);
-      doc.text(`Item ${id}`, 15, py);
-      doc.addImage(imagesMap[id], 'JPEG', 15, py + 5, 80, 50);
-      py += 65;
+      const item = CHECKLIST.find(c => String(c.id) === String(id));
+      if(py > 230){ doc.addPage(); pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos"); py = 46; px = 15; col = 0; }
+      doc.setDrawColor(228,232,239);
+      doc.roundedRect(px, py, 88, 68, 2, 2, 'S');
+      doc.addImage(imagesMap[id], 'JPEG', px+4, py+4, 80, 50);
+      doc.setFontSize(8.5);
+      doc.setTextColor(...UR_INK);
+      doc.setFont("helvetica","bold");
+      doc.text(doc.splitTextToSize(`Item ${String(id).padStart(2,'0')} — ${item ? item.titulo : ''}`, 80), px+4, py+62);
+      col++;
+      if(col === 2){ col = 0; px = 15; py += 76; } else { px = 108; }
     });
   }
 
+  pdfFooter(doc);
   doc.save(`Auditoria_UR_${auditData.data}.pdf`);
 }
 
@@ -489,7 +677,6 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   if(!data || !turno || !auditor) return alert("Preencha os campos obrigatórios!");
   if(CHECKLIST.some(i => !itemState[i.id].status)) return alert("Responda todo o checklist!");
 
-  // 1. Prepare Data
   const snapshotItems = [];
   const imagesMap = {};
   let pesoObtido = 0;
@@ -499,7 +686,7 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
     const score = st.status === 'conforme' ? item.peso : (st.status === 'parcial' ? item.peso/2 : 0);
     pesoObtido += score;
     snapshotItems.push({
-      id: item.id, titulo: item.titulo, peso: item.peso, 
+      id: item.id, titulo: item.titulo, peso: item.peso,
       status: st.status, scoreObtido: score, obs: st.obs
     });
     if(st.evidenciaBase64) imagesMap[item.id] = st.evidenciaBase64;
@@ -516,14 +703,11 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  // 2. INSTANT PDF DOWNLOAD
   generateAuditPDF(auditData, imagesMap);
   showToast("✓ PDF Gerado! Salvando dados em segundo plano...");
 
-  // 3. BACKGROUND UPLOAD (Doesn't block user)
   backgroundUpload(auditData);
 
-  // 4. RESET FORM IMMEDIATELY
   setTimeout(() => location.reload(), 1500);
 });
 
@@ -533,10 +717,8 @@ async function backgroundUpload(auditData) {
   overlay.style.display = "flex";
 
   try {
-    // First, add the document to Firestore
     const docRef = await db.collection(COLLECTION).add(auditData);
-    
-    // Then, upload images if any
+
     const imageItems = CHECKLIST.filter(i => itemState[i.id].evidenciaFile);
     let uploadedCount = 0;
 
@@ -546,19 +728,18 @@ async function backgroundUpload(auditData) {
       const ref = storage.ref().child(path);
       const snap = await ref.put(itemState[item.id].evidenciaFile);
       const url = await snap.ref.getDownloadURL();
-      
-      // Update item in firestore with URL
+
       const updatedItems = auditData.items.map(it => it.id === item.id ? {...it, evidenciaURL: url} : it);
       await docRef.update({ items: updatedItems });
       uploadedCount++;
     }
-    
-    overlay.style.background = "#10b981";
+
+    overlay.style.background = "#00843D";
     text.textContent = "✓ Sincronização concluída!";
     setTimeout(() => overlay.style.display = "none", 3000);
   } catch(e) {
     console.error(e);
-    overlay.style.background = "#ef4444";
+    overlay.style.background = "#C8102E";
     text.textContent = "⚠ Erro ao sincronizar fotos.";
   }
 }
@@ -574,18 +755,128 @@ document.getElementById("tabFormBtn").onclick = () => location.reload();
 document.getElementById("tabDashBtn").onclick = () => {
   document.getElementById("formSection").style.display = "none";
   document.getElementById("dashboardSection").style.display = "block";
+  document.getElementById("heroTitle").textContent = "Painel de Controle — Conformidade de Estoque";
   document.getElementById("tabDashBtn").classList.add("active");
   document.getElementById("tabFormBtn").classList.remove("active");
   loadDashboard();
 };
 
+// ===================== DASHBOARD & CHARTS =====================
+let charts = {};
+function destroyCharts(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
+
 async function loadDashboard(){
-  const snap = await db.collection(COLLECTION).orderBy("data","desc").limit(20).get();
-  const audits = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  const de = document.getElementById("fltDe").value;
+  const ate = document.getElementById("fltAte").value;
+  const turno = document.getElementById("fltTurno").value;
+
+  let query = db.collection(COLLECTION).orderBy("data","asc");
+  const snap = await query.get();
+  let audits = snap.docs.map(d => ({id:d.id, ...d.data()}));
+
+  if(de) audits = audits.filter(a => a.data >= de);
+  if(ate) audits = audits.filter(a => a.data <= ate);
+  if(turno) audits = audits.filter(a => a.turno === turno);
+
+  // ---- KPIs ----
+  const total = audits.length;
+  const mediaConf = total ? Math.round(audits.reduce((s,a)=>s+(a.percConformidade||0),0)/total) : 0;
+  const desviosTotais = audits.reduce((s,a)=>s+(a.naoConformidades||0),0);
+
+  document.getElementById("kpiConform").textContent = `${mediaConf}%`;
+  document.getElementById("kpiTotal").textContent = total;
+  document.getElementById("kpiDesvios").textContent = desviosTotais;
+
+  const trendEl = document.getElementById("kpiConformTrend");
+  if(total >= 2){
+    const half = Math.floor(total/2);
+    const firstHalf = audits.slice(0, half);
+    const secondHalf = audits.slice(half);
+    const avg = arr => arr.length ? arr.reduce((s,a)=>s+(a.percConformidade||0),0)/arr.length : 0;
+    const diff = Math.round(avg(secondHalf) - avg(firstHalf));
+    trendEl.textContent = diff >= 0 ? `▲ ${diff}% vs. período anterior` : `▼ ${Math.abs(diff)}% vs. período anterior`;
+    trendEl.className = "trend " + (diff >= 0 ? "up" : "down");
+  } else {
+    trendEl.textContent = "";
+  }
+
+  // ---- item ranking (desvios por item) ----
+  const itemDesvioCount = {};
+  CHECKLIST.forEach(c => itemDesvioCount[c.id] = 0);
+  audits.forEach(a => (a.items||[]).forEach(it => {
+    if(it.status !== 'conforme') itemDesvioCount[it.id] = (itemDesvioCount[it.id]||0) + 1;
+  }));
+  const rankedItems = Object.entries(itemDesvioCount).sort((a,b)=>b[1]-a[1]);
+  const topItemId = rankedItems.length && rankedItems[0][1] > 0 ? rankedItems[0][0] : null;
+  const topItem = topItemId ? CHECKLIST.find(c => String(c.id) === String(topItemId)) : null;
+  document.getElementById("kpiTopItem").textContent = topItem ? topItem.titulo : "Sem desvios";
+
+  // ---- status distribution ----
+  let confCount=0, parCount=0, naoCount=0;
+  audits.forEach(a => (a.items||[]).forEach(it => {
+    if(it.status === 'conforme') confCount++;
+    else if(it.status === 'parcial') parCount++;
+    else naoCount++;
+  }));
+
+  // ---- avg conformidade by turno ----
+  const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
+  const porTurno = turnos.map(t => {
+    const arr = audits.filter(a => a.turno === t);
+    return arr.length ? Math.round(arr.reduce((s,a)=>s+(a.percConformidade||0),0)/arr.length) : 0;
+  });
+
+  destroyCharts();
+  const gridColor = "#E4E8EF";
+
+  charts.evolucao = new Chart(document.getElementById("chartEvolucao"), {
+    type:'line',
+    data:{
+      labels: audits.map(a=>a.data),
+      datasets:[{
+        label:'Conformidade %', data: audits.map(a=>a.percConformidade||0),
+        borderColor:'#C8102E', backgroundColor:'rgba(200,16,46,0.08)', fill:true, tension:0.35, pointRadius:3
+      },{
+        label:'Meta', data: audits.map(()=>85),
+        borderColor:'#00843D', borderDash:[6,4], pointRadius:0
+      }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{min:0,max:100, grid:{color:gridColor}}, x:{grid:{display:false}} }, plugins:{legend:{position:'bottom'}} }
+  });
+
+  charts.status = new Chart(document.getElementById("chartStatus"), {
+    type:'doughnut',
+    data:{
+      labels:['Conforme','Parcial','Não Conforme'],
+      datasets:[{ data:[confCount,parCount,naoCount], backgroundColor:['#00843D','#F5A524','#C8102E'], borderWidth:0 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}} }
+  });
+
+  charts.turno = new Chart(document.getElementById("chartTurno"), {
+    type:'bar',
+    data:{
+      labels: turnos,
+      datasets:[{ label:'Conformidade média %', data: porTurno, backgroundColor:'#10151C', borderRadius:6 }]
+    },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{min:0,max:100, grid:{color:gridColor}}, x:{grid:{display:false}} }, plugins:{legend:{display:false}} }
+  });
+
+  charts.ranking = new Chart(document.getElementById("chartRanking"), {
+    type:'bar',
+    data:{
+      labels: rankedItems.slice(0,6).map(([id])=>{ const it = CHECKLIST.find(c=>String(c.id)===String(id)); return it ? (it.titulo.length>28 ? it.titulo.slice(0,26)+'…' : it.titulo) : id; }),
+      datasets:[{ label:'Desvios', data: rankedItems.slice(0,6).map(([,c])=>c), backgroundColor:'#C8102E', borderRadius:6 }]
+    },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{ x:{grid:{color:gridColor}}, y:{grid:{display:false}} }, plugins:{legend:{display:false}} }
+  });
+
+  // ---- table ----
   const tbody = document.getElementById("auditTableBody");
   tbody.innerHTML = "";
-  
-  audits.forEach(a => {
+  document.getElementById("emptyState").style.display = audits.length ? "none" : "block";
+
+  audits.slice().reverse().forEach(a => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${a.data}</td><td>${a.turno}</td><td>${a.auditor}</td>
@@ -597,6 +888,7 @@ async function loadDashboard(){
   });
 }
 
+document.getElementById("btnFilter").addEventListener("click", loadDashboard);
 document.getElementById("fData").valueAsDate = new Date();
 </script>
 </body>
