@@ -19,12 +19,11 @@
 
 <style>
   :root{
-    /* ---- UR token system ---- */
-    --primary:#C8102E;        /* vermelho da marca */
+    --primary:#C8102E;
     --primary-dark:#8F0A1F;
-    --accent:#00843D;         /* verde refresco */
+    --accent:#00843D;
     --accent-light:#00B04F;
-    --gold:#F5A524;           /* selo / destaque */
+    --gold:#F5A524;
     --ink:#10151C;
     --bg:#F3F5F8;
     --panel:#FFFFFF;
@@ -79,25 +78,27 @@
   }
   nav.tabs button.active{background:var(--ink); color:#fff;}
 
-  /* ===================== HERO BAND ===================== */
+  /* ===================== HERO BAND — motivo "gaseificado" ===================== */
   .hero{
     position:relative; overflow:hidden;
-    background:
-      linear-gradient(115deg, rgba(200,16,46,.94), rgba(15,20,27,.96) 55%, rgba(0,132,61,.9)),
-      repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 2px, transparent 2px 34px),
-      repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0 2px, transparent 2px 34px);
-    color:#fff; padding:34px 32px 30px;
+    background: linear-gradient(115deg, rgba(200,16,46,.95), rgba(15,20,27,.97) 55%, rgba(0,132,61,.92));
+    color:#fff; padding:38px 32px 32px;
   }
-  .hero-inner{max-width:1200px; margin:0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;}
-  .hero h2{font-family:var(--font-display); font-size:26px; font-weight:800; margin:0 0 6px; letter-spacing:-.4px;}
-  .hero p{margin:0; font-size:13.5px; color:rgba(255,255,255,.75); max-width:520px; line-height:1.5;}
+  .hero .bubbles{position:absolute; inset:0; pointer-events:none; opacity:.55;}
+  .hero .bubbles span{
+    position:absolute; border-radius:50%; background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .hero-inner{position:relative; max-width:1200px; margin:0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap;}
+  .hero h2{font-family:var(--font-display); font-size:27px; font-weight:800; margin:0 0 6px; letter-spacing:-.4px;}
+  .hero p{margin:0; font-size:13.5px; color:rgba(255,255,255,.78); max-width:520px; line-height:1.55;}
   .hero-badge{
-    display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.12);
-    border:1px solid rgba(255,255,255,.25); padding:10px 18px; border-radius:14px;
+    display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.28); padding:10px 18px; border-radius:14px;
     backdrop-filter: blur(6px);
   }
   .hero-badge .n{font-family:var(--font-mono); font-weight:700; font-size:20px;}
-  .hero-badge .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.7); font-weight:700;}
+  .hero-badge .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.72); font-weight:700;}
 
   main{max-width:1200px; margin:0 auto; padding:28px 24px 100px;}
 
@@ -112,7 +113,7 @@
   .card{
     background: var(--panel);
     border: 1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:22px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm); transition: box-shadow .2s;
   }
   .grid{display:grid; gap:18px;}
   .grid.cols-4{grid-template-columns:repeat(4,1fr);}
@@ -146,7 +147,7 @@
     border:1px solid var(--line); border-radius:14px;
     padding:18px; margin-bottom:14px; background:var(--panel); transition:all .2s;
   }
-  .item-card.state-conforme{border-color:var(--ok); background: linear-gradient(0deg,#fff,#fff), var(--ok-dim); background-blend-mode:normal; background-color:#F8FDFA;}
+  .item-card.state-conforme{border-color:var(--ok); background-color:#F8FDFA;}
   .item-card.state-parcial{background-color:#FFFBF2; border-color:var(--mid);}
   .item-card.state-nao_conforme{background-color:#FEF6F7; border-color:var(--bad);}
 
@@ -184,7 +185,6 @@
   .item-extra{display:grid; grid-template-columns:2fr 1fr; gap:14px; margin-top:14px;}
   @media (max-width:640px){ .item-extra{grid-template-columns:1fr;} }
 
-  /* ---- photo gallery (up to 6 photos per item) ---- */
   .thumb-gallery{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
   .thumb-item{position:relative; width:52px; height:52px; flex-shrink:0;}
   .thumb-item img{width:100%; height:100%; object-fit:cover; border-radius:8px; border:2px solid #fff; box-shadow: var(--shadow-sm); display:block;}
@@ -208,11 +208,14 @@
     background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:11px 18px; border-radius:10px;
     font-size:13.5px; font-weight:700; cursor:pointer;
   }
-  a.secondary{
-    background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:9px 16px; border-radius:10px;
-    font-size:12.5px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-block;
+  a.pillbtn, button.pillbtn{
+    background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:8px 15px; border-radius:9px;
+    font-size:12px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--font-body);
   }
-  a.secondary:hover{border-color:var(--primary); color:var(--primary);}
+  a.pillbtn:hover, button.pillbtn:hover{border-color:var(--primary); color:var(--primary);}
+  button.pillbtn:disabled{opacity:.55; cursor:wait;}
+  a.pillbtn.ready{border-color:var(--ok); color:var(--ok);}
 
   .kpi{padding:20px 22px; position:relative; overflow:hidden;}
   .kpi::before{content:""; position:absolute; top:0; left:0; width:4px; height:100%; background:var(--kpi-color, var(--primary));}
@@ -225,7 +228,7 @@
   .chart-card h3{font-family:var(--font-display); font-size:14px; margin:0 0 14px; font-weight:700; color:var(--ink);}
   .chart-wrap{position:relative; height:240px;}
 
-  table{width:100%; border-collapse:separate; border-spacing: 0; font-size:13.5px; min-width:560px;}
+  table{width:100%; border-collapse:separate; border-spacing: 0; font-size:13.5px; min-width:600px;}
   th,td{padding:14px 16px; border-bottom:1px solid var(--line); text-align:left;}
   th{background: var(--panel-2); color:var(--muted); font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;}
   tbody tr:hover{background:var(--panel-2);}
@@ -286,7 +289,7 @@
     .kpi .val{font-size:22px;}
     .chart-wrap{height:200px;}
 
-    table{min-width:520px; font-size:12.5px;}
+    table{min-width:560px; font-size:12.5px;}
     th,td{padding:11px 10px;}
     .card[style*="padding: 0"]{overflow-x:auto;}
 
@@ -322,6 +325,7 @@
 </header>
 
 <div class="hero" id="heroBand">
+  <div class="bubbles" id="heroBubbles"></div>
   <div class="hero-inner">
     <div>
       <h2 id="heroTitle">Checklist de Conformidade — Área de Estoque</h2>
@@ -427,6 +431,21 @@
 <div id="toast" class="toast" style="display:none;"></div>
 
 <script>
+// ===================== HERO BUBBLES (decorativo) =====================
+(function renderBubbles(){
+  const wrap = document.getElementById("heroBubbles");
+  const n = 14;
+  for(let i=0;i<n;i++){
+    const s = document.createElement("span");
+    const size = 10 + Math.random()*46;
+    s.style.width = size+"px";
+    s.style.height = size+"px";
+    s.style.left = (Math.random()*100)+"%";
+    s.style.top = (Math.random()*100)+"%";
+    wrap.appendChild(s);
+  }
+})();
+
 // ===================== FIREBASE =====================
 const firebaseConfig = {
   apiKey: "AIzaSyAKNghp24dikj2ABigCWeq-sH-RMTVOFO8",
@@ -498,6 +517,12 @@ function blobToBase64(blob){
     reader.onload = (evt) => resolve(evt.target.result);
     reader.readAsDataURL(blob);
   });
+}
+
+async function urlToBase64(url){
+  const res = await fetch(url);
+  const blob = await res.blob();
+  return blobToBase64(blob);
 }
 
 // ===================== RENDER CHECKLIST =====================
@@ -581,7 +606,7 @@ checklistWrap.addEventListener("change", async (e)=>{
       st.evidencias.push({blob: compressedBlob, base64});
     }
 
-    e.target.value = ""; // permite re-selecionar os mesmos arquivos depois
+    e.target.value = "";
     renderGallery(id);
   }
 });
@@ -605,12 +630,101 @@ function renderGallery(id){
   if(input) input.disabled = atMax;
 }
 
-// ===================== PDF GENERATION (MODERNO) =====================
+// ===================== PDF GENERATION (MODERNO, COM CAPA) =====================
 const UR_RED = [200,16,46];
-const UR_RED_DARK = [143,10,31];
 const UR_GREEN = [0,132,61];
 const UR_INK = [16,21,28];
 const UR_MUTED = [107,118,134];
+
+function statusLabel(s){
+  return s === 'conforme' ? 'Conforme' : (s === 'parcial' ? 'Parcial' : 'Não Conforme');
+}
+function statusColors(s){
+  if(s === 'conforme') return {bg:[226,245,234], fg:UR_GREEN};
+  if(s === 'parcial') return {bg:[254,242,220], fg:[180,120,10]};
+  return {bg:[251,229,233], fg:UR_RED};
+}
+
+function pdfCover(doc, auditData){
+  const w = doc.internal.pageSize.getWidth();
+  const h = doc.internal.pageSize.getHeight();
+
+  doc.setFillColor(...UR_INK);
+  doc.rect(0, 0, w, h, 'F');
+  doc.setFillColor(...UR_RED);
+  doc.rect(0, 0, w, 5, 'F');
+  doc.setFillColor(...UR_GREEN);
+  doc.rect(0, h-5, w, 5, 'F');
+
+  // bolhas decorativas (motivo "refresco gaseificado")
+  const bubblePositions = [[26,40,7],[46,66,4],[170,30,5],[186,60,3],[24,190,4],[178,210,6],[150,150,3],[40,140,3]];
+  bubblePositions.forEach(([bx,by,br], idx) => {
+    const alpha = idx % 2 === 0 ? UR_RED : UR_GREEN;
+    doc.setFillColor(alpha[0], alpha[1], alpha[2]);
+    doc.circle(bx, by, br, 'F');
+  });
+  doc.setGState && doc.setGState(new doc.GState({opacity:1}));
+
+  // marca
+  doc.setFillColor(...UR_RED);
+  doc.circle(w/2, 58, 15, 'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(13);
+  doc.text("UR", w/2, 62, {align:"center"});
+
+  doc.setFontSize(11);
+  doc.setFont("helvetica","bold");
+  doc.setTextColor(230,230,235);
+  doc.text("UBERLÂNDIA REFRESCOS", w/2, 84, {align:"center"});
+  doc.setFontSize(23);
+  doc.setTextColor(255,255,255);
+  doc.text("Relatório de Auditoria", w/2, 98, {align:"center"});
+  doc.text("de Estoque", w/2, 108, {align:"center"});
+
+  // selo de conformidade
+  const meta = auditData.percConformidade >= 85;
+  const badgeColor = meta ? UR_GREEN : UR_RED;
+  doc.setFillColor(...badgeColor);
+  doc.circle(w/2, 148, 22, 'F');
+  doc.setFillColor(255,255,255);
+  doc.circle(w/2, 148, 17.5, 'F');
+  doc.setTextColor(...badgeColor);
+  doc.setFontSize(20);
+  doc.setFont("helvetica","bold");
+  doc.text(`${auditData.percConformidade}%`, w/2, 152, {align:"center"});
+  doc.setFontSize(8);
+  doc.setTextColor(...UR_MUTED);
+  doc.setFont("helvetica","normal");
+  doc.text("CONFORMIDADE", w/2, 178, {align:"center"});
+  doc.setFontSize(8.5);
+  doc.setTextColor(220,220,225);
+  doc.text(meta ? "Dentro da meta UR (85%)" : "Abaixo da meta UR (85%)", w/2, 185, {align:"center"});
+
+  // ficha rápida
+  doc.setDrawColor(255,255,255);
+  doc.setLineWidth(0.2);
+  const fichaY = 205;
+  doc.line(40, fichaY, w-40, fichaY);
+  doc.setFontSize(9);
+  doc.setTextColor(255,255,255);
+  const cols = [
+    ["DATA", auditData.data], ["TURNO", auditData.turno],
+    ["AUDITOR", auditData.auditor], ["ÁREA", auditData.area]
+  ];
+  const colW = (w-80)/4;
+  cols.forEach((c, i) => {
+    const cx = 40 + colW*i;
+    doc.setFont("helvetica","bold"); doc.setFontSize(7.5); doc.setTextColor(190,190,198);
+    doc.text(c[0], cx, fichaY+10);
+    doc.setFont("helvetica","normal"); doc.setFontSize(9.5); doc.setTextColor(255,255,255);
+    doc.text(doc.splitTextToSize(c[1] || "—", colW-4), cx, fichaY+17);
+  });
+
+  doc.setFontSize(8);
+  doc.setTextColor(180,180,188);
+  doc.text(`Gerado em ${new Date().toLocaleString('pt-BR')}`, w/2, h-14, {align:"center"});
+}
 
 function pdfHeader(doc, title, subtitle){
   const w = doc.internal.pageSize.getWidth();
@@ -621,7 +735,6 @@ function pdfHeader(doc, title, subtitle){
   doc.setFillColor(...UR_GREEN);
   doc.rect(0, 37, w, 1.4, 'F');
 
-  // bottle-cap mark
   doc.setFillColor(...UR_RED);
   doc.circle(18, 17, 9, 'F');
   doc.setFillColor(255,255,255);
@@ -643,7 +756,7 @@ function pdfFooter(doc){
   const pageCount = doc.internal.getNumberOfPages();
   const w = doc.internal.pageSize.getWidth();
   const h = doc.internal.pageSize.getHeight();
-  for(let i=1;i<=pageCount;i++){
+  for(let i=2;i<=pageCount;i++){
     doc.setPage(i);
     doc.setDrawColor(230,230,230);
     doc.line(15, h-14, w-15, h-14);
@@ -651,24 +764,20 @@ function pdfFooter(doc){
     doc.setTextColor(...UR_MUTED);
     doc.setFont("helvetica","normal");
     doc.text("Uberlândia Refrescos · Sistema de Gestão de Qualidade", 15, h-9);
-    doc.text(`Página ${i} de ${pageCount}`, w-15, h-9, {align:"right"});
+    doc.text(`Página ${i-1} de ${pageCount-1}`, w-15, h-9, {align:"right"});
   }
 }
 
-function statusLabel(s){
-  return s === 'conforme' ? 'Conforme' : (s === 'parcial' ? 'Parcial' : 'Não Conforme');
-}
-
-// Gera o PDF e RETORNA o objeto jsPDF (não salva automaticamente),
-// para que possamos baixá-lo E também enviá-lo ao Storage para ficar
-// disponível no Painel de Controle.
+// Gera o PDF e RETORNA o objeto jsPDF (não salva automaticamente).
 function generateAuditPDF(auditData, imagesMap){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
-  pdfHeader(doc, "Relatório de Auditoria de Estoque", `Uberlândia Refrescos  ·  ${new Date().toLocaleString('pt-BR')}`);
+  pdfCover(doc, auditData);
 
-  // ---- meta info card ----
+  doc.addPage();
+  pdfHeader(doc, "Checklist da Auditoria", `Uberlândia Refrescos  ·  ${auditData.data}  ·  ${auditData.turno}`);
+
   doc.autoTable({
     startY: 46,
     theme: 'grid',
@@ -682,32 +791,33 @@ function generateAuditPDF(auditData, imagesMap){
     columnStyles:{0:{fontStyle:'bold', textColor:UR_MUTED, cellWidth:30}, 2:{fontStyle:'bold', textColor:UR_MUTED, cellWidth:30}}
   });
 
-  // ---- conformidade banner ----
-  let y = doc.lastAutoTable.finalY + 8;
-  const meta = auditData.percConformidade >= 85;
-  doc.setFillColor(...(meta ? UR_GREEN : UR_RED));
-  doc.roundedRect(15, y, doc.internal.pageSize.getWidth()-30, 14, 3, 3, 'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(11);
-  doc.setFont("helvetica","bold");
-  doc.text(`Conformidade geral: ${auditData.percConformidade}%  —  ${meta ? 'Dentro da meta UR (85%)' : 'Abaixo da meta UR (85%)'}`, 20, y+9.5);
+  let y = doc.lastAutoTable.finalY + 10;
 
-  // ---- checklist table ----
   doc.autoTable({
-    startY: y + 20,
+    startY: y,
     head: [['#', 'Item', 'Status', 'Pontuação']],
     body: auditData.items.map(i => [String(i.id).padStart(2,'0'), i.titulo, statusLabel(i.status), `${i.scoreObtido}/${i.peso}`]),
     theme:'striped',
-    styles:{ fontSize:9, cellPadding:5 },
+    styles:{ fontSize:9, cellPadding:{top:6,bottom:6,left:5,right:5} },
     headStyles:{ fillColor: UR_INK, textColor:255, fontStyle:'bold' },
-    columnStyles:{0:{cellWidth:10, halign:'center'}, 2:{cellWidth:32}, 3:{cellWidth:24, halign:'center'}},
+    columnStyles:{0:{cellWidth:10, halign:'center'}, 2:{cellWidth:34, halign:'center'}, 3:{cellWidth:24, halign:'center'}},
     didParseCell: (data) => {
       if(data.section === 'body' && data.column.index === 2){
+        data.cell.text = [];
+        data.cell.styles.fillColor = 255;
+      }
+    },
+    didDrawCell: (data) => {
+      if(data.section === 'body' && data.column.index === 2){
         const raw = auditData.items[data.row.index].status;
-        if(raw === 'conforme'){ data.cell.styles.fillColor = [226,245,234]; data.cell.styles.textColor = UR_GREEN; }
-        else if(raw === 'parcial'){ data.cell.styles.fillColor = [254,242,220]; data.cell.styles.textColor = [180,120,10]; }
-        else { data.cell.styles.fillColor = [251,229,233]; data.cell.styles.textColor = UR_RED; }
-        data.cell.styles.fontStyle = 'bold';
+        const c = statusColors(raw);
+        const padX = 3, padY = 2.2;
+        doc.setFillColor(...c.bg);
+        doc.roundedRect(data.cell.x+padX, data.cell.y+padY, data.cell.width-padX*2, data.cell.height-padY*2, 2.5, 2.5, 'F');
+        doc.setTextColor(...c.fg);
+        doc.setFont("helvetica","bold");
+        doc.setFontSize(8.2);
+        doc.text(statusLabel(raw), data.cell.x + data.cell.width/2, data.cell.y + data.cell.height/2 + 1.2, {align:'center'});
       }
     }
   });
@@ -719,11 +829,10 @@ function generateAuditPDF(auditData, imagesMap){
   const desvios = auditData.items.filter(i => i.status !== 'conforme');
   if(desvios.length > 0){
     desvios.forEach(d => {
-      const color = d.status === 'parcial' ? [254,242,220] : [251,229,233];
-      const textColor = d.status === 'parcial' ? [180,120,10] : UR_RED;
-      doc.setFillColor(...color);
+      const c = statusColors(d.status);
+      doc.setFillColor(...c.bg);
       doc.roundedRect(15, sy-5, doc.internal.pageSize.getWidth()-30, d.obs ? 20 : 12, 2, 2, 'F');
-      doc.setTextColor(...textColor);
+      doc.setTextColor(...c.fg);
       doc.setFontSize(10.5);
       doc.setFont("helvetica","bold");
       doc.text(`${statusLabel(d.status)}  ·  ${d.titulo}`, 19, sy);
@@ -763,7 +872,7 @@ function generateAuditPDF(auditData, imagesMap){
     doc.text(doc.splitTextToSize(auditData.planoAcao || "—", 180), 15, sy);
   }
 
-  // ---- photo evidence (até 6 fotos por item) ----
+  // ---- photo evidence ----
   const ids = Object.keys(imagesMap);
   if(ids.length > 0){
     doc.addPage();
@@ -775,7 +884,7 @@ function generateAuditPDF(auditData, imagesMap){
       fotos.forEach((imgB64, i) => {
         if(py > 230){ doc.addPage(); pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos"); py = 46; px = 15; col = 0; }
         doc.setDrawColor(228,232,239);
-        doc.roundedRect(px, py, 88, 68, 2, 2, 'S');
+        doc.roundedRect(px, py, 88, 68, 3, 3, 'S');
         doc.addImage(imgB64, 'JPEG', px+4, py+4, 80, 50);
         doc.setFontSize(8.5);
         doc.setTextColor(...UR_INK);
@@ -838,25 +947,40 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   setTimeout(() => location.reload(), 1500);
 });
 
-// Faz upload do PDF (para ficar disponível no Painel de Controle) e das
-// fotos de evidência (até 6 por item) em segundo plano, sem travar a tela.
+// Salva os dados e tenta sincronizar o PDF e as fotos. Cada etapa é isolada:
+// uma falha ao enviar o PDF, por exemplo, nunca impede o envio das fotos
+// (e vice-versa), para que o máximo de dados fique disponível no Painel.
 async function backgroundUpload(auditData, pdfBlob) {
   const overlay = document.getElementById("uploadingOverlay");
   const text = document.getElementById("uploadText");
   overlay.style.display = "flex";
 
+  let docRef;
   try {
-    const docRef = await db.collection(COLLECTION).add(auditData);
+    docRef = await db.collection(COLLECTION).add(auditData);
+  } catch(e) {
+    console.error("Falha ao salvar registro:", e);
+    overlay.style.background = "#C8102E";
+    text.textContent = "⚠ Erro ao salvar o registro da auditoria.";
+    setTimeout(() => overlay.style.display = "none", 4000);
+    return;
+  }
 
-    // ---- upload do PDF ----
+  let pdfOk = false;
+  try {
     text.textContent = "Enviando PDF do relatório...";
     const pdfPath = `ur_auditoria_pdfs/${docRef.id}.pdf`;
     const pdfRef = storage.ref().child(pdfPath);
     const pdfSnap = await pdfRef.put(pdfBlob, { contentType: 'application/pdf' });
     const pdfURL = await pdfSnap.ref.getDownloadURL();
     await docRef.update({ pdfURL });
+    pdfOk = true;
+  } catch(e) {
+    console.error("Falha ao enviar PDF (o registro em si foi salvo normalmente):", e);
+  }
 
-    // ---- upload das fotos (até 6 por item) ----
+  let photosOk = true;
+  try {
     const imageItems = CHECKLIST.filter(i => itemState[i.id].evidencias.length > 0);
     const totalImages = imageItems.reduce((s,i)=> s + itemState[i.id].evidencias.length, 0);
     let uploadedCount = 0;
@@ -868,24 +992,38 @@ async function backgroundUpload(auditData, pdfBlob) {
       for(let idx=0; idx<evidencias.length; idx++){
         uploadedCount++;
         text.textContent = `Enviando evidências (${uploadedCount}/${totalImages})...`;
-        const path = `ur_auditoria/${docRef.id}_${item.id}_${idx}.jpg`;
-        const ref = storage.ref().child(path);
-        const snap = await ref.put(evidencias[idx].blob);
-        const url = await snap.ref.getDownloadURL();
-        urls.push(url);
+        try {
+          const path = `ur_auditoria/${docRef.id}_${item.id}_${idx}.jpg`;
+          const ref = storage.ref().child(path);
+          const snap = await ref.put(evidencias[idx].blob);
+          const url = await snap.ref.getDownloadURL();
+          urls.push(url);
+        } catch(innerErr) {
+          console.error(`Falha ao enviar foto ${idx} do item ${item.id}:`, innerErr);
+          photosOk = false;
+        }
       }
-      updatedItems = updatedItems.map(it => it.id === item.id ? {...it, evidenciasURLs: urls} : it);
-      await docRef.update({ items: updatedItems });
+      if(urls.length){
+        updatedItems = updatedItems.map(it => it.id === item.id ? {...it, evidenciasURLs: urls} : it);
+        await docRef.update({ items: updatedItems });
+      }
     }
+  } catch(e) {
+    console.error("Falha geral no envio de fotos:", e);
+    photosOk = false;
+  }
 
+  if(pdfOk && photosOk){
     overlay.style.background = "#00843D";
     text.textContent = "✓ Sincronização concluída! PDF disponível no Painel.";
-    setTimeout(() => overlay.style.display = "none", 3500);
-  } catch(e) {
-    console.error(e);
-    overlay.style.background = "#C8102E";
-    text.textContent = "⚠ Erro ao sincronizar.";
+  } else if(pdfOk){
+    overlay.style.background = "#F5A524";
+    text.textContent = "✓ PDF sincronizado. Algumas fotos falharam — o Painel ainda permite gerar o PDF novamente.";
+  } else {
+    overlay.style.background = "#F5A524";
+    text.textContent = "PDF será gerado sob demanda no Painel (envio automático falhou).";
   }
+  setTimeout(() => overlay.style.display = "none", 4500);
 }
 
 // ===================== UTILS =====================
@@ -907,7 +1045,54 @@ document.getElementById("tabDashBtn").onclick = () => {
 
 // ===================== DASHBOARD & CHARTS =====================
 let charts = {};
+let auditsById = {};
 function destroyCharts(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
+
+// Sempre disponibiliza o PDF no Painel: se o registro já tem pdfURL, baixa
+// direto; caso contrário, reconstrói o PDF no navegador a partir dos dados
+// e fotos salvos (e tenta sincronizar o resultado em segundo plano).
+async function ensurePdfForRow(auditId){
+  const audit = auditsById[auditId];
+  if(!audit) return;
+  const btn = document.getElementById(`pdfbtn-${auditId}`);
+  if(btn){ btn.disabled = true; btn.textContent = "Gerando..."; }
+
+  try {
+    const imagesMap = {};
+    for(const item of (audit.items || [])){
+      if(item.evidenciasURLs && item.evidenciasURLs.length){
+        const base64s = [];
+        for(const url of item.evidenciasURLs){
+          try { base64s.push(await urlToBase64(url)); }
+          catch(err){ console.error("Falha ao carregar foto de evidência:", err); }
+        }
+        if(base64s.length) imagesMap[item.id] = base64s;
+      }
+    }
+
+    const doc = generateAuditPDF(audit, imagesMap);
+    doc.save(`Auditoria_UR_${audit.data}.pdf`);
+
+    // tenta sincronizar para as próximas vezes
+    try {
+      const pdfBlob = doc.output('blob');
+      const pdfPath = `ur_auditoria_pdfs/${auditId}.pdf`;
+      const pdfRef = storage.ref().child(pdfPath);
+      const snap = await pdfRef.put(pdfBlob, { contentType: 'application/pdf' });
+      const pdfURL = await snap.ref.getDownloadURL();
+      await db.collection(COLLECTION).doc(auditId).update({ pdfURL });
+    } catch(syncErr){
+      console.error("Não foi possível salvar o PDF gerado para acesso futuro:", syncErr);
+    }
+
+    showToast("✓ PDF gerado a partir dos dados salvos.");
+    loadDashboard();
+  } catch(e){
+    console.error("Falha ao gerar PDF sob demanda:", e);
+    showToast("⚠ Não foi possível gerar o PDF agora. Tente novamente.");
+    if(btn){ btn.disabled = false; btn.textContent = "Gerar PDF"; }
+  }
+}
 
 async function loadDashboard(){
   const de = document.getElementById("fltDe").value;
@@ -921,6 +1106,9 @@ async function loadDashboard(){
   if(de) audits = audits.filter(a => a.data >= de);
   if(ate) audits = audits.filter(a => a.data <= ate);
   if(turno) audits = audits.filter(a => a.turno === turno);
+
+  auditsById = {};
+  audits.forEach(a => auditsById[a.id] = a);
 
   // ---- KPIs ----
   const total = audits.length;
@@ -1023,8 +1211,8 @@ async function loadDashboard(){
   audits.slice().reverse().forEach(a => {
     const tr = document.createElement("tr");
     const pdfCell = a.pdfURL
-      ? `<a class="secondary" href="${a.pdfURL}" target="_blank" rel="noopener">Baixar PDF</a>`
-      : `<span style="color:var(--muted); font-size:12px;">Sincronizando…</span>`;
+      ? `<a class="pillbtn ready" href="${a.pdfURL}" target="_blank" rel="noopener">Baixar PDF</a>`
+      : `<button type="button" class="pillbtn" id="pdfbtn-${a.id}" onclick="ensurePdfForRow('${a.id}')">Gerar PDF</button>`;
     tr.innerHTML = `
       <td>${a.data}</td><td>${a.turno}</td><td>${a.auditor}</td>
       <td><span class="tag ${a.percConformidade>=85?'ok':'bad'}">${a.percConformidade}%</span></td>
