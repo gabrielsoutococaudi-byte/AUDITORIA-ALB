@@ -922,7 +922,13 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   btn.disabled = true;
   btn.textContent = "Gerando PDF...";
   msg.textContent = "Montando o relatório, o download começa em instantes...";
-  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  // Usamos setTimeout (não requestAnimationFrame) de propósito: rAF é
+  // pausado pelo navegador quando a tela do celular apaga ou o app vai
+  // para segundo plano, o que travava a geração por minutos. setTimeout
+  // continua disparando mesmo em segundo plano.
+  await new Promise(r => setTimeout(r, 20));
+
+  try {
 
   const snapshotItems = [];
   const imagesMap = {};
@@ -960,6 +966,14 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   backgroundUpload(auditData, pdfBlob);
 
   setTimeout(() => location.reload(), 1500);
+
+  } catch(err) {
+    console.error("Falha ao gerar o PDF:", err);
+    alert("Não foi possível gerar o PDF. Tente novamente.");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Finalizar e Baixar PDF";
+  }
 });
 
 // Salva os dados e tenta sincronizar o PDF e as fotos. Cada etapa é isolada:
