@@ -289,8 +289,6 @@
     .status-btn{min-width:0; padding:12px 4px; font-size:11.5px; text-align:center;}
 
     button.primary{width:100%; padding:15px; font-size:15px;}
-    #formSection > div[style*="display:flex"]{flex-direction:column; align-items:stretch !important; gap:10px;}
-
     .kpi .val{font-size:24px;}
     .chart-wrap{height:210px;}
 
@@ -313,7 +311,7 @@
 <body>
 
 <div id="uploadingOverlay">
-  <span id="uploadText">Enviando evidências (0/0)...</span>
+  <span id="uploadText">Sincronizando com o banco de dados...</span>
 </div>
 
 <header>
@@ -438,7 +436,7 @@
 
 <script>
 // ===================== CONSTANTES DE NEGÓCIO =====================
-const META_UR = 60; // Alterado de 80% para 60%
+const META_UR = 60; // Meta alterada para 60%
 
 // ===================== HERO BUBBLES =====================
 (function renderBubbles(){
@@ -456,7 +454,7 @@ const META_UR = 60; // Alterado de 80% para 60%
   }
 })();
 
-// ===================== FIREBASE =====================
+// ===================== FIREBASE CONFIG =====================
 const firebaseConfig = {
   apiKey: "AIzaSyAKNghp24dikj2ABigCWeq-sH-RMTVOFO8",
   authDomain: "auditoria-alb-f26bc.firebaseapp.com",
@@ -489,7 +487,7 @@ const CHECKLIST = [
 ];
 const PESO_TOTAL = CHECKLIST.reduce((s,i) => s + i.peso, 0);
 
-// ===================== COMPRESSÃO OTIMIZADA DE IMAGEM =====================
+// ===================== COMPRESSÃO OTIMIZADA =====================
 async function compressImage(file) {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -499,8 +497,7 @@ async function compressImage(file) {
       img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        // Reduzido para 500px máx e qualidade 0.35 para diminuir drasticamente o peso (50KB por foto)
-        const MAX_WIDTH = 500;
+        const MAX_WIDTH = 500; // Reduzido para evitar sobrecarga de memória
         let width = img.width;
         let height = img.height;
 
@@ -516,7 +513,7 @@ async function compressImage(file) {
 
         canvas.toBlob((blob) => {
           resolve(blob);
-        }, 'image/jpeg', 0.35);
+        }, 'image/jpeg', 0.4); // Qualidade ajustada
       };
     };
   });
@@ -690,7 +687,6 @@ function pdfCover(doc, auditData){
   doc.text("Relatório de Auditoria", w/2, 98, {align:"center"});
   doc.text("de Estoque", w/2, 108, {align:"center"});
 
-  // Selo de conformidade atualizado para a Meta de 60%
   const meta = auditData.percConformidade >= META_UR;
   const badgeColor = meta ? UR_GREEN : UR_RED;
   doc.setFillColor(...badgeColor);
@@ -877,7 +873,7 @@ function generateAuditPDF(auditData, imagesMap = {}){
     doc.text(doc.splitTextToSize(auditData.planoAcao || "—", 180), 15, sy);
   }
 
-  // Evidências
+  // ---- Evidências Fotográficas Protegidas ----
   const ids = Object.keys(imagesMap);
   if(ids.length > 0){
     doc.addPage();
@@ -887,14 +883,25 @@ function generateAuditPDF(auditData, imagesMap = {}){
       const item = CHECKLIST.find(c => String(c.id) === String(id));
       const fotos = imagesMap[id];
       fotos.forEach((imgB64, i) => {
-        if(py > 230){ doc.addPage(); pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos"); py = 46; px = 15; col = 0; }
-        doc.setDrawColor(228,232,239);
-        doc.roundedRect(px, py, 88, 68, 3, 3, 'S');
-        doc.addImage(imgB64, 'JPEG', px+4, py+4, 80, 50);
-        doc.setFontSize(8.5);
-        doc.setTextColor(...UR_INK);
-        doc.setFont("helvetica","bold");
-        doc.text(doc.splitTextToSize(`Item ${String(id).padStart(2,'0')} — Foto ${i+1}/${fotos.length} — ${item ? item.titulo : ''}`, 80), px+4, py+62);
+        if(py > 230){ 
+          doc.addPage(); 
+          pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos"); 
+          py = 46; px = 15; col = 0; 
+        }
+        
+        try {
+          doc.setDrawColor(228,232,239);
+          doc.roundedRect(px, py, 88, 68, 3, 3, 'S');
+          // Utilização de 'FAST' para prevenir estouro de memória
+          doc.addImage(imgB64, 'JPEG', px+4, py+4, 80, 50, undefined, 'FAST');
+          doc.setFontSize(8.5);
+          doc.setTextColor(...UR_INK);
+          doc.setFont("helvetica","bold");
+          doc.text(doc.splitTextToSize(`Item ${String(id).padStart(2,'0')} — Foto ${i+1}/${fotos.length} — ${item ? item.titulo : ''}`, 80), px+4, py+62);
+        } catch(imgErr) {
+          console.warn(`Aviso: falha ao desenhar imagem no PDF (Item ${id}):`, imgErr);
+        }
+
         col++;
         if(col === 2){ col = 0; px = 15; py += 76; } else { px = 108; }
       });
@@ -905,7 +912,7 @@ function generateAuditPDF(auditData, imagesMap = {}){
   return doc;
 }
 
-// ===================== SUBMIT OTIMIZADO (PARALELISMO) =====================
+// ===================== SUBMIT & UPLOAD PARALELO =====================
 document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   const data = document.getElementById("fData").value;
   const turno = document.getElementById("fTurno").value;
@@ -920,8 +927,8 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   btn.disabled = true;
   btn.textContent = "Processando...";
   msg.textContent = "Gerando relatório e salvando...";
-  
-  await new Promise(r => setTimeout(r, 20));
+
+  await new Promise(r => setTimeout(r, 30));
 
   try {
     const snapshotItems = [];
@@ -951,28 +958,28 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
-    // Gera e Baixa o PDF localmente
+    // Gera e faz download imediato do PDF no navegador do cliente
     const doc = generateAuditPDF(auditData, imagesMap);
     doc.save(`Auditoria_UR_${auditData.data}.pdf`);
     msg.textContent = "✓ PDF Baixado!";
-    showToast("✓ PDF Gerado! Sincronizando dados no banco...");
+    showToast("✓ PDF Gerado! Sincronizando dados no servidor...");
 
     const pdfBlob = doc.output('blob');
 
-    // Executa o Upload Otimizado sem bloquear a UX
+    // Executa a sincronização com o Firebase em segundo plano
     backgroundUploadOptimized(auditData, pdfBlob);
 
-    setTimeout(() => location.reload(), 1800);
+    setTimeout(() => location.reload(), 2000);
 
   } catch(err) {
-    console.error("Falha ao salvar auditoria:", err);
+    console.error("Falha ao processar auditoria:", err);
     alert("Ocorreu um erro ao processar. Tente novamente.");
     btn.disabled = false;
     btn.textContent = "Finalizar e Baixar PDF";
+    msg.textContent = "";
   }
 });
 
-// Upload Paralelo e Otimizado para Firebase
 async function backgroundUploadOptimized(auditData, pdfBlob) {
   const overlay = document.getElementById("uploadingOverlay");
   const text = document.getElementById("uploadText");
@@ -980,22 +987,19 @@ async function backgroundUploadOptimized(auditData, pdfBlob) {
   text.textContent = "Sincronizando com o Firebase...";
 
   try {
-    // 1. Salva Documento Principal
     const docRef = await db.collection(COLLECTION).add(auditData);
-    
-    // Lista de promessas para disparo paralelo
     const uploadTasks = [];
 
-    // 2. Task Upload PDF
+    // Task Upload PDF
     const pdfPath = `ur_auditoria_pdfs/${docRef.id}.pdf`;
     const pdfRef = storage.ref().child(pdfPath);
     const pdfTask = pdfRef.put(pdfBlob, { contentType: 'application/pdf' })
       .then(snap => snap.ref.getDownloadURL())
       .then(pdfURL => docRef.update({ pdfURL }))
-      .catch(e => console.error("Erro upload PDF:", e));
+      .catch(e => console.error("Erro no upload do PDF:", e));
     uploadTasks.push(pdfTask);
 
-    // 3. Tasks Upload de Imagens Paralelas
+    // Upload das Imagens em Paralelo
     const imageItems = CHECKLIST.filter(i => itemState[i.id].evidencias.length > 0);
     const photoUploadPromises = [];
     const itemUrlsMap = {};
@@ -1012,10 +1016,8 @@ async function backgroundUploadOptimized(auditData, pdfBlob) {
       });
     });
 
-    // Aguarda todos os uploads em paralelo
     await Promise.all([...uploadTasks, ...photoUploadPromises]);
 
-    // Atualiza links das evidências no documento Firestore de uma única vez
     if (Object.keys(itemUrlsMap).length > 0) {
       const updatedItems = auditData.items.map(it => {
         if (itemUrlsMap[it.id] && itemUrlsMap[it.id].length > 0) {
@@ -1027,18 +1029,18 @@ async function backgroundUploadOptimized(auditData, pdfBlob) {
     }
 
     overlay.style.background = "#00843D";
-    text.textContent = "✓ Sincronização realizada com sucesso!";
+    text.textContent = "✓ Sincronização concluída com sucesso!";
 
   } catch(e) {
-    console.error("Erro no envio em segundo plano:", e);
+    console.error("Erro na sincronização:", e);
     overlay.style.background = "#C8102E";
-    text.textContent = "⚠ Ocorreu uma falha no envio dos dados.";
+    text.textContent = "⚠ Ocorreu uma falha no salvamento remoto.";
   } finally {
     setTimeout(() => overlay.style.display = "none", 3000);
   }
 }
 
-// ===================== UTILS =====================
+// ===================== UTILS & DASHBOARD =====================
 function showToast(msg){
   const t = document.getElementById("toast");
   t.textContent = msg; t.style.display = "block";
@@ -1055,15 +1057,14 @@ document.getElementById("tabDashBtn").onclick = () => {
   loadDashboard();
 };
 
-// ===================== DASHBOARD & CHARTS =====================
 let charts = {};
 let auditsById = {};
 function destroyCharts(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
-// CORREÇÃO CRÍTICA DO PDF NO PAINEL DE CONTROLE
+// GERAR/BAIXAR PDF NO PAINEL DE CONTROLE
 window.ensurePdfForRow = async function(auditId){
   const audit = auditsById[auditId];
-  if(!audit) return alert("Dados da auditoria não foram localizados!");
+  if(!audit) return alert("Auditoria não encontrada no histórico!");
 
   const btn = document.getElementById(`pdfbtn-${auditId}`);
   if(btn){ btn.disabled = true; btn.textContent = "Gerando..."; }
@@ -1078,7 +1079,7 @@ window.ensurePdfForRow = async function(auditId){
             try { 
               const b64 = await urlToBase64(url);
               base64s.push(b64); 
-            } catch(err){ console.error("Erro ao converter URL para Base64:", err); }
+            } catch(err){ console.error("Erro ao converter URL:", err); }
           }
           if(base64s.length) imagesMap[item.id] = base64s;
         }
@@ -1089,8 +1090,8 @@ window.ensurePdfForRow = async function(auditId){
     doc.save(`Auditoria_UR_${audit.data || 'relatorio'}.pdf`);
     showToast("✓ PDF baixado com sucesso!");
   } catch(e){
-    console.error("Falha ao gerar PDF:", e);
-    showToast("⚠ Erro ao gerar o PDF do histórico.");
+    console.error("Falha ao gerar PDF no painel:", e);
+    showToast("⚠ Erro ao gerar o PDF.");
   } finally {
     if(btn){ btn.disabled = false; btn.textContent = "Gerar PDF"; }
   }
@@ -1202,7 +1203,6 @@ async function loadDashboard(){
       options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{ x:{grid:{color:gridColor}}, y:{grid:{display:false}} }, plugins:{legend:{display:false}} }
     });
 
-    // Tabela
     const tbody = document.getElementById("auditTableBody");
     tbody.innerHTML = "";
     document.getElementById("emptyState").style.display = audits.length ? "none" : "block";
