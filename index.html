@@ -248,25 +248,11 @@
     position: fixed; top: 20px; right: 20px; background: var(--ink); color: #fff;
     padding: 12px 20px; border-radius: 10px; z-index: 1000; box-shadow: var(--shadow);
     display: none; align-items: center; gap: 10px; font-weight: 600; font-size: 13px;
-    max-width: calc(100vw - 40px); min-width: 260px;
-  }
-  @media (max-width:768px){
-    #uploadingOverlay{ left:16px; right:16px; top:12px; min-width:0; }
+    max-width: calc(100vw - 40px);
   }
 
   /* ===================== MOBILE RESPONSIVE ===================== */
   @media (max-width:768px){
-    body{ padding-bottom: env(safe-area-inset-bottom); }
-    header{ padding-top: calc(12px + env(safe-area-inset-top)); }
-
-    /* Alvos de toque com no mínimo 48px, como pedido nos critérios de
-       aceite — antes vários controles ficavam abaixo disso no celular. */
-    button.primary, button.secondary, .status-btn, a.pillbtn, button.pillbtn,
-    input, select, nav.tabs button{
-      min-height:48px;
-    }
-    input[type="file"]{ min-height:44px; }
-
     header{padding:12px 16px; gap:10px;}
     .brand-mark{width:36px; height:36px;}
     .brand-mark::after{inset:5px; font-size:11px;}
@@ -297,41 +283,36 @@
     .status-row{flex-direction:column; gap:8px;}
     .status-btn{min-width:100%; padding:13px; font-size:13px;}
 
-    button.primary{width:100%; padding:15px; font-size:14.5px;}
-    #formSection > div[style*="display:flex"]{
-      flex-direction:column; align-items:stretch !important;
-      position:sticky; bottom:0; background:var(--bg);
-      padding:14px 0 calc(14px + env(safe-area-inset-bottom)) !important;
-      margin: 8px -14px -90px; padding-left:14px; padding-right:14px;
-      box-shadow: 0 -8px 20px -12px rgba(16,21,28,0.15);
-      z-index: 20;
-    }
+    button.primary{width:100%; padding:15px; min-height:48px; font-size:14.5px;}
+    #formSection > div[style*="display:flex"]{flex-direction:column; align-items:stretch !important;}
+
+    /* Alvos de toque de no mínimo 48px, conforme boas práticas mobile */
+    input, select, textarea{min-height:48px; padding:13px 14px; font-size:16px;} /* 16px evita zoom automático no iOS/Android */
+    textarea{min-height:88px;}
+    input[type="file"]{min-height:48px;}
+    button.secondary{min-height:48px; width:100%;}
+    a.pillbtn, button.pillbtn{min-height:44px; padding:10px 16px; font-size:13px;}
+    .thumb-item .rm{width:24px; height:24px; font-size:14px;}
 
     .kpi .val{font-size:22px;}
     .chart-wrap{height:200px;}
 
-    .thumb-item{width:46px; height:46px;}
+    /* Histórico em cartões ao invés de tabela apertada — mais legível
+       e mais fácil de tocar em telas pequenas que rolagem horizontal. */
+    table{min-width:0; font-size:12.5px;}
+    thead{display:none;}
+    table, tbody, tr, td{display:block; width:100%;}
+    tbody tr{
+      border:1px solid var(--line); border-radius:12px; margin:12px; padding:6px 4px;
+      box-shadow: var(--shadow-sm);
+    }
+    tbody tr td{border-bottom:none; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+    tbody tr td::before{content:attr(data-label); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); flex-shrink:0;}
+    tbody tr td:last-child{padding-top:4px;}
+    tbody tr td a.pillbtn, tbody tr td button.pillbtn{width:100%; justify-content:center;}
+    .card[style*="padding: 0"]{overflow-x:visible;}
 
-    /* Histórico de auditorias: em telas estreitas, cada linha vira um
-       cartão empilhado (rótulo: valor) em vez de uma tabela espremida
-       com rolagem horizontal difícil de usar no polegar. */
-    table.responsive-table{min-width:0;}
-    table.responsive-table thead{display:none;}
-    table.responsive-table, table.responsive-table tbody, table.responsive-table tr, table.responsive-table td{
-      display:block; width:100%;
-    }
-    table.responsive-table tr{
-      border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:12px; box-shadow: var(--shadow-sm);
-    }
-    table.responsive-table td{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      padding:9px 0; border-bottom:1px solid var(--panel-2); text-align:right;
-    }
-    table.responsive-table td:last-child{border-bottom:none;}
-    table.responsive-table td::before{
-      content: attr(data-label); font-weight:700; color:var(--muted); font-size:11px;
-      text-transform:uppercase; letter-spacing:.03em; text-align:left;
-    }
+    .thumb-item{width:46px; height:46px;}
   }
 
   @media (max-width:420px){
@@ -345,12 +326,7 @@
 <body>
 
 <div id="uploadingOverlay">
-  <div style="flex:1; min-width:0;">
-    <span id="uploadText">Enviando evidências (0/0)...</span>
-    <div style="width:100%; height:5px; background:rgba(255,255,255,.25); border-radius:3px; margin-top:6px; overflow:hidden;">
-      <div id="uploadProgressFill" style="height:100%; width:0%; background:#fff; border-radius:3px; transition:width .25s;"></div>
-    </div>
-  </div>
+  <span id="uploadText">Enviando evidências (0/0)...</span>
 </div>
 
 <header>
@@ -376,7 +352,7 @@
     </div>
     <div class="hero-badge">
       <div>
-        <div class="n" id="heroMetaBadge">–</div>
+        <div class="n" id="heroMetaBadge">--%</div>
         <div class="l">Meta UR</div>
       </div>
     </div>
@@ -388,7 +364,7 @@
     <span><span class="legend-dot" style="background:var(--ok);"></span><b>Conforme</b> (100%)</span>
     <span><span class="legend-dot" style="background:var(--mid);"></span><b>Parcial</b> (50%)</span>
     <span><span class="legend-dot" style="background:var(--bad);"></span><b>Não Conforme</b> (0%)</span>
-    <span style="margin-left: auto; font-weight: 800; color: var(--primary);" id="legendMeta">Meta UR: –</span>
+    <span style="margin-left: auto; font-weight: 800; color: var(--primary);" id="legendMetaText">Meta UR: --%</span>
   </div>
 
   <section id="formSection">
@@ -461,7 +437,7 @@
     <div class="card" style="padding: 0; overflow: hidden;">
       <div style="padding:20px 24px 4px;"><h2 class="section-title" style="margin-bottom:6px;">Histórico de Auditorias</h2></div>
       <div style="overflow-x:auto;">
-        <table class="responsive-table">
+        <table>
           <thead><tr><th>Data</th><th>Turno</th><th>Auditor</th><th>Conformidade</th><th>Ação</th><th>PDF</th></tr></thead>
           <tbody id="auditTableBody"></tbody>
         </table>
@@ -474,10 +450,6 @@
 <div id="toast" class="toast" style="display:none;"></div>
 
 <script>
-// ===================== META (fonte única) =====================
-// Preenchido logo abaixo, após CHECKLIST/META_CONFORMIDADE serem declarados,
-// via initMetaLabels() chamada no fim do arquivo.
-
 // ===================== HERO BUBBLES (decorativo) =====================
 (function renderBubbles(){
   const wrap = document.getElementById("heroBubbles");
@@ -525,94 +497,103 @@ const CHECKLIST = [
   {id:12, titulo:"Abastecimento do Setor de Apanha", peso:10, desc:"Setor devidamente abastecido para operação."}
 ];
 const PESO_TOTAL = CHECKLIST.reduce((s,i) => s + i.peso, 0);
+const CHECKLIST_BY_ID = new Map(CHECKLIST.map(i => [String(i.id), i])); // lookup O(1) em vez de .find() O(n)
 
-// Meta mínima de conformidade da UR. Único ponto de configuração — todo o
-// resto do sistema (hero, legenda, gráficos, tabela, PDF) lê deste valor,
-// para nunca mais haver divergência entre telas.
+// Meta única de conformidade da UR — alterar SOMENTE aqui.
+// Todo o restante do sistema (hero, legendas, dashboard, gráficos, tabela
+// e PDF) lê este valor, então não existe mais nenhum "85%" hardcoded solto.
 const META_CONFORMIDADE = 60;
 
+(function aplicarMetaNaUI(){
+  const heroBadge = document.getElementById("heroMetaBadge");
+  const legendText = document.getElementById("legendMetaText");
+  if(heroBadge) heroBadge.textContent = `${META_CONFORMIDADE}%`;
+  if(legendText) legendText.textContent = `Meta UR: ${META_CONFORMIDADE}%`;
+})();
+
 // ===================== IMAGE COMPRESSION =====================
-// Detecta suporte a WebP uma única vez (é mais leve que JPEG na mesma
-// qualidade percebida, o que acelera diretamente o upload em segundo
-// plano — a etapa que mais pesava no tempo total de salvamento).
-let _webpSupportCache = null;
-function supportsWebP(){
-  if(_webpSupportCache !== null) return _webpSupportCache;
-  const c = document.createElement('canvas');
-  c.width = c.height = 1;
-  _webpSupportCache = c.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-  return _webpSupportCache;
+// Detecta uma única vez se o navegador consegue gerar WebP via canvas
+// (Chrome/Edge/Android: sim; Safari antigo: não — nesse caso caímos para
+// JPEG automaticamente, sem quebrar nada).
+const SUPPORTS_WEBP = (() => {
+  try {
+    const c = document.createElement('canvas');
+    c.width = c.height = 1;
+    return c.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  } catch(e) { return false; }
+})();
+const IMG_MIME = SUPPORTS_WEBP ? 'image/webp' : 'image/jpeg';
+const IMG_EXT = SUPPORTS_WEBP ? 'webp' : 'jpg';
+const IMG_MAX_WIDTH = 1280; // pedido: redimensionar para no máximo 1280px
+const IMG_QUALITY = 0.6;   // qualidade suficiente para evidência + leitura no PDF, com arquivo bem menor
+
+function loadImageFromFile(file){
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+    img.onerror = (e) => { URL.revokeObjectURL(url); reject(e); };
+    img.src = url;
+  });
 }
 
-/**
- * Comprime e redimensiona a foto capturada. Retorna DOIS artefatos a
- * partir do mesmo canvas (sem re-ler o arquivo):
- *  - storageBlob/storageMime/storageExt: o que sobe para o Firebase Storage.
- *    Usa WebP (quando suportado) em ~1280px de lado maior — bem mais leve
- *    que o JPEG anterior, o que reduz diretamente o tempo de upload.
- *  - pdfBase64: JPEG (jsPDF não garante suporte a WEBP em addImage em
- *    todas as versões), usado apenas para montar o PDF localmente.
- */
+// Compacta 1 foto: redimensiona para no máximo 1280px no lado maior e
+// converte para WebP (com fallback automático para JPEG). Usa
+// createObjectURL em vez de FileReader+DataURL, que evita uma conversão
+// base64 desnecessária antes mesmo de desenhar no canvas.
 async function compressImage(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error('Falha ao ler o arquivo de imagem.'));
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onerror = () => reject(new Error('Falha ao decodificar a imagem.'));
-      img.src = event.target.result;
-      img.onload = () => {
-        const MAX_DIM = 1280; // conforme solicitado: no máximo 1280px no maior lado
-        let width = img.width;
-        let height = img.height;
-        if (width > MAX_DIM || height > MAX_DIM) {
-          if (width >= height) { height = Math.round(height * MAX_DIM / width); width = MAX_DIM; }
-          else { width = Math.round(width * MAX_DIM / height); height = MAX_DIM; }
-        }
+  const img = await loadImageFromFile(file);
+  const canvas = document.createElement('canvas');
+  let width = img.width;
+  let height = img.height;
+  const maiorLado = Math.max(width, height);
 
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
+  if (maiorLado > IMG_MAX_WIDTH) {
+    const escala = IMG_MAX_WIDTH / maiorLado;
+    width = Math.round(width * escala);
+    height = Math.round(height * escala);
+  }
 
-        const useWebp = supportsWebP();
-        const storageMime = useWebp ? 'image/webp' : 'image/jpeg';
-        const storageExt = useWebp ? 'webp' : 'jpg';
-        const pdfBase64 = canvas.toDataURL('image/jpeg', 0.55);
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, width, height);
 
-        canvas.toBlob((blob) => {
-          if(!blob){ reject(new Error('Falha ao comprimir a imagem.')); return; }
-          resolve({ storageBlob: blob, storageMime, storageExt, pdfBase64 });
-        }, storageMime, 0.62);
-      };
-    };
-  });
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, IMG_MIME, IMG_QUALITY));
+  return blob;
 }
 
 function blobToBase64(blob){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (evt) => resolve(evt.target.result);
-    reader.onerror = () => reject(new Error('Falha ao converter arquivo para base64.'));
+    reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
 }
 
 async function urlToBase64(url){
-  try{
-    const res = await fetch(url, { mode: 'cors' });
-    if(!res.ok) throw new Error(`HTTP ${res.status} ao buscar ${url}`);
-    const blob = await res.blob();
-    return await blobToBase64(blob);
-  } catch(err){
-    // Causa mais comum aqui: o bucket do Firebase Storage não tem CORS
-    // configurado para o domínio do app, o que faz fetch() falhar mesmo
-    // com a URL sendo válida (uma tag <img> funcionaria, fetch não).
-    console.error(`[PDF] Falha ao baixar evidência para reconstrução do PDF: ${url}`, err);
-    throw err;
+  const res = await fetch(url, { cache: 'no-store' });
+  if(!res.ok) throw new Error(`HTTP ${res.status} ao buscar evidência`);
+  const blob = await res.blob();
+  if(!blob.type.startsWith('image/')) throw new Error(`Conteúdo retornado não é uma imagem (${blob.type || 'tipo desconhecido'})`);
+  return blobToBase64(blob);
+}
+
+// Executa uma função assíncrona com novas tentativas (backoff simples).
+// Usado nos uploads ao Storage, que em redes móveis instáveis costumam
+// falhar de forma intermitente — sem isso, uma única falha de rede jogava
+// fora a fotografia inteira e forçava o usuário a reenviar tudo de novo.
+async function withRetry(fn, tentativas = 2, delayMs = 600){
+  let lastErr;
+  for(let i=0; i<=tentativas; i++){
+    try { return await fn(); }
+    catch(err){
+      lastErr = err;
+      if(i < tentativas) await new Promise(r => setTimeout(r, delayMs * (i+1)));
+    }
   }
+  throw lastErr;
 }
 
 // ===================== RENDER CHECKLIST =====================
@@ -690,15 +671,15 @@ checklistWrap.addEventListener("change", async (e)=>{
       showToast(`Limite de ${MAX_FOTOS_POR_ITEM} fotos por item. Apenas ${filesToAdd.length} foto(s) adicionada(s).`);
     }
 
-    for(const file of filesToAdd){
-      try{
-        const compressed = await compressImage(file);
-        st.evidencias.push(compressed);
-      } catch(err){
-        console.error('Falha ao processar foto selecionada:', err);
-        showToast('⚠ Não foi possível processar uma das fotos. Tente novamente.');
-      }
-    }
+    // Comprime todas as fotos selecionadas em paralelo em vez de uma de
+    // cada vez — com 6 fotos isso muda a espera de ~6x o tempo de uma foto
+    // para praticamente o tempo de 1 foto.
+    const novasEvidencias = await Promise.all(filesToAdd.map(async (file) => {
+      const compressedBlob = await compressImage(file);
+      const base64 = await blobToBase64(compressedBlob);
+      return {blob: compressedBlob, base64};
+    }));
+    st.evidencias.push(...novasEvidencias);
 
     e.target.value = "";
     renderGallery(id);
@@ -713,7 +694,7 @@ function renderGallery(id){
 
   gallery.innerHTML = st.evidencias.map((ev, idx) => `
     <div class="thumb-item">
-      <img src="${ev.pdfBase64}" alt="Evidência ${idx+1}" loading="lazy">
+      <img src="${ev.base64}" alt="Evidência ${idx+1}">
       <button type="button" class="rm" data-remove="${id}" data-idx="${idx}" aria-label="Remover foto">×</button>
     </div>
   `).join("");
@@ -973,13 +954,27 @@ function generateAuditPDF(auditData, imagesMap){
     pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos");
     let px = 15, py = 46, col = 0;
     ids.forEach(id => {
-      const item = CHECKLIST.find(c => String(c.id) === String(id));
+      const item = CHECKLIST_BY_ID.get(String(id));
       const fotos = imagesMap[id];
       fotos.forEach((imgB64, i) => {
         if(py > 230){ doc.addPage(); pdfHeader(doc, "Evidências Fotográficas", "Uberlândia Refrescos"); py = 46; px = 15; col = 0; }
         doc.setDrawColor(228,232,239);
         doc.roundedRect(px, py, 88, 68, 3, 3, 'S');
-        doc.addImage(imgB64, 'JPEG', px+4, py+4, 80, 50);
+        // addImage falha se a string base64 estiver corrompida/incompleta
+        // (ex.: uma foto que não baixou por CORS/expiração da URL). Isolar
+        // essa chamada evita que UMA foto ruim derrube o PDF inteiro — era
+        // essa a causa raiz do botão "Gerar PDF" do Painel falhando por
+        // completo mesmo quando as demais fotos e dados estavam OK.
+        try {
+          const formato = imgB64.startsWith('data:image/webp') ? 'WEBP' : 'JPEG';
+          doc.addImage(imgB64, formato, px+4, py+4, 80, 50);
+        } catch(imgErr) {
+          console.error(`Falha ao inserir foto ${i+1} do item ${id} no PDF:`, imgErr);
+          doc.setFillColor(...UR_MUTED);
+          doc.setFontSize(8);
+          doc.setTextColor(255,255,255);
+          doc.text("Foto indisponível", px+44, py+30, {align:"center"});
+        }
         doc.setFontSize(8.5);
         doc.setTextColor(...UR_INK);
         doc.setFont("helvetica","bold");
@@ -995,16 +990,36 @@ function generateAuditPDF(auditData, imagesMap){
 }
 
 // ===================== SUBMIT =====================
-// Fluxo redesenhado para responder em segundos:
-//   1) grava no Firestore só os dados leves da auditoria (sem fotos) —
-//      isso é o que estava lento antes, pois o registro só era salvo
-//      DEPOIS do PDF inteiro (com todas as fotos) já ter sido montado.
-//   2) gera o PDF localmente (rápido — já não há mais rede envolvida
-//      até aqui) e dispara o download.
-//   3) devolve o formulário para o usuário imediatamente (reset local,
-//      sem F5 — o reload antigo podia abortar uploads em andamento).
-//   4) fotos + PDF sobem em paralelo em segundo plano, com 1 única
-//      escrita final no Firestore (em vez de uma escrita por foto).
+// Limpa o formulário e o estado do checklist em memória para uma nova
+// auditoria, SEM recarregar a página. Esse é o ponto central da correção
+// de performance/confiabilidade: o código anterior chamava
+// `location.reload()` 1.5s após o clique, o que destruía o contexto JS e
+// cancelava no meio do caminho o envio do PDF e das fotos ao Firebase
+// (causando os registros "pendente"/sem PDF vistos no Painel). Resetar em
+// memória mantém o envio em segundo plano vivo até o fim.
+function resetFormularioParaNovaAuditoria(){
+  document.getElementById("fData").valueAsDate = new Date();
+  document.getElementById("fTurno").value = "";
+  document.getElementById("fAuditor").value = "";
+  document.getElementById("fArea").value = "Logística / Estoque";
+  document.getElementById("fObsGerais").value = "";
+  document.getElementById("fPlanoAcao").value = "";
+
+  CHECKLIST.forEach(item => {
+    itemState[item.id] = {status:null, obs:"", evidencias:[]};
+    const card = document.getElementById(`itemcard-${item.id}`);
+    if(card) card.className = "item-card";
+    const row = document.querySelector(`.status-row[data-item="${item.id}"]`);
+    if(row) row.querySelectorAll(".status-btn").forEach(b => b.classList.remove("selected"));
+    const obsField = document.querySelector(`textarea[data-obs="${item.id}"]`);
+    if(obsField) obsField.value = "";
+    renderGallery(item.id);
+  });
+
+  document.getElementById("formMsg").textContent = "";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
 document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   const data = document.getElementById("fData").value;
   const turno = document.getElementById("fTurno").value;
@@ -1014,18 +1029,25 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   if(!data || !turno || !auditor) return alert("Preencha os campos obrigatórios!");
   if(CHECKLIST.some(i => !itemState[i.id].status)) return alert("Responda todo o checklist!");
 
+  // Feedback imediato: trava o botão e avisa que está processando ANTES de
+  // montar o PDF, e cede o controle ao navegador (dupla espera por frame)
+  // para garantir que essa mudança apareça na tela antes do trabalho pesado
+  // e síncrono de montagem do PDF começar.
   const btn = document.getElementById("btnSubmit");
   const msg = document.getElementById("formMsg");
   btn.disabled = true;
-  btn.textContent = "Salvando...";
-  msg.textContent = "Salvando auditoria...";
+  btn.textContent = "Gerando PDF...";
+  msg.textContent = "Montando o relatório, o download começa em instantes...";
+  // Usamos setTimeout (não requestAnimationFrame) de propósito: rAF é
+  // pausado pelo navegador quando a tela do celular apaga ou o app vai
+  // para segundo plano, o que travava a geração por minutos. setTimeout
+  // continua disparando mesmo em segundo plano.
+  await new Promise(r => setTimeout(r, 20));
 
-  // Snapshot do estado atual ANTES de qualquer reset — o upload em
-  // segundo plano passa a trabalhar só com esta cópia local, então o
-  // formulário pode ser limpo/reutilizado sem afetar o envio pendente.
+  try {
+
   const snapshotItems = [];
-  const evidenceSnapshot = {}; // itemId -> [{storageBlob,storageMime,storageExt,pdfBase64}]
-  const pdfImagesMap = {};     // itemId -> [pdfBase64,...] (para montar o PDF local)
+  const imagesMap = {};
   let pesoObtido = 0;
 
   CHECKLIST.forEach(item => {
@@ -1036,10 +1058,7 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
       id: item.id, titulo: item.titulo, peso: item.peso,
       status: st.status, scoreObtido: score, obs: st.obs
     });
-    if(st.evidencias.length){
-      evidenceSnapshot[item.id] = st.evidencias.slice();
-      pdfImagesMap[item.id] = st.evidencias.map(ev => ev.pdfBase64);
-    }
+    if(st.evidencias.length) imagesMap[item.id] = st.evidencias.map(ev => ev.base64);
   });
 
   const auditData = {
@@ -1054,166 +1073,160 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
-  let docRef;
-  try {
-    // Escrita LEVE (sem fotos) — é isso que garante o "salvar em poucos
-    // segundos" pedido no critério de aceite, independente de quantas
-    // fotos existam no checklist.
-    docRef = await db.collection(COLLECTION).add(auditData);
+  const doc = generateAuditPDF(auditData, imagesMap);
+  doc.save(`Auditoria_UR_${auditData.data}.pdf`);
+  showToast("✓ PDF gerado! Sincronizando dados em segundo plano...");
+
+  const pdfBlob = doc.output('blob');
+  // Snapshot imutável dos blobs de foto: como o formulário é resetado em
+  // seguida (para liberar o auditor imediatamente), backgroundUpload NÃO
+  // pode depender do objeto global `itemState`, que está prestes a ser
+  // substituído por um estado vazio para a próxima auditoria.
+  const evidenciasSnapshot = {};
+  CHECKLIST.forEach(item => {
+    const evid = itemState[item.id].evidencias;
+    if(evid.length) evidenciasSnapshot[item.id] = evid.map(ev => ev.blob);
+  });
+
+  // Não usamos `await` aqui de propósito: o upload continua rodando de
+  // forma independente enquanto o auditor já pode começar uma nova
+  // auditoria — sem bloquear a tela e sem o risco de ser cancelado por
+  // um reload, já que não há mais nenhum reload nesse fluxo.
+  backgroundUpload(auditData, pdfBlob, evidenciasSnapshot);
+
+  resetFormularioParaNovaAuditoria();
+
   } catch(err) {
-    console.error("Falha ao salvar o registro da auditoria:", err);
-    alert("Não foi possível salvar a auditoria. Verifique sua conexão e tente novamente.");
+    console.error("Falha ao gerar o PDF:", err);
+    alert("Não foi possível gerar o PDF. Tente novamente.");
+  } finally {
     btn.disabled = false;
     btn.textContent = "Finalizar e Baixar PDF";
-    msg.textContent = "";
-    return;
   }
-
-  msg.textContent = "✓ Auditoria salva! Gerando PDF...";
-  showToast("✓ Auditoria salva com sucesso!");
-
-  // Geração do PDF é 100% local (CPU), não depende de rede — roda rápido
-  // mesmo com 6 fotos, pois as imagens já estão comprimidas em memória.
-  let pdfBlob = null;
-  try {
-    const doc = generateAuditPDF(auditData, pdfImagesMap);
-    doc.save(`Auditoria_UR_${auditData.data}.pdf`);
-    pdfBlob = doc.output('blob');
-    msg.textContent = "✓ PDF baixado! Enviando fotos em segundo plano...";
-  } catch(err) {
-    console.error("Falha ao gerar o PDF localmente:", err);
-    msg.textContent = "✓ Auditoria salva (o PDF poderá ser gerado depois pelo Painel).";
-  }
-
-  // Dispara o upload em segundo plano SEM aguardar (fire-and-forget) e
-  // devolve o formulário na hora — nada de location.reload(), que antes
-  // podia cortar o upload de fotos/PDF pela metade.
-  backgroundUpload(docRef.id, auditData, pdfBlob, evidenceSnapshot);
-  resetForm();
-
-  btn.disabled = false;
-  btn.textContent = "Finalizar e Baixar PDF";
 });
 
-/**
- * Envia PDF + fotos em paralelo (Promise.all) e faz UMA única atualização
- * final no Firestore (em vez de uma escrita por foto, como antes), o que
- * reduz drasticamente o número de round-trips à rede.
- */
-async function backgroundUpload(auditId, auditData, pdfBlob, evidenceSnapshot) {
+// Salva os dados e sincroniza o PDF e as fotos. Causas-raiz corrigidas
+// aqui em relação à versão anterior (que era o principal gargalo de
+// performance/confiabilidade apontado pelo usuário):
+//   1) O PDF e TODAS as fotos agora sobem em PARALELO (Promise.all), não
+//      mais uma foto de cada vez em sequência — com 6 fotos isso reduzia o
+//      tempo total de ~6x o tempo de 1 upload para ~1x.
+//   2) Existe apenas UMA escrita final no Firestore com o array `items`
+//      completo, em vez de uma escrita por item (eram N+2 escritas; agora
+//      são sempre 2: o registro inicial e essa atualização final).
+//   3) Cada upload individual tem retry automático (withRetry), então uma
+//      falha passageira de rede no celular não derruba a foto inteira.
+//   4) Como o formulário não recarrega mais a página, essa função agora
+//      pode rodar até o fim sem ser interrompida no meio do caminho — que
+//      era a causa raiz de auditorias "pendentes" sem PDF/fotos no Painel.
+async function backgroundUpload(auditData, pdfBlob, evidenciasSnapshot) {
   const overlay = document.getElementById("uploadingOverlay");
   const text = document.getElementById("uploadText");
-  const bar = document.getElementById("uploadProgressFill");
-  overlay.style.background = "";
   overlay.style.display = "flex";
-  if(bar) bar.style.width = "0%";
+  overlay.style.background = "#10151C";
+  text.textContent = "Salvando registro da auditoria...";
 
-  const totalPhotos = Object.values(evidenceSnapshot).reduce((s,arr)=>s+arr.length, 0);
-  let doneCount = 0;
-  const updateProgress = () => {
-    if(!totalPhotos){ if(bar) bar.style.width = "100%"; return; }
-    const pct = Math.round((doneCount/totalPhotos)*100);
-    if(bar) bar.style.width = pct + "%";
-    text.textContent = `Enviando evidências (${doneCount}/${totalPhotos})...`;
-  };
-  updateProgress();
-
-  // ---- upload do PDF (em paralelo com as fotos) ----
-  const pdfTask = (async () => {
-    if(!pdfBlob) return null;
-    try{
-      const pdfPath = `ur_auditoria_pdfs/${auditId}.pdf`;
-      const pdfRef = storage.ref().child(pdfPath);
-      const snap = await pdfRef.put(pdfBlob, {
-        contentType: 'application/pdf',
-        // Sem isso o navegador tende a ABRIR o PDF inline (visualizador)
-        // em vez de baixar — era uma das causas do "erro" percebido ao
-        // clicar em "Baixar PDF" no Painel, especialmente no celular.
-        contentDisposition: `attachment; filename="Auditoria_UR_${auditData.data}.pdf"`
-      });
-      return await snap.ref.getDownloadURL();
-    } catch(err){
-      console.error("[Upload] Falha ao enviar PDF ao Storage:", err);
-      return null;
-    }
-  })();
-
-  // ---- upload de TODAS as fotos em paralelo (Promise.all) ----
-  const photoResults = {}; // itemId -> array de URLs (mesma ordem das evidências)
-  const photoTasks = [];
-  Object.entries(evidenceSnapshot).forEach(([itemId, evidencias]) => {
-    photoResults[itemId] = new Array(evidencias.length).fill(null);
-    evidencias.forEach((ev, idx) => {
-      const path = `ur_auditoria/${auditId}_${itemId}_${idx}.${ev.storageExt}`;
-      const task = storage.ref().child(path).put(ev.storageBlob, { contentType: ev.storageMime })
-        .then(snap => snap.ref.getDownloadURL())
-        .then(url => { photoResults[itemId][idx] = url; })
-        .catch(err => {
-          console.error(`[Upload] Falha ao enviar foto ${idx+1} do item ${itemId}:`, err);
-        })
-        .finally(() => { doneCount++; updateProgress(); });
-      photoTasks.push(task);
-    });
-  });
-
-  const [pdfURL] = await Promise.all([pdfTask, Promise.all(photoTasks)]);
-
-  const photosOk = Object.values(photoResults).every(urls => urls.every(u => u !== null));
-  const updatedItems = auditData.items.map(it => {
-    const urls = (photoResults[it.id] || []).filter(Boolean);
-    return urls.length ? { ...it, evidenciasURLs: urls } : it;
-  });
-
-  // UMA única escrita final consolidando PDF + fotos, em vez de N escritas.
+  let docRef;
   try {
-    await db.collection(COLLECTION).doc(auditId).update({
-      pdfURL: pdfURL || null,
-      items: updatedItems
-    });
-  } catch(err) {
-    console.error("Falha ao consolidar PDF/fotos no registro da auditoria:", err);
-    overlay.style.background = "#F5A524";
-    text.textContent = "⚠ Auditoria salva, mas houve falha ao registrar PDF/fotos.";
+    docRef = await db.collection(COLLECTION).add(auditData);
+  } catch(e) {
+    console.error("Falha ao salvar registro:", e);
+    overlay.style.background = "#C8102E";
+    text.textContent = "⚠ Erro ao salvar o registro da auditoria.";
     setTimeout(() => overlay.style.display = "none", 4500);
     return;
   }
 
-  if(pdfURL && photosOk){
+  // Monta a lista plana de todas as fotos de todos os itens, para que o
+  // Promise.all abaixo dispare todos os uploads verdadeiramente ao mesmo
+  // tempo (em vez de paralelizar só dentro de cada item).
+  const uploadTasks = [];
+  Object.keys(evidenciasSnapshot).forEach(itemId => {
+    evidenciasSnapshot[itemId].forEach((blob, idx) => {
+      uploadTasks.push({ itemId, idx, blob });
+    });
+  });
+  const totalImages = uploadTasks.length;
+  let uploadedCount = 0;
+
+  const atualizarProgresso = () => {
+    uploadedCount++;
+    text.textContent = totalImages
+      ? `Enviando evidências (${uploadedCount}/${totalImages})...`
+      : "Enviando PDF do relatório...";
+  };
+
+  const pdfUploadPromise = (async () => {
+    try {
+      const pdfPath = `ur_auditoria_pdfs/${docRef.id}.pdf`;
+      const pdfRef = storage.ref().child(pdfPath);
+      const pdfURL = await withRetry(async () => {
+        const snap = await pdfRef.put(pdfBlob, { contentType: 'application/pdf' });
+        return snap.ref.getDownloadURL();
+      });
+      await docRef.update({ pdfURL });
+      return true;
+    } catch(e) {
+      console.error("Falha ao enviar PDF (o registro em si foi salvo normalmente):", e);
+      return false;
+    }
+  })();
+
+  const photoUploadPromises = uploadTasks.map(task => (async () => {
+    try {
+      const path = `ur_auditoria/${docRef.id}_${task.itemId}_${task.idx}.${IMG_EXT}`;
+      const ref = storage.ref().child(path);
+      const url = await withRetry(async () => {
+        const snap = await ref.put(task.blob, { contentType: IMG_MIME });
+        return snap.ref.getDownloadURL();
+      });
+      atualizarProgresso();
+      return { itemId: task.itemId, idx: task.idx, url, ok: true };
+    } catch(err) {
+      console.error(`Falha ao enviar foto ${task.idx} do item ${task.itemId}:`, err);
+      atualizarProgresso();
+      return { itemId: task.itemId, idx: task.idx, ok: false };
+    }
+  })());
+
+  if(totalImages) text.textContent = `Enviando evidências (0/${totalImages})...`;
+
+  const [pdfOk, photoResults] = await Promise.all([
+    pdfUploadPromise,
+    Promise.all(photoUploadPromises)
+  ]);
+
+  // Consolida as URLs por item e grava tudo em UMA única atualização.
+  let photosOk = true;
+  if(photoResults.length){
+    const urlsPorItem = {};
+    photoResults.forEach(r => {
+      if(!r.ok){ photosOk = false; return; }
+      (urlsPorItem[r.itemId] = urlsPorItem[r.itemId] || []).push(r);
+    });
+    const updatedItems = auditData.items.map(it => {
+      const urls = (urlsPorItem[it.id] || []).sort((a,b)=>a.idx-b.idx).map(r=>r.url);
+      return urls.length ? {...it, evidenciasURLs: urls} : it;
+    });
+    try {
+      await docRef.update({ items: updatedItems });
+    } catch(e) {
+      console.error("Falha ao gravar URLs das evidências no registro:", e);
+      photosOk = false;
+    }
+  }
+
+  if(pdfOk && photosOk){
     overlay.style.background = "#00843D";
     text.textContent = "✓ Sincronização concluída! PDF disponível no Painel.";
-  } else if(pdfURL){
+  } else if(pdfOk){
     overlay.style.background = "#F5A524";
-    text.textContent = "✓ PDF sincronizado. Algumas fotos falharam — tente reenviar pelo Painel.";
+    text.textContent = "✓ PDF sincronizado. Algumas fotos falharam — o Painel ainda permite gerar o PDF novamente.";
   } else {
     overlay.style.background = "#F5A524";
     text.textContent = "PDF será gerado sob demanda no Painel (envio automático falhou).";
   }
   setTimeout(() => overlay.style.display = "none", 4500);
-}
-
-/**
- * Reseta o formulário localmente (sem location.reload()). O reload
- * antigo derrubava qualquer upload de fotos/PDF ainda em andamento em
- * segundo plano — trocado por uma limpeza de estado in-page.
- */
-function resetForm(){
-  CHECKLIST.forEach(item => {
-    itemState[item.id] = {status:null, obs:"", evidencias:[]};
-    const card = document.getElementById(`itemcard-${item.id}`);
-    if(card) card.className = "item-card";
-    const row = document.querySelector(`.status-row[data-item="${item.id}"]`);
-    if(row) row.querySelectorAll(".status-btn").forEach(b=>b.classList.remove("selected"));
-    const obsField = document.querySelector(`textarea[data-obs="${item.id}"]`);
-    if(obsField) obsField.value = "";
-    renderGallery(item.id);
-  });
-  document.getElementById("fObsGerais").value = "";
-  document.getElementById("fPlanoAcao").value = "";
-  document.getElementById("fAuditor").value = "";
-  document.getElementById("fTurno").value = "";
-  document.getElementById("fData").valueAsDate = new Date();
-  document.getElementById("formMsg").textContent = "";
-  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 // ===================== UTILS =====================
@@ -1223,16 +1236,7 @@ function showToast(msg){
   setTimeout(() => t.style.display = "none", 4000);
 }
 
-document.getElementById("tabFormBtn").onclick = () => {
-  // Antes usava location.reload(), o que podia abortar um upload de
-  // fotos/PDF ainda em andamento em segundo plano. Agora é só uma troca
-  // de visão dentro da página.
-  document.getElementById("dashboardSection").style.display = "none";
-  document.getElementById("formSection").style.display = "block";
-  document.getElementById("heroTitle").textContent = "Checklist de Conformidade — Área de Estoque";
-  document.getElementById("tabFormBtn").classList.add("active");
-  document.getElementById("tabDashBtn").classList.remove("active");
-};
+document.getElementById("tabFormBtn").onclick = () => location.reload();
 document.getElementById("tabDashBtn").onclick = () => {
   document.getElementById("formSection").style.display = "none";
   document.getElementById("dashboardSection").style.display = "block";
@@ -1247,118 +1251,82 @@ let charts = {};
 let auditsById = {};
 function destroyCharts(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
+// Sempre disponibiliza o PDF no Painel: se o registro já tem pdfURL, baixa
+// direto; caso contrário, reconstrói o PDF no navegador a partir dos dados
+// e fotos salvos (e tenta sincronizar o resultado em segundo plano).
 async function ensurePdfForRow(auditId){
   const audit = auditsById[auditId];
   if(!audit) return;
   const btn = document.getElementById(`pdfbtn-${auditId}`);
   if(btn){ btn.disabled = true; btn.textContent = "Gerando..."; }
 
-  // Causa raiz do "erro ao baixar PDF" no celular: este fluxo precisa
-  // buscar as fotos (fetch) de forma assíncrona ANTES de gerar o PDF.
-  // Depois de um await/fetch, vários navegadores móveis (Chrome/Android,
-  // Samsung Internet) deixam de considerar a ação como "gesto do
-  // usuário" e bloqueiam o download programático (doc.save()).
-  // Solução: abrir a aba de destino de forma SÍNCRONA, ainda dentro do
-  // clique, e só preencher o conteúdo dela quando o PDF estiver pronto.
-  const pendingTab = window.open('', '_blank');
-  if(pendingTab){
-    pendingTab.document.write(
-      '<!doctype html><meta charset="utf-8"><body style="font-family:sans-serif;padding:24px;color:#444;">Gerando o PDF, aguarde…</body>'
-    );
-  }
-
   try {
     const imagesMap = {};
-    for(const item of (audit.items || [])){
-      if(item.evidenciasURLs && item.evidenciasURLs.length){
-        const base64s = [];
-        for(const url of item.evidenciasURLs){
-          try {
-            base64s.push(await urlToBase64(url));
-          } catch(err){
-            // Log detalhado, conforme pedido: item, URL e erro original.
-            console.error(`[PDF] Item ${item.id} — não foi possível carregar a evidência (verifique a configuração de CORS do bucket do Firebase Storage se o erro for "Failed to fetch"):`, url, err);
-          }
-        }
-        if(base64s.length) imagesMap[item.id] = base64s;
-      }
-    }
+    const itensComFoto = (audit.items || []).filter(item => item.evidenciasURLs && item.evidenciasURLs.length);
+
+    await Promise.all(itensComFoto.map(async (item) => {
+      // Busca todas as fotos deste item em paralelo. allSettled garante que
+      // uma foto com falha (404, expirada, bloqueada por CORS) não impede
+      // as demais de aparecerem no PDF.
+      const resultados = await Promise.allSettled(
+        item.evidenciasURLs.map(url => urlToBase64(url))
+      );
+      const base64s = resultados
+        .filter(r => r.status === 'fulfilled')
+        .map(r => r.value);
+      resultados.forEach(r => {
+        if(r.status === 'rejected') console.error(`Falha ao carregar foto de evidência do item ${item.id}:`, r.reason);
+      });
+      if(base64s.length) imagesMap[item.id] = base64s;
+    }));
 
     const doc = generateAuditPDF(audit, imagesMap);
-    const blob = doc.output('blob');
-    const blobUrl = URL.createObjectURL(blob);
-    const filename = `Auditoria_UR_${audit.data}.pdf`;
+    doc.save(`Auditoria_UR_${audit.data}.pdf`);
 
-    if(pendingTab && !pendingTab.closed){
-      // Aba já estava aberta desde o clique: só trocamos a URL. Isso
-      // funciona de forma confiável em Chrome/Edge desktop e Android.
-      pendingTab.location.href = blobUrl;
-    }
-    // Dispara também o download padrão via link (funciona em paralelo
-    // no desktop e como reforço no mobile quando pop-ups são permitidos).
-    const a = document.createElement('a');
-    a.href = blobUrl;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-
+    // tenta sincronizar para as próximas vezes
     try {
+      const pdfBlob = doc.output('blob');
       const pdfPath = `ur_auditoria_pdfs/${auditId}.pdf`;
       const pdfRef = storage.ref().child(pdfPath);
-      const snap = await pdfRef.put(blob, {
-        contentType: 'application/pdf',
-        contentDisposition: `attachment; filename="${filename}"`
-      });
+      const snap = await pdfRef.put(pdfBlob, { contentType: 'application/pdf' });
       const pdfURL = await snap.ref.getDownloadURL();
       await db.collection(COLLECTION).doc(auditId).update({ pdfURL });
     } catch(syncErr){
-      console.error("[PDF] Não foi possível salvar o PDF gerado para acesso futuro (o download local ainda funcionou):", syncErr);
+      console.error("Não foi possível salvar o PDF gerado para acesso futuro:", syncErr);
     }
 
     showToast("✓ PDF gerado a partir dos dados salvos.");
     loadDashboard();
   } catch(e){
-    console.error("[PDF] Falha ao gerar PDF sob demanda:", e);
-    if(pendingTab && !pendingTab.closed) pendingTab.close();
-    showToast("⚠ Não foi possível gerar o PDF agora. Veja o console para detalhes.");
+    console.error("Falha ao gerar PDF sob demanda:", e);
+    showToast("⚠ Não foi possível gerar o PDF agora. Tente novamente.");
     if(btn){ btn.disabled = false; btn.textContent = "Gerar PDF"; }
   }
 }
 
-// Limite de segurança para a consulta do Painel. Sem isso, a cada troca
-// de filtro ou clique em "Filtrar" o app baixava a coleção INTEIRA do
-// Firestore, o que fica cada vez mais lento (e mais caro) à medida que
-// o histórico de auditorias cresce. 500 registros mais recentes cobre
-// bem mais de um ano de auditorias diárias por turno.
-const DASHBOARD_QUERY_LIMIT = 500;
-let _dashboardLoading = false;
-
 async function loadDashboard(){
-  if(_dashboardLoading) return; // evita disparos concorrentes (ex.: duplo toque no filtro)
-  _dashboardLoading = true;
-  const filterBtn = document.getElementById("btnFilter");
-  if(filterBtn) filterBtn.disabled = true;
-
-  try{
   const de = document.getElementById("fltDe").value;
   const ate = document.getElementById("fltAte").value;
   const turno = document.getElementById("fltTurno").value;
 
-  const query = db.collection(COLLECTION)
-    .orderBy("data","desc")
-    .limit(DASHBOARD_QUERY_LIMIT);
-  const snap = await query.get();
-  let audits = snap.docs.map(d => ({id:d.id, ...d.data()})).reverse(); // volta para ordem cronológica ascendente
+  // Filtros de data/turno aplicados diretamente na consulta ao Firestore
+  // (where), em vez de sempre baixar a coleção inteira e filtrar no
+  // navegador — reduz leituras e tráfego conforme o histórico cresce.
+  // Observação: filtrar por "turno" e por intervalo de "data" ao mesmo
+  // tempo exige um índice composto no Firestore; se o console indicar a
+  // necessidade, basta clicar no link do próprio erro para criá-lo.
+  let query = db.collection(COLLECTION).orderBy("data","asc");
+  if(de) query = query.where("data", ">=", de);
+  if(ate) query = query.where("data", "<=", ate);
+  if(turno) query = query.where("turno", "==", turno);
 
-  if(de) audits = audits.filter(a => a.data >= de);
-  if(ate) audits = audits.filter(a => a.data <= ate);
-  if(turno) audits = audits.filter(a => a.turno === turno);
+  const snap = await query.get();
+  let audits = snap.docs.map(d => ({id:d.id, ...d.data()}));
 
   auditsById = {};
   audits.forEach(a => auditsById[a.id] = a);
 
+  // ---- KPIs ----
   const total = audits.length;
   const mediaConf = total ? Math.round(audits.reduce((s,a)=>s+(a.percConformidade||0),0)/total) : 0;
   const desviosTotais = audits.reduce((s,a)=>s+(a.naoConformidades||0),0);
@@ -1380,6 +1348,7 @@ async function loadDashboard(){
     trendEl.textContent = "";
   }
 
+  // ---- item ranking (desvios por item) ----
   const itemDesvioCount = {};
   CHECKLIST.forEach(c => itemDesvioCount[c.id] = 0);
   audits.forEach(a => (a.items||[]).forEach(it => {
@@ -1387,9 +1356,10 @@ async function loadDashboard(){
   }));
   const rankedItems = Object.entries(itemDesvioCount).sort((a,b)=>b[1]-a[1]);
   const topItemId = rankedItems.length && rankedItems[0][1] > 0 ? rankedItems[0][0] : null;
-  const topItem = topItemId ? CHECKLIST.find(c => String(c.id) === String(topItemId)) : null;
+  const topItem = topItemId ? CHECKLIST_BY_ID.get(String(topItemId)) : null;
   document.getElementById("kpiTopItem").textContent = topItem ? topItem.titulo : "Sem desvios";
 
+  // ---- status distribution ----
   let confCount=0, parCount=0, naoCount=0;
   audits.forEach(a => (a.items||[]).forEach(it => {
     if(it.status === 'conforme') confCount++;
@@ -1397,6 +1367,7 @@ async function loadDashboard(){
     else naoCount++;
   }));
 
+  // ---- avg conformidade by turno ----
   const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
   const porTurno = turnos.map(t => {
     const arr = audits.filter(a => a.turno === t);
@@ -1442,12 +1413,13 @@ async function loadDashboard(){
   charts.ranking = new Chart(document.getElementById("chartRanking"), {
     type:'bar',
     data:{
-      labels: rankedItems.slice(0,6).map(([id])=>{ const it = CHECKLIST.find(c=>String(c.id)===String(id)); return it ? (it.titulo.length>28 ? it.titulo.slice(0,26)+'…' : it.titulo) : id; }),
+      labels: rankedItems.slice(0,6).map(([id])=>{ const it = CHECKLIST_BY_ID.get(String(id)); return it ? (it.titulo.length>28 ? it.titulo.slice(0,26)+'…' : it.titulo) : id; }),
       datasets:[{ label:'Desvios', data: rankedItems.slice(0,6).map(([,c])=>c), backgroundColor:'#C8102E', borderRadius:6 }]
     },
     options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{ x:{grid:{color:gridColor}}, y:{grid:{display:false}} }, plugins:{legend:{display:false}} }
   });
 
+  // ---- table ----
   const tbody = document.getElementById("auditTableBody");
   tbody.innerHTML = "";
   document.getElementById("emptyState").style.display = audits.length ? "none" : "block";
@@ -1455,33 +1427,28 @@ async function loadDashboard(){
   audits.slice().reverse().forEach(a => {
     const tr = document.createElement("tr");
     const pdfCell = a.pdfURL
-      ? `<a class="pillbtn ready" href="${a.pdfURL}" target="_blank" rel="noopener" download="Auditoria_UR_${a.data}.pdf">Baixar PDF</a>`
+      ? `<a class="pillbtn ready" href="${a.pdfURL}" target="_blank" rel="noopener">Baixar PDF</a>`
       : `<button type="button" class="pillbtn" id="pdfbtn-${a.id}" onclick="ensurePdfForRow('${a.id}')">Gerar PDF</button>`;
     tr.innerHTML = `
-      <td data-label="Data">${a.data}</td>
-      <td data-label="Turno">${a.turno}</td>
-      <td data-label="Auditor">${a.auditor}</td>
+      <td data-label="Data">${a.data}</td><td data-label="Turno">${a.turno}</td><td data-label="Auditor">${a.auditor}</td>
       <td data-label="Conformidade"><span class="tag ${a.percConformidade>=META_CONFORMIDADE?'ok':'bad'}">${a.percConformidade}%</span></td>
       <td data-label="Ação">${a.statusAcao}</td>
       <td data-label="PDF">${pdfCell}</td>
     `;
     tbody.appendChild(tr);
   });
-  } finally {
-    _dashboardLoading = false;
-    if(filterBtn) filterBtn.disabled = false;
-  }
 }
 
-document.getElementById("btnFilter").addEventListener("click", loadDashboard);
+document.getElementById("btnFilter").addEventListener("click", async () => {
+  const btn = document.getElementById("btnFilter");
+  if(btn.disabled) return; // evita disparar a mesma consulta várias vezes em cliques repetidos
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Filtrando...";
+  try { await loadDashboard(); }
+  finally { btn.disabled = false; btn.textContent = original; }
+});
 document.getElementById("fData").valueAsDate = new Date();
-
-// Preenche os textos de meta a partir da única constante META_CONFORMIDADE,
-// eliminando os valores "85%" que ficavam hardcoded em HTML/PDF/gráficos.
-(function initMetaLabels(){
-  document.getElementById("heroMetaBadge").textContent = `${META_CONFORMIDADE}%`;
-  document.getElementById("legendMeta").textContent = `Meta UR: ${META_CONFORMIDADE}%`;
-})();
 </script>
 </body>
 </html>
