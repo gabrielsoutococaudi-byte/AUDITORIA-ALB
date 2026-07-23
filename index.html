@@ -13,7 +13,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
@@ -78,7 +77,7 @@
   }
   nav.tabs button.active{background:var(--ink); color:#fff;}
 
-  /* ===================== HERO BAND — motivo "gaseificado" ===================== */
+  /* ===================== HERO BAND ===================== */
   .hero{
     position:relative; overflow:hidden;
     background: linear-gradient(115deg, rgba(200,16,46,.95), rgba(15,20,27,.97) 55%, rgba(0,132,61,.92));
@@ -119,8 +118,6 @@
   .grid.cols-4{grid-template-columns:repeat(4,1fr);}
   .grid.cols-2{grid-template-columns:repeat(2,1fr);}
   .grid.cols-3{grid-template-columns:repeat(3,1fr);}
-  @media (max-width:900px){ .grid.cols-4,.grid.cols-2,.grid.cols-3{grid-template-columns:1fr 1fr;} }
-  @media (max-width:600px){ .grid.cols-4,.grid.cols-2,.grid.cols-3{grid-template-columns:1fr;} }
 
   label{display:block; font-size:11.5px; color:var(--muted); margin-bottom:8px; font-weight:700; text-transform: uppercase; letter-spacing:.03em;}
   input, select, textarea{
@@ -175,22 +172,22 @@
 
   .status-row{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap;}
   .status-btn{
-    flex:1; min-width:130px; padding:11px; border-radius:10px; border:1.5px solid var(--line);
+    flex:1; min-width:110px; padding:11px; border-radius:10px; border:1.5px solid var(--line);
     background:#fff; color:var(--muted); cursor:pointer; font-size:12.5px; font-weight:700; transition:all .15s;
+    touch-action: manipulation;
   }
   .status-btn.selected.ok{background:var(--ok); color:#fff; border-color:var(--ok);}
   .status-btn.selected.bad{background:var(--bad); color:#fff; border-color:var(--bad);}
   .status-btn.selected.mid{background:var(--mid); color:#fff; border-color:var(--mid);}
 
   .item-extra{display:grid; grid-template-columns:2fr 1fr; gap:14px; margin-top:14px;}
-  @media (max-width:640px){ .item-extra{grid-template-columns:1fr;} }
 
   .thumb-gallery{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
   .thumb-item{position:relative; width:52px; height:52px; flex-shrink:0;}
   .thumb-item img{width:100%; height:100%; object-fit:cover; border-radius:8px; border:2px solid #fff; box-shadow: var(--shadow-sm); display:block;}
   .thumb-item .rm{
-    position:absolute; top:-6px; right:-6px; width:19px; height:19px; border-radius:50%;
-    background:var(--bad); color:#fff; border:2px solid #fff; font-size:11px; line-height:1;
+    position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%;
+    background:var(--bad); color:#fff; border:2px solid #fff; font-size:12px; line-height:1;
     display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; font-weight:700;
   }
   .photo-count{font-size:11px; color:var(--muted); margin-top:8px; font-weight:700; letter-spacing:.02em;}
@@ -199,19 +196,19 @@
   button.primary{
     background:var(--primary); color:#fff; border:none; padding:14px 32px; border-radius:12px;
     font-weight:700; font-size:15px; cursor:pointer; transition:all .2s; font-family:var(--font-body);
-    box-shadow: 0 8px 20px -6px rgba(200,16,46,0.45);
+    box-shadow: 0 8px 20px -6px rgba(200,16,46,0.45); touch-action: manipulation;
   }
   button.primary:hover{transform: translateY(-1px); background: var(--primary-dark);}
-  button.primary:disabled{opacity:.5; cursor:not-allowed;}
+  button.primary:disabled{opacity:.5; cursor:not-allowed; transform:none;}
 
   button.secondary{
     background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:11px 18px; border-radius:10px;
-    font-size:13.5px; font-weight:700; cursor:pointer;
+    font-size:13.5px; font-weight:700; cursor:pointer; touch-action: manipulation;
   }
   a.pillbtn, button.pillbtn{
     background:#fff; color:var(--ink); border:1.5px solid var(--line); padding:8px 15px; border-radius:9px;
-    font-size:12px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:6px;
-    font-family:var(--font-body);
+    font-size:12px; font-weight:700; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    font-family:var(--font-body); touch-action: manipulation;
   }
   a.pillbtn:hover, button.pillbtn:hover{border-color:var(--primary); color:var(--primary);}
   button.pillbtn:disabled{opacity:.55; cursor:wait;}
@@ -226,8 +223,9 @@
 
   .chart-card{padding:20px 22px 12px;}
   .chart-card h3{font-family:var(--font-display); font-size:14px; margin:0 0 14px; font-weight:700; color:var(--ink);}
-  .chart-wrap{position:relative; height:240px;}
+  .chart-wrap{position:relative; height:240px; width:100%;}
 
+  .table-responsive{overflow-x:auto; -webkit-overflow-scrolling: touch; margin:0 -16px; padding:0 16px;}
   table{width:100%; border-collapse:separate; border-spacing: 0; font-size:13.5px; min-width:600px;}
   th,td{padding:14px 16px; border-bottom:1px solid var(--line); text-align:left;}
   th{background: var(--panel-2); color:var(--muted); font-weight:700; font-size:10.5px; text-transform:uppercase; letter-spacing:.04em;}
@@ -238,69 +236,77 @@
   .tag.bad{background:var(--bad-dim); color:var(--bad);}
 
   .toast{
-    position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
-    background:var(--ink); color:#fff; padding:14px 28px; border-radius:12px;
-    font-weight:600; font-size:14px; z-index:100; box-shadow: var(--shadow);
-    max-width: calc(100vw - 48px); text-align:center;
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:12px 24px; border-radius:12px;
+    font-weight:600; font-size:13.5px; z-index:100; box-shadow: var(--shadow);
+    width: max-content; max-width: calc(100vw - 32px); text-align:center;
   }
 
   #uploadingOverlay{
-    position: fixed; top: 20px; right: 20px; background: var(--ink); color: #fff;
-    padding: 12px 20px; border-radius: 10px; z-index: 1000; box-shadow: var(--shadow);
-    display: none; align-items: center; gap: 10px; font-weight: 600; font-size: 13px;
-    max-width: calc(100vw - 40px);
+    position: fixed; top: 16px; right: 16px; left: 16px; background: var(--ink); color: #fff;
+    padding: 12px 18px; border-radius: 12px; z-index: 1000; box-shadow: var(--shadow);
+    display: none; align-items: center; justify-content: center; gap: 10px; font-weight: 600; font-size: 13px;
+    margin: 0 auto; max-width: 480px;
   }
 
-  /* ===================== MOBILE RESPONSIVE ===================== */
+  /* ===================== RESPONSIVE BREAKPOINTS ===================== */
+  @media (max-width:900px){
+    .grid.cols-4{grid-template-columns:repeat(2,1fr);}
+    .grid.cols-3{grid-template-columns:1fr;}
+    .grid.cols-2{grid-template-columns:1fr;}
+  }
+
   @media (max-width:768px){
-    header{padding:12px 16px; gap:10px;}
-    .brand-mark{width:36px; height:36px;}
+    header{padding:12px 16px; gap:12px;}
+    .brand-mark{width:38px; height:38px;}
     .brand-mark::after{inset:5px; font-size:11px;}
-    header h1{font-size:15.5px;}
-    header .sub{font-size:10.5px;}
-    nav.tabs{width:100%; order:3;}
-    nav.tabs button{flex:1; padding:10px 8px; font-size:12.5px;}
+    header h1{font-size:16px;}
+    header .sub{font-size:11px;}
+    nav.tabs{width:100%; order:3; display:flex;}
+    nav.tabs button{flex:1; padding:10px 8px; font-size:13px; text-align:center;}
 
-    .hero{padding:22px 16px 20px;}
+    .hero{padding:24px 16px 20px;}
     .hero-inner{flex-direction:column; align-items:flex-start; gap:14px;}
-    .hero h2{font-size:19px;}
-    .hero p{font-size:12.5px;}
-    .hero-badge{align-self:stretch; justify-content:center;}
+    .hero h2{font-size:20px;}
+    .hero p{font-size:13px;}
+    .hero-badge{width:100%; justify-content:center;}
 
-    main{padding:18px 14px 90px;}
-    .card{padding:16px;}
-    h2.section-title{font-size:14.5px; margin-bottom:16px;}
+    main{padding:16px 12px 80px;}
+    .card{padding:16px; border-radius:14px; margin-bottom:16px;}
+    h2.section-title{font-size:15px; margin-bottom:16px;}
 
-    .legend-strip{flex-direction:column; align-items:flex-start; gap:10px; padding:14px 16px;}
-    .legend-strip > span:last-child{margin-left:0 !important;}
+    .legend-strip{flex-direction:column; align-items:flex-start; gap:8px; padding:12px 16px;}
+    .legend-strip > span:last-child{margin-left:0 !important; margin-top:4px;}
 
     .item-card{flex-direction:column; padding:14px;}
-    .cap-badge{width:30px; height:30px;}
-    .cap-badge::after{font-size:10.5px;}
-    .item-head{flex-direction:column; align-items:flex-start; gap:8px;}
+    .cap-badge{width:32px; height:32px;}
+    .cap-badge::after{font-size:11px;}
+    .item-head{flex-direction:row; align-items:flex-start; justify-content:space-between; width:100%;}
     .item-title{font-size:14px;}
+    .item-extra{grid-template-columns:1fr; gap:12px;}
 
-    .status-row{flex-direction:column; gap:8px;}
-    .status-btn{min-width:100%; padding:13px; font-size:13px;}
+    .status-row{display:grid; grid-template-columns:1fr 1fr 1fr; width:100%; gap:6px;}
+    .status-btn{min-width:0; padding:12px 4px; font-size:11.5px; text-align:center;}
 
-    button.primary{width:100%; padding:15px; font-size:14.5px;}
-    #formSection > div[style*="display:flex"]{flex-direction:column; align-items:stretch !important;}
+    button.primary{width:100%; padding:15px; font-size:15px;}
+    #formSection > div[style*="display:flex"]{flex-direction:column; align-items:stretch !important; gap:10px;}
 
-    .kpi .val{font-size:22px;}
-    .chart-wrap{height:200px;}
+    .kpi .val{font-size:24px;}
+    .chart-wrap{height:210px;}
 
-    table{min-width:560px; font-size:12.5px;}
-    th,td{padding:11px 10px;}
-    .card[style*="padding: 0"]{overflow-x:auto;}
-
-    .thumb-item{width:46px; height:46px;}
+    .table-responsive{margin:0 -16px; padding:0 16px;}
+    table{min-width:540px; font-size:12.5px;}
+    th,td{padding:10px 12px;}
+    
+    .thumb-item{width:48px; height:48px;}
   }
 
-  @media (max-width:420px){
-    header h1{font-size:14px;}
-    .hero h2{font-size:17px;}
-    .hero-badge .n{font-size:17px;}
+  @media (max-width:480px){
     .grid.cols-4, .grid.cols-3, .grid.cols-2{grid-template-columns:1fr;}
+    .status-row{grid-template-columns:1fr;}
+    header h1{font-size:15px;}
+    .hero h2{font-size:18px;}
+    .hero-badge .n{font-size:18px;}
   }
 </style>
 </head>
@@ -333,7 +339,7 @@
     </div>
     <div class="hero-badge">
       <div>
-        <div class="n">85%</div>
+        <div class="n">60%</div>
         <div class="l">Meta UR</div>
       </div>
     </div>
@@ -345,7 +351,7 @@
     <span><span class="legend-dot" style="background:var(--ok);"></span><b>Conforme</b> (100%)</span>
     <span><span class="legend-dot" style="background:var(--mid);"></span><b>Parcial</b> (50%)</span>
     <span><span class="legend-dot" style="background:var(--bad);"></span><b>Não Conforme</b> (0%)</span>
-    <span style="margin-left: auto; font-weight: 800; color: var(--primary);">Meta UR: 85%</span>
+    <span style="margin-left: auto; font-weight: 800; color: var(--primary);">Meta UR: 60%</span>
   </div>
 
   <section id="formSection">
@@ -375,12 +381,12 @@
     <div class="card">
       <h2 class="section-title"><span class="badge">3</span> Plano de Ação & Observações</h2>
       <div class="grid cols-2">
-        <div class="field"><label>Observações Gerais</label><textarea id="fObsGerais" placeholder="Descreva observações relevantes..."></textarea></div>
-        <div class="field"><label>Plano de Ação Imediato</label><textarea id="fPlanoAcao" placeholder="Quais ações serão tomadas?"></textarea></div>
+        <div class="field"><label>Observações Gerais</label><textarea id="fObsGerais" rows="3" placeholder="Descreva observações relevantes..."></textarea></div>
+        <div class="field"><label>Plano de Ação Imediato</label><textarea id="fPlanoAcao" rows="3" placeholder="Quais ações serão tomadas?"></textarea></div>
       </div>
     </div>
 
-    <div style="display:flex; gap:16px; align-items:center; padding: 20px 0;">
+    <div style="display:flex; gap:16px; align-items:center; padding: 10px 0 20px;">
       <button class="primary" id="btnSubmit">Finalizar e Baixar PDF</button>
       <span id="formMsg" style="font-size:14px; font-weight: 600;"></span>
     </div>
@@ -395,7 +401,7 @@
         <div class="field"><label>Turno</label>
           <select id="fltTurno"><option value="">Todos</option><option>Turno A</option><option>Turno B</option><option>Turno Intermediário</option><option>Turno C</option></select>
         </div>
-        <div class="field"><button class="secondary" id="btnFilter" style="width: 100%; margin-top: 24px;">Filtrar</button></div>
+        <div class="field" style="display:flex; align-items:flex-end;"><button class="secondary" id="btnFilter" style="width: 100%;">Filtrar</button></div>
       </div>
     </div>
 
@@ -416,8 +422,8 @@
     </div>
 
     <div class="card" style="padding: 0; overflow: hidden;">
-      <div style="padding:20px 24px 4px;"><h2 class="section-title" style="margin-bottom:6px;">Histórico de Auditorias</h2></div>
-      <div style="overflow-x:auto;">
+      <div style="padding:20px 24px 10px;"><h2 class="section-title" style="margin-bottom:0;">Histórico de Auditorias</h2></div>
+      <div class="table-responsive">
         <table>
           <thead><tr><th>Data</th><th>Turno</th><th>Auditor</th><th>Conformidade</th><th>Ação</th><th>PDF</th></tr></thead>
           <tbody id="auditTableBody"></tbody>
@@ -431,13 +437,17 @@
 <div id="toast" class="toast" style="display:none;"></div>
 
 <script>
-// ===================== HERO BUBBLES (decorativo) =====================
+// ===================== CONSTANTES DE NEGÓCIO =====================
+const META_UR = 60; // Alterado de 80% para 60%
+
+// ===================== HERO BUBBLES =====================
 (function renderBubbles(){
   const wrap = document.getElementById("heroBubbles");
-  const n = 14;
+  if(!wrap) return;
+  const n = 12;
   for(let i=0;i<n;i++){
     const s = document.createElement("span");
-    const size = 10 + Math.random()*46;
+    const size = 10 + Math.random()*40;
     s.style.width = size+"px";
     s.style.height = size+"px";
     s.style.left = (Math.random()*100)+"%";
@@ -479,7 +489,7 @@ const CHECKLIST = [
 ];
 const PESO_TOTAL = CHECKLIST.reduce((s,i) => s + i.peso, 0);
 
-// ===================== IMAGE COMPRESSION =====================
+// ===================== COMPRESSÃO OTIMIZADA DE IMAGEM =====================
 async function compressImage(file) {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -489,10 +499,8 @@ async function compressImage(file) {
       img.src = event.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        // Dimensionado para o tamanho em que a foto realmente aparece no
-        // PDF (~80mm de largura) — isso é suficiente para boa nitidez e
-        // deixa a geração do PDF (e o download) bem mais rápidos.
-        const MAX_WIDTH = 720;
+        // Reduzido para 500px máx e qualidade 0.35 para diminuir drasticamente o peso (50KB por foto)
+        const MAX_WIDTH = 500;
         let width = img.width;
         let height = img.height;
 
@@ -508,7 +516,7 @@ async function compressImage(file) {
 
         canvas.toBlob((blob) => {
           resolve(blob);
-        }, 'image/jpeg', 0.5);
+        }, 'image/jpeg', 0.35);
       };
     };
   });
@@ -533,7 +541,7 @@ const checklistWrap = document.getElementById("checklistWrap");
 const itemState = {};
 
 CHECKLIST.forEach(item=>{
-  itemState[item.id] = {status:null, obs:"", evidencias:[]}; // evidencias: [{blob, base64}]
+  itemState[item.id] = {status:null, obs:"", evidencias:[]};
   const card = document.createElement("div");
   card.className = "item-card";
   card.id = `itemcard-${item.id}`;
@@ -553,7 +561,7 @@ CHECKLIST.forEach(item=>{
         <button type="button" class="status-btn bad" data-val="nao_conforme">Não Conforme</button>
       </div>
       <div class="item-extra">
-        <div class="field"><label>Observação</label><textarea data-obs="${item.id}" placeholder="Descreva o desvio..."></textarea></div>
+        <div class="field"><label>Observação</label><textarea data-obs="${item.id}" rows="2" placeholder="Descreva o desvio..."></textarea></div>
         <div class="field">
           <label>Fotos (até ${MAX_FOTOS_POR_ITEM})</label>
           <input type="file" accept="image/*" multiple capture="environment" data-evidencia="${item.id}">
@@ -633,7 +641,7 @@ function renderGallery(id){
   if(input) input.disabled = atMax;
 }
 
-// ===================== PDF GENERATION (MODERNO, COM CAPA) =====================
+// ===================== PDF GENERATION =====================
 const UR_RED = [200,16,46];
 const UR_GREEN = [0,132,61];
 const UR_INK = [16,21,28];
@@ -659,16 +667,13 @@ function pdfCover(doc, auditData){
   doc.setFillColor(...UR_GREEN);
   doc.rect(0, h-5, w, 5, 'F');
 
-  // bolhas decorativas (motivo "refresco gaseificado")
   const bubblePositions = [[26,40,7],[46,66,4],[170,30,5],[186,60,3],[24,190,4],[178,210,6],[150,150,3],[40,140,3]];
   bubblePositions.forEach(([bx,by,br], idx) => {
     const alpha = idx % 2 === 0 ? UR_RED : UR_GREEN;
     doc.setFillColor(alpha[0], alpha[1], alpha[2]);
     doc.circle(bx, by, br, 'F');
   });
-  doc.setGState && doc.setGState(new doc.GState({opacity:1}));
 
-  // marca
   doc.setFillColor(...UR_RED);
   doc.circle(w/2, 58, 15, 'F');
   doc.setTextColor(255,255,255);
@@ -685,8 +690,8 @@ function pdfCover(doc, auditData){
   doc.text("Relatório de Auditoria", w/2, 98, {align:"center"});
   doc.text("de Estoque", w/2, 108, {align:"center"});
 
-  // selo de conformidade
-  const meta = auditData.percConformidade >= 85;
+  // Selo de conformidade atualizado para a Meta de 60%
+  const meta = auditData.percConformidade >= META_UR;
   const badgeColor = meta ? UR_GREEN : UR_RED;
   doc.setFillColor(...badgeColor);
   doc.circle(w/2, 148, 22, 'F');
@@ -702,9 +707,8 @@ function pdfCover(doc, auditData){
   doc.text("CONFORMIDADE", w/2, 178, {align:"center"});
   doc.setFontSize(8.5);
   doc.setTextColor(220,220,225);
-  doc.text(meta ? "Dentro da meta UR (85%)" : "Abaixo da meta UR (85%)", w/2, 185, {align:"center"});
+  doc.text(meta ? `Dentro da meta UR (${META_UR}%)` : `Abaixo da meta UR (${META_UR}%)`, w/2, 185, {align:"center"});
 
-  // ficha rápida
   doc.setDrawColor(255,255,255);
   doc.setLineWidth(0.2);
   const fichaY = 205;
@@ -771,8 +775,7 @@ function pdfFooter(doc){
   }
 }
 
-// Gera o PDF e RETORNA o objeto jsPDF (não salva automaticamente).
-function generateAuditPDF(auditData, imagesMap){
+function generateAuditPDF(auditData, imagesMap = {}){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -825,7 +828,6 @@ function generateAuditPDF(auditData, imagesMap){
     }
   });
 
-  // ---- summary page ----
   doc.addPage();
   pdfHeader(doc, "Resumo Detalhado de Desvios", "Uberlândia Refrescos");
   let sy = 46;
@@ -875,7 +877,7 @@ function generateAuditPDF(auditData, imagesMap){
     doc.text(doc.splitTextToSize(auditData.planoAcao || "—", 180), 15, sy);
   }
 
-  // ---- photo evidence ----
+  // Evidências
   const ids = Object.keys(imagesMap);
   if(ids.length > 0){
     doc.addPage();
@@ -903,7 +905,7 @@ function generateAuditPDF(auditData, imagesMap){
   return doc;
 }
 
-// ===================== SUBMIT =====================
+// ===================== SUBMIT OTIMIZADO (PARALELISMO) =====================
 document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   const data = document.getElementById("fData").value;
   const turno = document.getElementById("fTurno").value;
@@ -913,146 +915,127 @@ document.getElementById("btnSubmit").addEventListener("click", async ()=>{
   if(!data || !turno || !auditor) return alert("Preencha os campos obrigatórios!");
   if(CHECKLIST.some(i => !itemState[i.id].status)) return alert("Responda todo o checklist!");
 
-  // Feedback imediato: trava o botão e avisa que está processando ANTES de
-  // montar o PDF, e cede o controle ao navegador (dupla espera por frame)
-  // para garantir que essa mudança apareça na tela antes do trabalho pesado
-  // e síncrono de montagem do PDF começar.
   const btn = document.getElementById("btnSubmit");
   const msg = document.getElementById("formMsg");
   btn.disabled = true;
-  btn.textContent = "Gerando PDF...";
-  msg.textContent = "Montando o relatório, o download começa em instantes...";
-  // Usamos setTimeout (não requestAnimationFrame) de propósito: rAF é
-  // pausado pelo navegador quando a tela do celular apaga ou o app vai
-  // para segundo plano, o que travava a geração por minutos. setTimeout
-  // continua disparando mesmo em segundo plano.
+  btn.textContent = "Processando...";
+  msg.textContent = "Gerando relatório e salvando...";
+  
   await new Promise(r => setTimeout(r, 20));
 
   try {
+    const snapshotItems = [];
+    const imagesMap = {};
+    let pesoObtido = 0;
 
-  const snapshotItems = [];
-  const imagesMap = {};
-  let pesoObtido = 0;
-
-  CHECKLIST.forEach(item => {
-    const st = itemState[item.id];
-    const score = st.status === 'conforme' ? item.peso : (st.status === 'parcial' ? item.peso/2 : 0);
-    pesoObtido += score;
-    snapshotItems.push({
-      id: item.id, titulo: item.titulo, peso: item.peso,
-      status: st.status, scoreObtido: score, obs: st.obs
+    CHECKLIST.forEach(item => {
+      const st = itemState[item.id];
+      const score = st.status === 'conforme' ? item.peso : (st.status === 'parcial' ? item.peso/2 : 0);
+      pesoObtido += score;
+      snapshotItems.push({
+        id: item.id, titulo: item.titulo, peso: item.peso,
+        status: st.status, scoreObtido: score, obs: st.obs
+      });
+      if(st.evidencias.length) imagesMap[item.id] = st.evidencias.map(ev => ev.base64);
     });
-    if(st.evidencias.length) imagesMap[item.id] = st.evidencias.map(ev => ev.base64);
-  });
 
-  const auditData = {
-    data, turno, auditor, area,
-    items: snapshotItems,
-    observacoesGerais: document.getElementById("fObsGerais").value,
-    planoAcao: document.getElementById("fPlanoAcao").value,
-    percConformidade: Math.round((pesoObtido/PESO_TOTAL)*100),
-    naoConformidades: snapshotItems.filter(i => i.status !== 'conforme').length,
-    statusAcao: document.getElementById("fPlanoAcao").value ? "pendente" : "concluído",
-    pdfURL: null,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
+    const auditData = {
+      data, turno, auditor, area,
+      items: snapshotItems,
+      observacoesGerais: document.getElementById("fObsGerais").value,
+      planoAcao: document.getElementById("fPlanoAcao").value,
+      percConformidade: Math.round((pesoObtido/PESO_TOTAL)*100),
+      naoConformidades: snapshotItems.filter(i => i.status !== 'conforme').length,
+      statusAcao: document.getElementById("fPlanoAcao").value ? "pendente" : "concluído",
+      pdfURL: null,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
 
-  const doc = generateAuditPDF(auditData, imagesMap);
-  doc.save(`Auditoria_UR_${auditData.data}.pdf`);
-  document.getElementById("formMsg").textContent = "✓ PDF baixado!";
-  showToast("✓ PDF Gerado! Salvando dados em segundo plano...");
+    // Gera e Baixa o PDF localmente
+    const doc = generateAuditPDF(auditData, imagesMap);
+    doc.save(`Auditoria_UR_${auditData.data}.pdf`);
+    msg.textContent = "✓ PDF Baixado!";
+    showToast("✓ PDF Gerado! Sincronizando dados no banco...");
 
-  const pdfBlob = doc.output('blob');
-  backgroundUpload(auditData, pdfBlob);
+    const pdfBlob = doc.output('blob');
 
-  setTimeout(() => location.reload(), 1500);
+    // Executa o Upload Otimizado sem bloquear a UX
+    backgroundUploadOptimized(auditData, pdfBlob);
+
+    setTimeout(() => location.reload(), 1800);
 
   } catch(err) {
-    console.error("Falha ao gerar o PDF:", err);
-    alert("Não foi possível gerar o PDF. Tente novamente.");
-  } finally {
+    console.error("Falha ao salvar auditoria:", err);
+    alert("Ocorreu um erro ao processar. Tente novamente.");
     btn.disabled = false;
     btn.textContent = "Finalizar e Baixar PDF";
   }
 });
 
-// Salva os dados e tenta sincronizar o PDF e as fotos. Cada etapa é isolada:
-// uma falha ao enviar o PDF, por exemplo, nunca impede o envio das fotos
-// (e vice-versa), para que o máximo de dados fique disponível no Painel.
-async function backgroundUpload(auditData, pdfBlob) {
+// Upload Paralelo e Otimizado para Firebase
+async function backgroundUploadOptimized(auditData, pdfBlob) {
   const overlay = document.getElementById("uploadingOverlay");
   const text = document.getElementById("uploadText");
   overlay.style.display = "flex";
+  text.textContent = "Sincronizando com o Firebase...";
 
-  let docRef;
   try {
-    docRef = await db.collection(COLLECTION).add(auditData);
-  } catch(e) {
-    console.error("Falha ao salvar registro:", e);
-    overlay.style.background = "#C8102E";
-    text.textContent = "⚠ Erro ao salvar o registro da auditoria.";
-    setTimeout(() => overlay.style.display = "none", 4000);
-    return;
-  }
+    // 1. Salva Documento Principal
+    const docRef = await db.collection(COLLECTION).add(auditData);
+    
+    // Lista de promessas para disparo paralelo
+    const uploadTasks = [];
 
-  let pdfOk = false;
-  try {
-    text.textContent = "Enviando PDF do relatório...";
+    // 2. Task Upload PDF
     const pdfPath = `ur_auditoria_pdfs/${docRef.id}.pdf`;
     const pdfRef = storage.ref().child(pdfPath);
-    const pdfSnap = await pdfRef.put(pdfBlob, { contentType: 'application/pdf' });
-    const pdfURL = await pdfSnap.ref.getDownloadURL();
-    await docRef.update({ pdfURL });
-    pdfOk = true;
-  } catch(e) {
-    console.error("Falha ao enviar PDF (o registro em si foi salvo normalmente):", e);
-  }
+    const pdfTask = pdfRef.put(pdfBlob, { contentType: 'application/pdf' })
+      .then(snap => snap.ref.getDownloadURL())
+      .then(pdfURL => docRef.update({ pdfURL }))
+      .catch(e => console.error("Erro upload PDF:", e));
+    uploadTasks.push(pdfTask);
 
-  let photosOk = true;
-  try {
+    // 3. Tasks Upload de Imagens Paralelas
     const imageItems = CHECKLIST.filter(i => itemState[i.id].evidencias.length > 0);
-    const totalImages = imageItems.reduce((s,i)=> s + itemState[i.id].evidencias.length, 0);
-    let uploadedCount = 0;
-    let updatedItems = auditData.items;
+    const photoUploadPromises = [];
+    const itemUrlsMap = {};
 
-    for(const item of imageItems) {
-      const evidencias = itemState[item.id].evidencias;
-      const urls = [];
-      for(let idx=0; idx<evidencias.length; idx++){
-        uploadedCount++;
-        text.textContent = `Enviando evidências (${uploadedCount}/${totalImages})...`;
-        try {
-          const path = `ur_auditoria/${docRef.id}_${item.id}_${idx}.jpg`;
-          const ref = storage.ref().child(path);
-          const snap = await ref.put(evidencias[idx].blob);
-          const url = await snap.ref.getDownloadURL();
-          urls.push(url);
-        } catch(innerErr) {
-          console.error(`Falha ao enviar foto ${idx} do item ${item.id}:`, innerErr);
-          photosOk = false;
+    imageItems.forEach(item => {
+      itemUrlsMap[item.id] = [];
+      itemState[item.id].evidencias.forEach((ev, idx) => {
+        const path = `ur_auditoria/${docRef.id}_${item.id}_${idx}.jpg`;
+        const ref = storage.ref().child(path);
+        const p = ref.put(ev.blob).then(snap => snap.ref.getDownloadURL()).then(url => {
+          itemUrlsMap[item.id].push(url);
+        }).catch(e => console.error(`Erro upload foto ${idx} item ${item.id}:`, e));
+        photoUploadPromises.push(p);
+      });
+    });
+
+    // Aguarda todos os uploads em paralelo
+    await Promise.all([...uploadTasks, ...photoUploadPromises]);
+
+    // Atualiza links das evidências no documento Firestore de uma única vez
+    if (Object.keys(itemUrlsMap).length > 0) {
+      const updatedItems = auditData.items.map(it => {
+        if (itemUrlsMap[it.id] && itemUrlsMap[it.id].length > 0) {
+          return { ...it, evidenciasURLs: itemUrlsMap[it.id] };
         }
-      }
-      if(urls.length){
-        updatedItems = updatedItems.map(it => it.id === item.id ? {...it, evidenciasURLs: urls} : it);
-        await docRef.update({ items: updatedItems });
-      }
+        return it;
+      });
+      await docRef.update({ items: updatedItems });
     }
-  } catch(e) {
-    console.error("Falha geral no envio de fotos:", e);
-    photosOk = false;
-  }
 
-  if(pdfOk && photosOk){
     overlay.style.background = "#00843D";
-    text.textContent = "✓ Sincronização concluída! PDF disponível no Painel.";
-  } else if(pdfOk){
-    overlay.style.background = "#F5A524";
-    text.textContent = "✓ PDF sincronizado. Algumas fotos falharam — o Painel ainda permite gerar o PDF novamente.";
-  } else {
-    overlay.style.background = "#F5A524";
-    text.textContent = "PDF será gerado sob demanda no Painel (envio automático falhou).";
+    text.textContent = "✓ Sincronização realizada com sucesso!";
+
+  } catch(e) {
+    console.error("Erro no envio em segundo plano:", e);
+    overlay.style.background = "#C8102E";
+    text.textContent = "⚠ Ocorreu uma falha no envio dos dados.";
+  } finally {
+    setTimeout(() => overlay.style.display = "none", 3000);
   }
-  setTimeout(() => overlay.style.display = "none", 4500);
 }
 
 // ===================== UTILS =====================
@@ -1077,179 +1060,172 @@ let charts = {};
 let auditsById = {};
 function destroyCharts(){ Object.values(charts).forEach(c => c && c.destroy()); charts = {}; }
 
-// Sempre disponibiliza o PDF no Painel: se o registro já tem pdfURL, baixa
-// direto; caso contrário, reconstrói o PDF no navegador a partir dos dados
-// e fotos salvos (e tenta sincronizar o resultado em segundo plano).
-async function ensurePdfForRow(auditId){
+// CORREÇÃO CRÍTICA DO PDF NO PAINEL DE CONTROLE
+window.ensurePdfForRow = async function(auditId){
   const audit = auditsById[auditId];
-  if(!audit) return;
+  if(!audit) return alert("Dados da auditoria não foram localizados!");
+
   const btn = document.getElementById(`pdfbtn-${auditId}`);
   if(btn){ btn.disabled = true; btn.textContent = "Gerando..."; }
 
   try {
     const imagesMap = {};
-    for(const item of (audit.items || [])){
-      if(item.evidenciasURLs && item.evidenciasURLs.length){
-        const base64s = [];
-        for(const url of item.evidenciasURLs){
-          try { base64s.push(await urlToBase64(url)); }
-          catch(err){ console.error("Falha ao carregar foto de evidência:", err); }
+    if(audit.items && Array.isArray(audit.items)){
+      for(const item of audit.items){
+        if(item.evidenciasURLs && item.evidenciasURLs.length){
+          const base64s = [];
+          for(const url of item.evidenciasURLs){
+            try { 
+              const b64 = await urlToBase64(url);
+              base64s.push(b64); 
+            } catch(err){ console.error("Erro ao converter URL para Base64:", err); }
+          }
+          if(base64s.length) imagesMap[item.id] = base64s;
         }
-        if(base64s.length) imagesMap[item.id] = base64s;
       }
     }
 
     const doc = generateAuditPDF(audit, imagesMap);
-    doc.save(`Auditoria_UR_${audit.data}.pdf`);
-
-    // tenta sincronizar para as próximas vezes
-    try {
-      const pdfBlob = doc.output('blob');
-      const pdfPath = `ur_auditoria_pdfs/${auditId}.pdf`;
-      const pdfRef = storage.ref().child(pdfPath);
-      const snap = await pdfRef.put(pdfBlob, { contentType: 'application/pdf' });
-      const pdfURL = await snap.ref.getDownloadURL();
-      await db.collection(COLLECTION).doc(auditId).update({ pdfURL });
-    } catch(syncErr){
-      console.error("Não foi possível salvar o PDF gerado para acesso futuro:", syncErr);
-    }
-
-    showToast("✓ PDF gerado a partir dos dados salvos.");
-    loadDashboard();
+    doc.save(`Auditoria_UR_${audit.data || 'relatorio'}.pdf`);
+    showToast("✓ PDF baixado com sucesso!");
   } catch(e){
-    console.error("Falha ao gerar PDF sob demanda:", e);
-    showToast("⚠ Não foi possível gerar o PDF agora. Tente novamente.");
+    console.error("Falha ao gerar PDF:", e);
+    showToast("⚠ Erro ao gerar o PDF do histórico.");
+  } finally {
     if(btn){ btn.disabled = false; btn.textContent = "Gerar PDF"; }
   }
-}
+};
 
 async function loadDashboard(){
   const de = document.getElementById("fltDe").value;
   const ate = document.getElementById("fltAte").value;
   const turno = document.getElementById("fltTurno").value;
 
-  let query = db.collection(COLLECTION).orderBy("data","asc");
-  const snap = await query.get();
-  let audits = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  try {
+    let query = db.collection(COLLECTION).orderBy("data","asc");
+    const snap = await query.get();
+    let audits = snap.docs.map(d => ({id:d.id, ...d.data()}));
 
-  if(de) audits = audits.filter(a => a.data >= de);
-  if(ate) audits = audits.filter(a => a.data <= ate);
-  if(turno) audits = audits.filter(a => a.turno === turno);
+    if(de) audits = audits.filter(a => a.data >= de);
+    if(ate) audits = audits.filter(a => a.data <= ate);
+    if(turno) audits = audits.filter(a => a.turno === turno);
 
-  auditsById = {};
-  audits.forEach(a => auditsById[a.id] = a);
+    auditsById = {};
+    audits.forEach(a => auditsById[a.id] = a);
 
-  // ---- KPIs ----
-  const total = audits.length;
-  const mediaConf = total ? Math.round(audits.reduce((s,a)=>s+(a.percConformidade||0),0)/total) : 0;
-  const desviosTotais = audits.reduce((s,a)=>s+(a.naoConformidades||0),0);
+    const total = audits.length;
+    const mediaConf = total ? Math.round(audits.reduce((s,a)=>s+(a.percConformidade||0),0)/total) : 0;
+    const desviosTotais = audits.reduce((s,a)=>s+(a.naoConformidades||0),0);
 
-  document.getElementById("kpiConform").textContent = `${mediaConf}%`;
-  document.getElementById("kpiTotal").textContent = total;
-  document.getElementById("kpiDesvios").textContent = desviosTotais;
+    document.getElementById("kpiConform").textContent = `${mediaConf}%`;
+    document.getElementById("kpiTotal").textContent = total;
+    document.getElementById("kpiDesvios").textContent = desviosTotais;
 
-  const trendEl = document.getElementById("kpiConformTrend");
-  if(total >= 2){
-    const half = Math.floor(total/2);
-    const firstHalf = audits.slice(0, half);
-    const secondHalf = audits.slice(half);
-    const avg = arr => arr.length ? arr.reduce((s,a)=>s+(a.percConformidade||0),0)/arr.length : 0;
-    const diff = Math.round(avg(secondHalf) - avg(firstHalf));
-    trendEl.textContent = diff >= 0 ? `▲ ${diff}% vs. período anterior` : `▼ ${Math.abs(diff)}% vs. período anterior`;
-    trendEl.className = "trend " + (diff >= 0 ? "up" : "down");
-  } else {
-    trendEl.textContent = "";
+    const trendEl = document.getElementById("kpiConformTrend");
+    if(total >= 2){
+      const half = Math.floor(total/2);
+      const firstHalf = audits.slice(0, half);
+      const secondHalf = audits.slice(half);
+      const avg = arr => arr.length ? arr.reduce((s,a)=>s+(a.percConformidade||0),0)/arr.length : 0;
+      const diff = Math.round(avg(secondHalf) - avg(firstHalf));
+      trendEl.textContent = diff >= 0 ? `▲ ${diff}% vs. período anterior` : `▼ ${Math.abs(diff)}% vs. período anterior`;
+      trendEl.className = "trend " + (diff >= 0 ? "up" : "down");
+    } else {
+      trendEl.textContent = "";
+    }
+
+    const itemDesvioCount = {};
+    CHECKLIST.forEach(c => itemDesvioCount[c.id] = 0);
+    audits.forEach(a => (a.items||[]).forEach(it => {
+      if(it.status !== 'conforme') itemDesvioCount[it.id] = (itemDesvioCount[it.id]||0) + 1;
+    }));
+    const rankedItems = Object.entries(itemDesvioCount).sort((a,b)=>b[1]-a[1]);
+    const topItemId = rankedItems.length && rankedItems[0][1] > 0 ? rankedItems[0][0] : null;
+    const topItem = topItemId ? CHECKLIST.find(c => String(c.id) === String(topItemId)) : null;
+    document.getElementById("kpiTopItem").textContent = topItem ? topItem.titulo : "Sem desvios";
+
+    let confCount=0, parCount=0, naoCount=0;
+    audits.forEach(a => (a.items||[]).forEach(it => {
+      if(it.status === 'conforme') confCount++;
+      else if(it.status === 'parcial') parCount++;
+      else naoCount++;
+    }));
+
+    const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
+    const porTurno = turnos.map(t => {
+      const arr = audits.filter(a => a.turno === t);
+      return arr.length ? Math.round(arr.reduce((s,a)=>s+(a.percConformidade||0),0)/arr.length) : 0;
+    });
+
+    destroyCharts();
+    const gridColor = "#E4E8EF";
+
+    charts.evolucao = new Chart(document.getElementById("chartEvolucao"), {
+      type:'line',
+      data:{
+        labels: audits.map(a=>a.data),
+        datasets:[{
+          label:'Conformidade %', data: audits.map(a=>a.percConformidade||0),
+          borderColor:'#C8102E', backgroundColor:'rgba(200,16,46,0.08)', fill:true, tension:0.35, pointRadius:3
+        },{
+          label:`Meta (${META_UR}%)`, data: audits.map(()=>META_UR),
+          borderColor:'#00843D', borderDash:[6,4], pointRadius:0
+        }]
+      },
+      options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{min:0,max:100, grid:{color:gridColor}}, x:{grid:{display:false}} }, plugins:{legend:{position:'bottom'}} }
+    });
+
+    charts.status = new Chart(document.getElementById("chartStatus"), {
+      type:'doughnut',
+      data:{
+        labels:['Conforme','Parcial','Não Conforme'],
+        datasets:[{ data:[confCount,parCount,naoCount], backgroundColor:['#00843D','#F5A524','#C8102E'], borderWidth:0 }]
+      },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}} }
+    });
+
+    charts.turno = new Chart(document.getElementById("chartTurno"), {
+      type:'bar',
+      data:{
+        labels: turnos,
+        datasets:[{ label:'Conformidade média %', data: porTurno, backgroundColor:'#10151C', borderRadius:6 }]
+      },
+      options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{min:0,max:100, grid:{color:gridColor}}, x:{grid:{display:false}} }, plugins:{legend:{display:false}} }
+    });
+
+    charts.ranking = new Chart(document.getElementById("chartRanking"), {
+      type:'bar',
+      data:{
+        labels: rankedItems.slice(0,6).map(([id])=>{ const it = CHECKLIST.find(c=>String(c.id)===String(id)); return it ? (it.titulo.length>22 ? it.titulo.slice(0,20)+'…' : it.titulo) : id; }),
+        datasets:[{ label:'Desvios', data: rankedItems.slice(0,6).map(([,c])=>c), backgroundColor:'#C8102E', borderRadius:6 }]
+      },
+      options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{ x:{grid:{color:gridColor}}, y:{grid:{display:false}} }, plugins:{legend:{display:false}} }
+    });
+
+    // Tabela
+    const tbody = document.getElementById("auditTableBody");
+    tbody.innerHTML = "";
+    document.getElementById("emptyState").style.display = audits.length ? "none" : "block";
+
+    audits.slice().reverse().forEach(a => {
+      const tr = document.createElement("tr");
+      const pdfCell = a.pdfURL
+        ? `<a class="pillbtn ready" href="${a.pdfURL}" target="_blank" rel="noopener">Baixar PDF</a>`
+        : `<button type="button" class="pillbtn" id="pdfbtn-${a.id}" onclick="window.ensurePdfForRow('${a.id}')">Gerar PDF</button>`;
+      
+      tr.innerHTML = `
+        <td>${a.data}</td><td>${a.turno}</td><td>${a.auditor}</td>
+        <td><span class="tag ${a.percConformidade>=META_UR?'ok':'bad'}">${a.percConformidade}%</span></td>
+        <td>${a.statusAcao}</td>
+        <td>${pdfCell}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  } catch(err) {
+    console.error("Erro ao carregar o painel:", err);
+    showToast("⚠ Erro ao carregar dados do painel.");
   }
-
-  // ---- item ranking (desvios por item) ----
-  const itemDesvioCount = {};
-  CHECKLIST.forEach(c => itemDesvioCount[c.id] = 0);
-  audits.forEach(a => (a.items||[]).forEach(it => {
-    if(it.status !== 'conforme') itemDesvioCount[it.id] = (itemDesvioCount[it.id]||0) + 1;
-  }));
-  const rankedItems = Object.entries(itemDesvioCount).sort((a,b)=>b[1]-a[1]);
-  const topItemId = rankedItems.length && rankedItems[0][1] > 0 ? rankedItems[0][0] : null;
-  const topItem = topItemId ? CHECKLIST.find(c => String(c.id) === String(topItemId)) : null;
-  document.getElementById("kpiTopItem").textContent = topItem ? topItem.titulo : "Sem desvios";
-
-  // ---- status distribution ----
-  let confCount=0, parCount=0, naoCount=0;
-  audits.forEach(a => (a.items||[]).forEach(it => {
-    if(it.status === 'conforme') confCount++;
-    else if(it.status === 'parcial') parCount++;
-    else naoCount++;
-  }));
-
-  // ---- avg conformidade by turno ----
-  const turnos = ["Turno A","Turno B","Turno Intermediário","Turno C"];
-  const porTurno = turnos.map(t => {
-    const arr = audits.filter(a => a.turno === t);
-    return arr.length ? Math.round(arr.reduce((s,a)=>s+(a.percConformidade||0),0)/arr.length) : 0;
-  });
-
-  destroyCharts();
-  const gridColor = "#E4E8EF";
-
-  charts.evolucao = new Chart(document.getElementById("chartEvolucao"), {
-    type:'line',
-    data:{
-      labels: audits.map(a=>a.data),
-      datasets:[{
-        label:'Conformidade %', data: audits.map(a=>a.percConformidade||0),
-        borderColor:'#C8102E', backgroundColor:'rgba(200,16,46,0.08)', fill:true, tension:0.35, pointRadius:3
-      },{
-        label:'Meta', data: audits.map(()=>85),
-        borderColor:'#00843D', borderDash:[6,4], pointRadius:0
-      }]
-    },
-    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{min:0,max:100, grid:{color:gridColor}}, x:{grid:{display:false}} }, plugins:{legend:{position:'bottom'}} }
-  });
-
-  charts.status = new Chart(document.getElementById("chartStatus"), {
-    type:'doughnut',
-    data:{
-      labels:['Conforme','Parcial','Não Conforme'],
-      datasets:[{ data:[confCount,parCount,naoCount], backgroundColor:['#00843D','#F5A524','#C8102E'], borderWidth:0 }]
-    },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom'}} }
-  });
-
-  charts.turno = new Chart(document.getElementById("chartTurno"), {
-    type:'bar',
-    data:{
-      labels: turnos,
-      datasets:[{ label:'Conformidade média %', data: porTurno, backgroundColor:'#10151C', borderRadius:6 }]
-    },
-    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{min:0,max:100, grid:{color:gridColor}}, x:{grid:{display:false}} }, plugins:{legend:{display:false}} }
-  });
-
-  charts.ranking = new Chart(document.getElementById("chartRanking"), {
-    type:'bar',
-    data:{
-      labels: rankedItems.slice(0,6).map(([id])=>{ const it = CHECKLIST.find(c=>String(c.id)===String(id)); return it ? (it.titulo.length>28 ? it.titulo.slice(0,26)+'…' : it.titulo) : id; }),
-      datasets:[{ label:'Desvios', data: rankedItems.slice(0,6).map(([,c])=>c), backgroundColor:'#C8102E', borderRadius:6 }]
-    },
-    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{ x:{grid:{color:gridColor}}, y:{grid:{display:false}} }, plugins:{legend:{display:false}} }
-  });
-
-  // ---- table ----
-  const tbody = document.getElementById("auditTableBody");
-  tbody.innerHTML = "";
-  document.getElementById("emptyState").style.display = audits.length ? "none" : "block";
-
-  audits.slice().reverse().forEach(a => {
-    const tr = document.createElement("tr");
-    const pdfCell = a.pdfURL
-      ? `<a class="pillbtn ready" href="${a.pdfURL}" target="_blank" rel="noopener">Baixar PDF</a>`
-      : `<button type="button" class="pillbtn" id="pdfbtn-${a.id}" onclick="ensurePdfForRow('${a.id}')">Gerar PDF</button>`;
-    tr.innerHTML = `
-      <td>${a.data}</td><td>${a.turno}</td><td>${a.auditor}</td>
-      <td><span class="tag ${a.percConformidade>=85?'ok':'bad'}">${a.percConformidade}%</span></td>
-      <td>${a.statusAcao}</td>
-      <td>${pdfCell}</td>
-    `;
-    tbody.appendChild(tr);
-  });
 }
 
 document.getElementById("btnFilter").addEventListener("click", loadDashboard);
